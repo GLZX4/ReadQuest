@@ -1,12 +1,23 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import DashboardPage from './pages/DashboardPage';
+import LoginPage from './pages/LoginPage';
+import MainLayout from './components/MainLayout';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Welcome to ReadQuest!</h1>
-      <p>This is the beginning of your gamified reading comprehension platform.</p>
-    </div>
+    <Router>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<h2>404 - Page not found</h2>} />
+        </Routes>
+      </MainLayout>
+    </Router>
   );
 }
 

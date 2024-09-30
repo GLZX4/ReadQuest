@@ -1,0 +1,51 @@
+.login-register-container {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 200px;
+    height: 500px;
+    width: 80%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+}
+
+.login-register-container h1 {
+    position: relative;
+    font-size: 2.5rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.login {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login input {
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+.login button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #292929;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.login button:hover {
+    background-color: #000;
+}

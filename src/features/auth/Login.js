@@ -22,8 +22,8 @@ function Login() {
 
   return (
     <div className="login-register-container">
-      <h1>Login</h1>
-      <form className="login" onSubmit={handleLogin}>
+      <h1 className='noselect'>Login</h1>
+      <form className="login-register" onSubmit={handleLogin}>
         <input
           type="text"
           placeholder="Username"

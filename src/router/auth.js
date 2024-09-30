@@ -8,22 +8,38 @@ const User = require('../models/user');
 
 // Register Route
 router.post('/register', async (req, res) => {
-    const { name, username, email, password, role } = req.body;
-
+    const { name, username, email, password, role, schoolCode } = req.body;
+  
     try {
-        // Check if username already exists
-        const existingUser = await User.findOne({ username });
-        if (existingUser) return res.status(400).json({ message: 'Username already taken' });
-
-        // Create a new user
-        const newUser = new User({ name, username, email, password, role });
-        await newUser.save();
-
-        res.status(201).json({ message: 'User registered successfully' });
+      // Check if schoolCode exists
+      const school = await School.findOne({ schoolCode }); // Assuming you're using mongoose ORM
+      if (!school) {
+        return res.status(400).json({ message: 'Invalid school code' });
+      }
+  
+      // Check if username already exists
+      const existingUser = await User.findOne({ username });
+      if (existingUser) return res.status(400).json({ message: 'Username already taken' });
+  
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create a new user with the schoolID associated
+      const newUser = new User({
+        name,
+        username,
+        email,
+        password: hashedPassword,
+        role,
+        schoolID: school._id // Associate the user with the school
+      });
+  
+      await newUser.save();
+      res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+      res.status(500).json({ message: 'Server error', error });
     }
-});
+  });
 
 
 // Login Route

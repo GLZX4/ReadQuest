@@ -1,8 +1,9 @@
 // src/pages/DashboardPage.js
 import React from 'react';
+import Dashboard from "../components/Dashboard";
 
 function DashboardPage() {
-  return <h2>Your Dashboard</h2>;
+  return <Dashboard userRole="student" />;
 }
 
 export default DashboardPage;

@@ -2,7 +2,7 @@
 import React from 'react';
 
 function HomePage() {
-  return <h2>Welcome to ReadQuest</h2>;
+  return <h2></h2>;
 }
 
 export default HomePage;

@@ -1,0 +1,32 @@
+.bar-chart-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 300px;  /* Adjust this depending on your design */
+}
+
+.bar {
+    background-color: #4caf50; /* Adjust the color */
+    width: 50px; /* Adjust the width */
+    margin: 0 5px;
+    transition: height 0.3s ease;
+}
+
+    .bar-1 { background-color: rgba(255, 99, 132, 0.7); }
+    .bar-2 { background-color: rgba(255, 159, 64, 0.7); }
+    .bar-3 { background-color: rgba(255, 205, 86, 0.7); }
+    .bar-4 { background-color: rgba(75, 192, 192, 0.7); }
+    .bar-5 { background-color: rgba(54, 162, 235, 0.7); }
+
+  
+.bar:hover {
+    filter: saturate(150%);
+    transition: all 0.1s ease-in-out;
+}
+
+.bar-label {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+}

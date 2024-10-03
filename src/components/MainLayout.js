@@ -4,6 +4,7 @@ import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Dashboard from "./Dashboard";
+import "../styles/mainLayout.css";
 
 function MainLayout({ children }) {  // Corrected `childern` to `children`
     return (

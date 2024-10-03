@@ -41,7 +41,9 @@ const Dashboard = ({ userRole }) => {
     }, [userRole]);
     
 
-    if (loading) return <div className="dashboard-container">Loading...</div>;
+    if (loading) return <div className="dashboard-container">
+        <div className="loader"></div>
+      </div>;
     if (error) return <div>{error}</div>;
 
     return (

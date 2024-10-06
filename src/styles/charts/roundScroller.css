@@ -1,0 +1,64 @@
+.round-scroller {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    width: 250px; /* Use a fixed width that forces overflow */
+    padding: 10px;
+    overflow-x: auto; /* Set to auto to enable scrolling only when needed */
+    background: #f3f3f3;
+    border-radius: 10px;
+    gap: 10px;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -webkit-mask: linear-gradient(90deg,#0000,#000 5% 80%,#0000)
+}
+
+.round-scroller::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
+}
+
+.round {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #000; /* Default Background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.round:hover {
+    transform: scale(1.1);
+}
+
+.round-complete {
+    background: #4caf50; /* Green for completed */
+}
+
+.round-incomplete {
+    background: #f44336; /* Red for not started */
+}
+
+.round-partial {
+    background: #ffeb3b; /* Yellow for partially completed */
+}
+
+
+.round-scroller-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.scroll-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.scroll-btn:hover {
+    color: #4caf50; /* Highlight color when hovering */
+}

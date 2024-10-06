@@ -61,10 +61,17 @@
     flex: 3; /* Large Tile*/
 }
 
+.continueBtn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .continueBtn button {
     flex: 1; /* Small Tile */
     display: flex;
     padding: 11px 33px;
+    max-height: 50px;
     text-decoration: none;
     font-size: 22px;
     color: white;

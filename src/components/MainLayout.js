@@ -13,7 +13,6 @@ function MainLayout({ children }) {  // Corrected `childern` to `children`
             <main className="content-container"> {/* Use className instead of class */}
                 {children} {/* Corrected typo here */}
             </main>
-            <Footer />
         </div>
     );
 }

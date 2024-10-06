@@ -1,0 +1,67 @@
+.homepage {
+    position: relative;
+}
+
+.hero-section {
+    position: relative; /* Establish reference for positioning */
+    min-width: 500px;
+    min-height: 290px;
+    width: 80%;
+    background-color: #F3ECC3; /* Light yellow color */
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%); /* Slanted box */
+
+}
+
+.hero-shadow {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+    background-color: #D1C4E9; /* Light purple color */
+    width: 98%;
+    height: 96%;
+}
+
+.hero-content {
+    position: relative;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-tagline {
+    max-width: 700px;
+    width: 80%;
+    font-size: 2em;
+}
+
+.hero-description {
+    width: 80%;
+    max-width: 700px;
+}
+
+.cta-button {
+    max-width: 200px;
+    padding: 10px 20px;
+    margin-left: 20px;
+    background-color: #5c2385; /* Purple color */
+    color: #fff;
+    border: none;
+    box-shadow: 6px 6px 0 black;
+    cursor: pointer;
+    transform: skew(-15deg);
+    transition: all 0.3s ease-in-out;
+}
+
+.cta-button:hover {
+  box-shadow: 10px 10px 0 #fbc638;
+  animation-delay: 0.5s;
+  animation: text-strobe 2s infinite alternate; /* Add strobe animation when hovered */
+}
+
+@keyframes text-strobe {
+  0% { color: #ffffff; }
+  50% { color: #fbc638; }
+  100% { color: #ffffff; }
+}

@@ -1,5 +1,6 @@
 .homepage {
     position: relative;
+    width: 100%;
 }
 
 .hero-section {
@@ -64,4 +65,56 @@
   0% { color: #ffffff; }
   50% { color: #fbc638; }
   100% { color: #ffffff; }
+}
+
+
+.features-section {
+    margin-top: 50px;
+    width: 100%;
+    background-color: #5c2385;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.features-title {
+    color: #fff;
+    display: flex;
+    text-align: center;
+    justify-self: center;
+    align-self: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.features-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+  
+.feature-column {
+    flex: 1;
+    min-height: 150px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin: 0 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.feature-title {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.feature-description {
+    font-size: 1.2em;
+    margin-bottom: 10px;
 }

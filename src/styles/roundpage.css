@@ -1,0 +1,154 @@
+.round-container {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 100px;
+    min-height: 100px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 50px;
+    border-radius: 10px; /* Apply border radius to the entire container */
+    box-sizing: border-box; /* Ensure padding and borders are included in the width/height calculations */
+}
+
+.round-container * {
+    background-color: #D1C4E9;
+}
+
+.question-timer-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 60%;
+    padding: 5px;
+    border-top: 4px solid #90C418;
+    border-left: 4px solid #90C418;
+    border-right: 4px solid #90C418;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.questionNum {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.timer {
+    font-size: 1.2em;
+}
+
+
+.starProgress {
+    display: flex;
+    flex-direction: row;
+}
+/* star shape adapted from: https://css-shape.com/star/ */
+.star {
+    width: 30px;  
+    aspect-ratio: 1;
+    background: #ccc;
+    clip-path: polygon(50% 0,
+      calc(50%*(1 + sin(.4turn))) calc(50%*(1 - cos(.4turn))),
+      calc(50%*(1 - sin(.2turn))) calc(50%*(1 - cos(.2turn))),
+      calc(50%*(1 + sin(.2turn))) calc(50%*(1 - cos(.2turn))),
+      calc(50%*(1 - sin(.4turn))) calc(50%*(1 - cos(.4turn))) 
+     ); 
+  }
+.star.lit {
+    background-color: #F8CA00;
+}
+
+.question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-top: 4px solid #90C418;
+    border-left: 4px solid #90C418;
+    border-right: 4px solid #90C418;
+    border-radius: 0px 10px 0px 0px;
+    background-color: #D1C4E9; /* Optional, ensure consistent background */
+}
+
+.question-context-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 200px;
+    padding: 30px;
+    background-color: #E2F4FB; /* Light greenish-blue */
+    box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+}
+.question-context-container span {
+    position: relative;
+    font-size: 2em;
+    font-weight: bold;
+    background-color: transparent;
+    text-align: center;
+}
+
+.question-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 80px;
+    border-top: 4px solid #90C418;
+    background-color: #D1C4E9;
+}
+
+.question-text-container span {
+    position: relative;
+    font-size: 1.7em;
+    font-weight: 500;
+    background-color: transparent;
+    text-align: center;
+}
+
+.answers-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates two equal columns */
+    grid-template-rows: repeat(2, 1fr); /* Creates two equal rows */
+    gap: 20px; /* Space between buttons */
+    align-items: center; /* Align items vertically */
+    justify-content: center;
+    padding: 10px;
+    border-top: 4px solid #808080;
+    border-left: 4px solid #90C418;
+    border-right: 4px solid #90C418;
+    border-bottom: 4px solid #90C418;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.answer-button {
+    border: 2px solid #808080;
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 1.5em;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.answer-button:hover {
+    filter: saturate(200%);
+    transform: scale(1.1);
+}
+
+.answer-1 {
+    background-color: #ff9999; /* Light red */
+}
+
+.answer-2 {
+    background-color: #ffff99; /* Light yellow */
+}
+
+.answer-3 {
+    background-color: #99ccff; /* Light blue */
+}
+
+.answer-4 {
+    background-color: #99ff99; /* Light green */
+}

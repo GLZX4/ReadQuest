@@ -5,5 +5,7 @@
 ## Available Scripts
 
 
-
+To start the program, start the server using:
+### `cd backend`
+Then use:
 ### `npm start`

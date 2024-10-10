@@ -14,8 +14,11 @@ function RoundPage() {
     const [isAnswered, setIsAnswered] = useState(false);
     const [questionBank, setQuestionBank] = useState([]);
     const [hasTimerExpired, setHasTimerExpired] = useState(false);
-    const [progress, setProgress] = useState(0); // Track the current progress
-
+    const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
+    const [answerTimes, setAnswerTimes] = useState([]);
+    const [startTime, setStartTime] = useState(null);
+    const [attempts, setAttempts] = useState(0);
+  
     useEffect(() => {
         // Mock function to fetch the question bank data (this would be replaced with an API call)
         const fetchQuestionBank = async (qBankID) => {
@@ -64,14 +67,16 @@ function RoundPage() {
         }
     }, [questionBank, currentRound]);
 
+    // Start timer when the question is loaded
     const loadQuestion = (questionIndex) => {
         if (questionBank[questionIndex]) {
             const questionData = questionBank[questionIndex];
             setCurrentQuestion(questionData);
             setAnswers(questionData.options);
             setIsAnswered(false);
-            setTimer(30);
-            setHasTimerExpired(false);
+            setTimer(30); // Reset the timer
+            setStartTime(Date.now()); // Record the start time
+            setAttempts(0); // Reset attempts for the new question
         }
     };
 
@@ -94,30 +99,53 @@ function RoundPage() {
 
     // Function to handle answer submission and update progress
     const handleAnswerAndAdvance = (selectedAnswer) => {
+        setAttempts(prevAttempts => prevAttempts + 1); // Increment the attempts
+        const timeTaken = (Date.now() - startTime) / 1000; // Time in seconds
+        setAnswerTimes(prevTimes => [...prevTimes, timeTaken]); // Store the time taken
         setIsAnswered(true);
-        setProgress(prevProgress => prevProgress + 1);
+        
+        // Check if answer is correct
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            setCorrectAnswersCount(prevCount => prevCount + 1);
+        }
 
-        // Proceed to the next round after answering
+        // Immediately proceed to the next round after answering
         setTimeout(() => {
             if (currentRound < questionBank.length) {
-                setCurrentRound((prevRound) => prevRound + 1);
+                setCurrentRound(prevRound => prevRound + 1);
             } else if (currentRound === questionBank.length) {
                 console.log("Round completed");
+                console.log("Accuracy Rate:", calculateAccuracyRate() + "%");
+                console.log("Average Attempts per Question:", calculateAverageAttempts());
             }
-        }, 500);
+        }, 500); // Adding a small delay for UX purposes
     };
 
+    // Function to load the next round
     const handleNextRound = () => {
         if (currentRound < questionBank.length) {
-            setCurrentRound((prevRound) => prevRound + 1);
+            setCurrentRound(prevRound => prevRound + 1);
         } else if (currentRound === questionBank.length) {
             console.log("Round completed");
         }
     };
 
+    const calculateAverageAnswerTime = () => {
+        const sum = answerTimes.reduce((acc, time) => acc + time, 0);
+        return (sum / answerTimes.length).toFixed(2); // Returning with 2 decimal places
+    };
+
+    const calculateAccuracyRate = () => {
+        return ((correctAnswersCount / questionBank.length) * 100).toFixed(2);
+    };
+
+    const calculateAverageAttempts = () => {
+        return (attempts / questionBank.length).toFixed(2);
+    };
+
     // Calculate the number of questions per star
     const questionsPerStar = Math.ceil(questionBank.length / 5); // Divide the number of questions by 5
-    const litStars = Math.floor(progress / questionsPerStar); // Calculate how many stars to light
+    const litStars = Math.floor((currentRound - 1) / questionsPerStar); // Calculate how many stars to light
 
     return (
         <div className="round-page">
@@ -147,7 +175,7 @@ function RoundPage() {
                         {answers.map((answer, index) => (
                             <button
                                 key={index}
-                                className={"answer-button answer-" + (index + 1)}
+                                className={`answer-button answer-${index + 1}`}
                                 onClick={() => handleAnswerAndAdvance(answer)}
                                 disabled={isAnswered}
                             >

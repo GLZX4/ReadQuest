@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import BarChart from "./graphs/BarChart";
 import RoundScroller from "./graphs/RoundScroller";
+import Achievements from "../progress/Achievements"
+import "../../styles/dashboard.css";
+
+const studentId = 1; // Assuming studentId is 1 for now
 
 // Function to add ordinal suffixes to day numbers
 const getOrdinalSuffix = (day) => {
@@ -78,7 +82,8 @@ const StudentDash = () => {
   }, []);
 
   return (
-    <>
+    
+    <div className="dashboard-container">
       <span className="dashboard-studentName">John Doe</span>
       <div className="dashboard-structure">
         <div className="dashboard-row">
@@ -94,6 +99,12 @@ const StudentDash = () => {
             </span>
             <button>Continue...</button>
           </div>
+          <div className="dashboard-item continueBtn">
+          <span>
+              <b>Play New Round</b>
+            </span>
+            <button className="newRound">New Round...</button>
+          </div>
         </div>
 
         <div className="dashboard-row">
@@ -103,10 +114,17 @@ const StudentDash = () => {
             </span>
             <BarChart data={barChartData} />
           </div>
-          <div className="dashboard-item achievements">Latest Achievement</div>
+          <div className="dashboard-item achievements">
+            <span>
+              <b>Achievements</b>
+            </span>
+            
+            <Achievements studentId={studentId} />
+
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -19,7 +19,9 @@
     margin: 0 auto;
     padding: 15px 30px;
     border-radius: 10px;
+    width: 80%;
     max-width: 1000px;
+    margin: 20px auto;
     background-color: #fff;
     box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
 }
@@ -58,20 +60,23 @@
 }
 
 .weekProgress {
-    flex: 3; /* Large Tile*/
+    flex: 2; /* Medium Tile*/
 }
 
 .continueBtn {
+    flex: 2; /* Small Tile */
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
 }
 
 .continueBtn button {
-    flex: 1; /* Small Tile */
     display: flex;
     padding: 11px 33px;
     max-height: 50px;
+    max-width: 180px;
     text-decoration: none;
     font-size: 22px;
     color: white;
@@ -81,6 +86,12 @@
     transform: skewX(-15deg);
     border: none;
     cursor: pointer;
+    text-wrap: nowrap;
+}
+
+.newRound {
+    background: #90C418 !important;
+    color: black !important;
 }
 
 .continueBtn button:focus {

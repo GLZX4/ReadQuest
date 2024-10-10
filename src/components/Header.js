@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/header.css";
 
 function Header() {
+
+    const [useName, setUserName] = useState('');
+
+    useEffect(() => {
+        const storedName = localStorage.getItem('name');
+        if (storedName) {
+            setUserName(storedName);
+        }
+    }, []);
+
+
     return (
         <header>
             <Link to="/" className="logo-link">
@@ -19,7 +30,7 @@ function Header() {
                 <div class="account-container">
                     <img class="account-rnd-image"></img>
                     <Link to="/Login" className="account-link">
-                        <span class="account-name">John Doe</span>
+                        <span class="account-name">{useName || 'Guest'}</span>
                     </Link>
                 </div>
             </div>

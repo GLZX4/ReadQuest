@@ -10,8 +10,7 @@
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    width: 60%;
-    max-width: 450px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 20px;

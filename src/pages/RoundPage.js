@@ -123,6 +123,8 @@ function RoundPage() {
 
     // Function to load the next round
     const handleNextRound = () => {
+        setHasTimerExpired(false); // Reset timer expired status
+        setIsAnswered(false); // Enable buttons for the next question
         if (currentRound < questionBank.length) {
             setCurrentRound(prevRound => prevRound + 1);
         } else if (currentRound === questionBank.length) {

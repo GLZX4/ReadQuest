@@ -16,7 +16,6 @@ function Register() {
     console.log('Registering:', toSubmit);
     
     try {
-      // Replace with your backend API URL
       const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password, role, schoolCode });
       console.log("Registration successful", response.data);
       window.location.href = '/login'; // Redirect to login after successful registration
@@ -28,7 +27,7 @@ function Register() {
 
   return (
     <div className="login-register-container">
-      <h1 className="noselect">Register</h1>
+      <h1 className="noselect">Register As Student</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form className="login-register" onSubmit={handleRegister}>
         <input
@@ -52,15 +51,6 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="role-select"
-        >
-          <option value="student">Student</option>
-          <option value="tutor">Tutor</option>
-          <option value="admin">Admin</option>
-        </select>
         <input
           type="text"
           placeholder="School Code"

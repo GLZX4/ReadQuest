@@ -1,3 +1,10 @@
+body {
+    background-image: url(../assets/images/Background-Filler.svg);
+    background-size: cover;
+    background-repeat: repeat;
+    background-position: center;
+}
+
 .round-container {
     position: relative;
     left: 50%;

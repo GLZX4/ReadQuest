@@ -84,7 +84,7 @@ const StudentDash = () => {
   return (
     
     <div className="dashboard-container">
-      <span className="dashboard-studentName">John Doe</span>
+      <span className="dashboard-name">John Doe</span>
       <div className="dashboard-structure">
         <div className="dashboard-row">
         <div className="dashboard-item weekProgress">

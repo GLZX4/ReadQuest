@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddSchool from '../../components/AddSchool';
+import '../../styles/admindash.css';
 
 function AdminDash() {
   const [schools, setSchools] = useState([]); // State to store schools data
   const [selectedSchoolID, setSelectedSchoolID] = useState('');
   const [recentCode, setRecentCode] = useState('');
+  const [isAddSchoolVisible, setIsAddSchoolVisible] = useState(false);
+
 
   // UseEffect to fetch schools on component mount
   useEffect(() => {
@@ -74,12 +78,18 @@ function AdminDash() {
     return code;
   };
 
+  const toggleAddSchoolVisibility = () => {
+    setIsAddSchoolVisible(prevState => !prevState);
+};
+
+
   return (
     <div className='dashboard-container'>
       <span className='dashboard-name'>Admin</span>
       <div className="dashboard-structure">
         <div className="dashboard-row">
-          <div className="dashboard-item">
+
+          <div className="dashboard-item code-generation">
             <h2>Tutor Account Code Generation</h2>
             <span className='code-generated'>{recentCode}</span>
             {/* School selection dropdown */}
@@ -102,7 +112,17 @@ function AdminDash() {
               Generate Code
             </button>
           </div>
-          <div className="dashboard-item"></div>
+
+          <div className="dashboard-item new-school">
+            <h2>Add a School</h2>
+            <button
+                    className='toggle-school-form'
+                    onClick={toggleAddSchoolVisibility}
+                >
+                    {isAddSchoolVisible ? 'Hide Form' : 'Show Form'}
+                </button>
+                {isAddSchoolVisible && <AddSchool />}
+            </div>
           <div className="dashboard-item"></div>
         </div>
 

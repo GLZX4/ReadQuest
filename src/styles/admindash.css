@@ -1,0 +1,26 @@
+.code-generation {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.code-generation select {
+    max-width: 150px;
+    padding: 5px;
+}
+
+.code-generation button {
+    max-width: 150px;
+    padding: 5px;
+}   
+
+.new-school {
+    flex: 2;
+}
+
+.toggle-school-form {
+    max-width: 150px;
+}

@@ -54,4 +54,25 @@ router.get('/schoolsFetch', async (req, res) => {
     }
   });
 
+
+// Add a School endpoint
+router.post('/addSchool', async (req, res) => {
+    console.log('entered addSchool');
+    const { schoolName, schoolCode, address, contactEmail, contactPhone } = req.body;
+
+    if (!schoolName || !schoolCode || !address || !contactEmail || !contact) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try{
+        await sql.query`
+        INSERT INTO schools (schoolName, schoolCode, address, contactEmail, contactPhone)
+        VALUES (${schoolName}, ${schoolCode}, ${address}, ${contactEmail}, ${contactPhone})
+    `;
+        res.status(201).json({ message: 'School Added successfully.' });
+    } catch(error) {
+        console.error('Error during school addition:', error);
+    }
+});
+
 module.exports = router;

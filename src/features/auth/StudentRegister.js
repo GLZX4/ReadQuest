@@ -6,12 +6,18 @@ function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatpassword] = useState('');
   const [role, setRole] = useState('student'); // Default role
   const [schoolCode, setSchoolCode] = useState('');
   const [error, setError] = useState('');
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (password !== repeatPassword) {
+      setError('Passwords do not match');
+      return;
+    }
     const toSubmit = { name, email, password, role, schoolCode };
     console.log('Registering:', toSubmit);
     
@@ -28,7 +34,6 @@ function Register() {
   return (
     <div className="login-register-container">
       <h1 className="noselect">Register As Student</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form className="login-register" onSubmit={handleRegister}>
         <input
           type="text"
@@ -52,6 +57,13 @@ function Register() {
           required
         />
         <input
+          type="password"
+          placeholder="Repeat-Password"
+          value={repeatPassword}
+          onChange={(e) => setRepeatpassword(e.target.value)}
+          required
+        />
+        <input
           type="text"
           placeholder="School Code"
           value={schoolCode}
@@ -60,6 +72,7 @@ function Register() {
         />
         <button type="submit">Register</button>
       </form>
+      {error && <p id='error-code' style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }

@@ -8,9 +8,14 @@ function AdminDash() {
   const [selectedSchoolID, setSelectedSchoolID] = useState('');
   const [recentCode, setRecentCode] = useState('');
   const [isAddSchoolVisible, setIsAddSchoolVisible] = useState(false);
+  const [adminData, setAdminData] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    systemStatus: ''
+  });
+  
 
 
-  // UseEffect to fetch schools on component mount
   useEffect(() => {
     const fetchSchools = async () => {
       try {
@@ -19,9 +24,21 @@ function AdminDash() {
       } catch (error) {
         console.error('Error fetching schools:', error);
       }
+    
+    };
+
+    const fetchAdminData = async () => {
+      try {
+          const response = await axios.get('http://localhost:5000/api/admin/fetchAdminData');
+          console.log('Admin Data:', response.data);
+          setAdminData(response.data);
+      } catch (error) {
+          console.error('Error fetching admin data:', error);
+      }
     };
 
     fetchSchools();
+    fetchAdminData();
   }, []); 
 
   
@@ -129,7 +146,9 @@ function AdminDash() {
         <div className="dashboard-row">
           <div className="dashboard-item">
             <h2>System Status</h2>
-            <span>All systems operational</span>
+            <span>{adminData.systemStatus}</span>
+            <span>Users Logged In: {adminData.activeUsers}</span>
+            <span>Total System Users: {adminData.totalUsers}</span>
           </div>
           <div className="dashboard-item"></div>
           <div className="dashboard-item"></div>

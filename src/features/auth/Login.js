@@ -15,6 +15,7 @@ function Login() {
       const { token, name } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('name', name);
+      localStorage.setItem('email', email); 
       console.log("Login successful, token:", token);
       // Redirect to dashboard after successful login
       window.location.href = '/dashboard';

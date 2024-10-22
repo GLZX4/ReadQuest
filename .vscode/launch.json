@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Backend Server",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "program": "${workspaceFolder}/backend/server.js",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Launch Frontend (React)",
+            "type": "pwa-node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "start"
+            ],
+            "console": "integratedTerminal"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch Full Application",
+            "configurations": [
+                "Launch Backend Server",
+                "Launch Frontend (React)"
+            ]
+        }
+    ]
+}

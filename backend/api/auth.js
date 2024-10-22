@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sql = require('mssql');
 const { connectToDatabase } = require('../middleware/dbConfig');
+const { code } = require('framer-motion/client');
 require('dotenv').config();
 
 const router = express.Router();
@@ -84,27 +85,53 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ userId: user.userID, role: user.Role }, JWT_SECRET, { expiresIn: '1h' });
         res.send({ token });
 
+        // Update user's login status
+        await sql.query`UPDATE Users SET loggedIn = 1 WHERE Email = ${email}`;
+
     } catch (err) {
         console.error('Error during login:', err);
         res.status(500).send({ message: 'Error logging in user' });
     }
 });
 
+// Logout Endpoint
+router.post('/logout', async (req, res) => {
+    const { email } = req.body;
+    try {
+        await sql.query`UPDATE Users SET loggedIn = 0 WHERE Email = ${email}`;
+        res.send({ message: 'User logged out successfully' });
+    } catch (err) {
+        console.error('Error during logout:', err);
+        res.status(500).send({ message: 'Error logging out user' });
+    }
+});
+
 // Register endpoint for tutors with verification code
 router.post('/register-tutor', async (req, res) => {
-    const { name, email, password, schoolCode, verificationCode } = req.body;
+    const { name, email, password, verificationCode } = req.body;
     const role = 'tutor';
 
-    if (verificationCode !== process.env.TUTOR_REGISTRATION_CODE) {
+    console.log("Received tutor registration request:", req.body); // Debug log
+    let trueCode;
+    try {
+        const codeFind = await sql.query`SELECT * FROM VerificationCode WHERE code = ${verificationCode}`;
+        trueCode = codeFind;
+        console.log("True code:", trueCode);
+    } catch (error) {
+        console.error('Error during tutor registration:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+
+    if (verificationCode !== trueCode.recordset[0].code) {
         return res.status(401).json({ message: 'Invalid verification code' });
+    } else if (trueCode.recordset[0].used === true) {
+        return res.status(401).json({ message: 'Verification code already used' });
+    } else if (trueCode.recordset[0].expirationAt < new Date()) {
+        return res.status(401).json({ message: 'Verification code expired' });
     }
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const schoolResult = await sql.query`SELECT schoolID FROM Schools WHERE schoolCode = ${schoolCode}`;
-        if (schoolResult.recordset.length === 0) {
-            return res.status(400).json({ message: 'Invalid school code.' });
-        }
 
         let roleResult = await sql.query`SELECT roleID FROM Roles WHERE Role = ${role}`;
         let roleID;
@@ -117,12 +144,14 @@ router.post('/register-tutor', async (req, res) => {
             roleID = roleResult.recordset[0].roleID;
         }
 
-        const schoolID = schoolResult.recordset[0].schoolID;
+        const schoolID = trueCode.recordset[0].schoolID;    
 
         await sql.query`
             INSERT INTO Users (Name, Email, UserPassword, roleID, schoolID) 
             VALUES (${name}, ${email}, ${hashedPassword}, ${roleID}, ${schoolID})
         `;
+        await sql.query`UPDATE VerificationCode SET used = 1 WHERE code = ${verificationCode}`;
+        console.log('Tutor registered successfully.');
         res.status(201).json({ message: 'Tutor registered successfully.' });
     } catch (error) {
         console.error('Error during tutor registration:', error);

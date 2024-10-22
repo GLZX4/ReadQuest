@@ -6,10 +6,17 @@ function TutorRegister() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatpassword] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const [error, setError] = useState('');
 
     const handleRegister = async (e) => {
+
+        if (password !== repeatPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5000/api/auth/register-tutor', {
@@ -29,7 +36,6 @@ function TutorRegister() {
     return (
         <div className="login-register-container">
             <h1 className="noselect">Register As Tutor</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form className="login-register" onSubmit={handleRegister}>
                 <input
                     type="text"
@@ -53,6 +59,13 @@ function TutorRegister() {
                     required
                 />
                 <input
+                    type="password"
+                    placeholder="Repeat Password"
+                    value={repeatPassword}
+                    onChange={(e) => setRepeatpassword(e.target.value)}
+                    required
+                />
+                <input
                     type="text"
                     placeholder="Verification Code"
                     value={verificationCode}
@@ -61,6 +74,7 @@ function TutorRegister() {
                 />
                 <button type="submit">Register</button>
             </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 .authContainer {
     position: relative;
     min-height: 500px;
-    width: 80%;
+    width: 60%;
     margin: 0 auto;
     background-color: #fff;
     display: flex;
@@ -28,7 +28,7 @@
 }
 
 .auth-buttons {
-    margin-top: 500px;  /* Space for buttons, ensure they sit below the form */
+    margin-top: 530px;  /* Space for buttons, ensure they sit below the form */
     display: flex;
     flex-direction: column;
     align-items: center;

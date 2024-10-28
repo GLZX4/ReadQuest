@@ -1,12 +1,13 @@
 // src/pages/RoundPage.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import LoadingSpinner from '../features/rounds/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../features/round/LoadingSpinner';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import '../styles/roundpage.css';
 
 function RoundPage() {
-    const disableTimer = true; // Set this to `true` to disable the timer in development
-    const questionBankID = useParams();
+    const disableTimer = true;
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [currentRound, setCurrentRound] = useState(1);
@@ -18,67 +19,81 @@ function RoundPage() {
     const [answerTimes, setAnswerTimes] = useState([]);
     const [startTime, setStartTime] = useState(null);
     const [attempts, setAttempts] = useState(0);
-  
+    const navigate = useNavigate();
+
     useEffect(() => {
-        // Mock function to fetch the question bank data (this would be replaced with an API call)
-        const fetchQuestionBank = async (qBankID) => {
-            console.log(`Fetching question bank for ID: ${qBankID}`); // Debugging log
-            if (!qBankID) {
-                console.error("No question bank ID provided.");
-                return;
-            }
-
+        const fetchRoundByDifficulty = async () => {
             try {
-                await new Promise(resolve => setTimeout(resolve, 500));
-
-                const fetchedQuestionBank = [
-                    {
-                        questionContext: `Context for question 1 in bank ${qBankID}`,
-                        questionText: `What is the answer to question 1 in bank ${qBankID}?`,
-                        options: ["Option A", "Option B", "Option C", "Option D"],
-                        correctAnswer: "Option A"
-                    },
-                    {
-                        questionContext: `Context for question 2 in bank ${qBankID}`,
-                        questionText: `What is the answer to question 2 in bank ${qBankID}?`,
-                        options: ["Option A", "Option B", "Option C", "Option D"],
-                        correctAnswer: "Option B"
-                    }
-                ];
-
-                if (Array.isArray(fetchedQuestionBank) && fetchedQuestionBank.length > 0) {
-                    setQuestionBank(fetchedQuestionBank);
+                const token = localStorage.getItem('token');
+                const decoded = jwtDecode(token);
+                const userID = decoded.userId;
+    
+                const difficultyResponse = await axios.get('http://localhost:5000/api/performance/students/get-difficulty', { 
+                    params: { userID } 
+                });
+    
+                const difficulty = difficultyResponse.data.difficulty;
+                console.log('Fetched Difficulty:', difficulty);
+    
+                const roundResponse = await axios.get('http://localhost:5000/api/round/select-by-difficulty', {
+                    params: { difficulty }
+                });
+    
+                const round = roundResponse.data;
+                console.log('Fetched Round:', round);
+    
+                const questionBankResponse = await axios.get('http://localhost:5000/api/round/retrieve-qBank', {
+                    params: { QBankID: round.QBankID }
+                });
+    
+                const questions = questionBankResponse.data;
+                console.log('Fetched Question Bank:', questions);
+    
+                if (questions.length > 0) {
+                    setQuestionBank(questions);  // Store all questions in the bank
+                    setCurrentRound(1);          // Start at the first question
                 } else {
-                    console.error('Fetched Question Bank is empty or invalid');
+                    console.error('Question Bank is empty or invalid');
                 }
             } catch (error) {
-                console.error('Error fetching question bank:', error);
+                console.error('Error fetching round by difficulty:', error);
             }
         };
+    
+        fetchRoundByDifficulty();
+    }, []);
+    
 
-        if (questionBankID) {
-            fetchQuestionBank(questionBankID);
-        }
-    }, [questionBankID]);
-
+    // Load the initial question once the question bank is set
     useEffect(() => {
         if (questionBank.length > 0) {
             loadQuestion(currentRound - 1);
         }
     }, [questionBank, currentRound]);
 
-    // Start timer when the question is loaded
+    // Load each question and initialize state
     const loadQuestion = (questionIndex) => {
         if (questionBank[questionIndex]) {
             const questionData = questionBank[questionIndex];
-            setCurrentQuestion(questionData);
-            setAnswers(questionData.options);
+            console.log('Question Data:', questionData.QuestionText);
+            setCurrentQuestion(questionData.QuestionText);
+
+            // Parse AnswerOptions if it's a JSON string
+            let parsedAnswers = [];
+            try {
+                parsedAnswers = JSON.parse(questionData.AnswerOptions).map(option => option.option);
+            } catch (e) {
+                console.error("Failed to parse AnswerOptions:", e);
+            }
+            
+            setAnswers(parsedAnswers);
             setIsAnswered(false);
             setTimer(30); // Reset the timer
             setStartTime(Date.now()); // Record the start time
             setAttempts(0); // Reset attempts for the new question
         }
     };
+
 
     // Timer logic
     useEffect(() => {
@@ -97,65 +112,72 @@ function RoundPage() {
         }
     }, [timer, isAnswered, hasTimerExpired]);
 
-    // Function to handle answer submission and update progress
+    // Handle answer submission and load the next question
     const handleAnswerAndAdvance = (selectedAnswer) => {
-        setAttempts(prevAttempts => prevAttempts + 1); // Increment the attempts
-        const timeTaken = (Date.now() - startTime) / 1000; // Time in seconds
-        setAnswerTimes(prevTimes => [...prevTimes, timeTaken]); // Store the time taken
+        setAttempts((prevAttempts) => prevAttempts + 1);
+        const timeTaken = (Date.now() - startTime) / 1000;
+        setAnswerTimes((prevTimes) => [...prevTimes, timeTaken]);
         setIsAnswered(true);
-        
-        // Check if answer is correct
-        if (selectedAnswer === currentQuestion.correctAnswer) {
-            setCorrectAnswersCount(prevCount => prevCount + 1);
+    
+        // Verify that currentQuestion exists and has the correct answer
+        if (currentQuestion && selectedAnswer === currentQuestion.correctAnswer) {
+            setCorrectAnswersCount((prevCount) => prevCount + 1);
         }
-
-        // Immediately proceed to the next round after answering
+    
         setTimeout(() => {
             if (currentRound < questionBank.length) {
-                setCurrentRound(prevRound => prevRound + 1);
-            } else if (currentRound === questionBank.length) {
+                setCurrentRound((prevRound) => prevRound + 1);
+            } else {
                 console.log("Round completed");
                 console.log("Accuracy Rate:", calculateAccuracyRate() + "%");
                 console.log("Average Attempts per Question:", calculateAverageAttempts());
+                console.log("Average Answer Time:", calculateAverageAnswerTime() + "s");
+                navigate('/dashboard'); // Navigate after displaying metrics
             }
-        }, 500); // Adding a small delay for UX purposes
+        }, 500);
     };
 
-    // Function to load the next round
     const handleNextRound = () => {
-        setHasTimerExpired(false); // Reset timer expired status
-        setIsAnswered(false); // Enable buttons for the next question
+        setHasTimerExpired(false);
+        setIsAnswered(false);
         if (currentRound < questionBank.length) {
-            setCurrentRound(prevRound => prevRound + 1);
-        } else if (currentRound === questionBank.length) {
+            setCurrentRound((prevRound) => prevRound + 1);
+        } else {
+            //navigate to dashboard
             console.log("Round completed");
+            
+            navigate('/dashboard');
         }
     };
 
+    // Utility functions for calculating metrics
     const calculateAverageAnswerTime = () => {
+        if (answerTimes.length === 0) return 0;
         const sum = answerTimes.reduce((acc, time) => acc + time, 0);
-        return (sum / answerTimes.length).toFixed(2); // Returning with 2 decimal places
+        return (sum / answerTimes.length).toFixed(2);
     };
 
     const calculateAccuracyRate = () => {
+        if (questionBank.length === 0) return 0;
         return ((correctAnswersCount / questionBank.length) * 100).toFixed(2);
     };
 
     const calculateAverageAttempts = () => {
+        if (questionBank.length === 0) return 0;
         return (attempts / questionBank.length).toFixed(2);
     };
 
-    // Calculate the number of questions per star
-    const questionsPerStar = Math.ceil(questionBank.length / 5); // Divide the number of questions by 5
-    const litStars = Math.floor((currentRound - 1) / questionsPerStar); // Calculate how many stars to light
+    const questionsPerStar = Math.ceil(questionBank.length / 5);
+    const litStars = Math.floor((currentRound - 1) / questionsPerStar);
 
     return (
         <div className="round-page">
             {currentQuestion ? (
                 <div className="round-container">
-
                     <section className="question-timer-container">
-                        <span className="questionNum noselect">Question: {currentRound}/{questionBank.length}</span>
+                        <span className="questionNum noselect">
+                            Question: {currentRound}/{questionBank.length}
+                        </span>
                         <span className="timer noselect">Timer: {timer}s</span>
                         <section className="starProgress">
                             {[...Array(5)].map((_, index) => (
@@ -166,7 +188,7 @@ function RoundPage() {
 
                     <section className="question-container">
                         <div className="question-context-container noselect">
-                            <span>{currentQuestion.questionContext}</span>
+                            <span>{currentQuestion}</span>
                         </div>
                         <div className="question-text-container noselect">
                             <span>{currentQuestion.questionText}</span>
@@ -185,6 +207,7 @@ function RoundPage() {
                             </button>
                         ))}
                     </section>
+
                 </div>
             ) : (
                 <LoadingSpinner />

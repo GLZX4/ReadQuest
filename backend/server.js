@@ -8,17 +8,21 @@ const authRoutes = require('./api/auth');       // Update to correct path
 const studentRoutes = require('./api/student'); // Update to correct path
 const tutorRoutes = require('./api/tutor');     // Update to correct path
 const adminRoutes = require('./api/admin');     // Update to correct path
+const performanceRoutes = require('./api/performance'); // Update to correct path
+const roundRoutes = require('./api/round');     // Update to correct path
 
 // Middleware
 app.use(cors());
-app.use(bodyparser.json());  // Make sure this is before app.use(authRoutes)
+app.use(bodyparser.json());
 app.use(express.json());
 
 // Define routes
 app.use('/api/student', studentRoutes);
 app.use('/api/tutor', tutorRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/auth', authRoutes); // Corrected path to mount the auth routes
+app.use('/api/auth', authRoutes);
+app.use('/api/performance', performanceRoutes);
+app.use('/api/round', roundRoutes)
 
 // Server listen
 const PORT = process.env.PORT || 5000;

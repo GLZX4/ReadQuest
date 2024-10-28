@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import AdminDash from '../features/dashboard/AdminDash';
 import StudentDash from '../features/dashboard/StudentDash';
 import TutorDash from '../features/dashboard/TutorDash';
-import LoadingSpinner from '../features/rounds/LoadingSpinner';
+import LoadingSpinner from '../features/round/LoadingSpinner';
 
 function DashboardPage() {
   const navigate = useNavigate();

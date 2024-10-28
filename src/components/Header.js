@@ -27,7 +27,7 @@ function Header() {
     }, []);
 
     // Function to log out and mark the user as logged out in the database
-    const fetchAdminData = async () => {
+    const logoutUser = async () => {
         try {
             localStorage.removeItem('name');
             localStorage.removeItem('token');
@@ -64,7 +64,7 @@ function Header() {
                     {userName !== 'Guest' && (
                         <button
                             className="logout"
-                            onClick={fetchAdminData}
+                            onClick={logoutUser}
                         >
                             Logout
                         </button>

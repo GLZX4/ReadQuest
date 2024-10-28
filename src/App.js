@@ -17,7 +17,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/round/:questionBankID" element={<RoundPage />} />
+          <Route path="/round" element={<RoundPage />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </MainLayout>

@@ -30,13 +30,13 @@ function HomePage() {
           <div className='feature-column'>
             <span className='feature-title'>Progress Tracking</span>
             <span className='feature-description'>Badges, Rewards, Progress Charts</span>
-            <img alt='Progress demonstration' className='featureIMG-demonstration'></img>
+            <img alt='Progress demonstration' className='featureIMG-demonstration tutorToolDemo'></img>
           </div>
           
           <div className='feature-column'>
             <span className='feature-title'>Tutor Tools</span>
             <span className='feature-description'>Tutors can track students progress and assign tasks</span>
-            <img alt='Tutor Tool Demonstration' className='featureIMG-demonstration'></img>
+            <div alt='Tutor Tool Demonstration' className='featureIMG-demonstration '></div>
           </div>
         </div>
       </section>

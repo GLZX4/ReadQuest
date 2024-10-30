@@ -98,7 +98,7 @@
   
 .feature-column {
     flex: 1;
-    min-height: 150px;
+    min-height: 450px;
     padding: 20px;
     text-align: center;
     background-color: #f9f9f9;
@@ -107,6 +107,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .feature-title {
@@ -117,4 +118,21 @@
 .feature-description {
     font-size: 1.2em;
     margin-bottom: 10px;
+}
+
+.featureIMG-demonstration {
+    margin-top: 20px;
+    position: relative;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 65%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tutorToolDemo {
+    background-image: url('../assets/images/home-tracking-demo.png');
 }

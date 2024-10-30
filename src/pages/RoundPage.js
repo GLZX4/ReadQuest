@@ -8,53 +8,46 @@ import '../styles/roundpage.css';
 
 function RoundPage() {
     const disableTimer = true;
-    const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [answers, setAnswers] = useState([]);
-    const [currentRound, setCurrentRound] = useState(1);
     const [timer, setTimer] = useState(30);
     const [isAnswered, setIsAnswered] = useState(false);
-    const [questionBank, setQuestionBank] = useState([]);
     const [hasTimerExpired, setHasTimerExpired] = useState(false);
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
-    const [answerTimes, setAnswerTimes] = useState([]);
+    const [qBankID, setQBankID] = useState(null);
     const [startTime, setStartTime] = useState(null);
-    const [attempts, setAttempts] = useState(0);
+    const [showCorrectOverlay, setShowCorrectOverlay] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [answers, setAnswers] = useState([]);
+    const [roundID, setRoundID] = useState(null);
+    const [questionIndex, setQuestionIndex] = useState(0);
+    const [currentRound, setCurrentRound] = useState(1);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRoundByDifficulty = async () => {
             try {
+                console.log("Starting fetchRoundByDifficulty...");
                 const token = localStorage.getItem('token');
                 const decoded = jwtDecode(token);
                 const userID = decoded.userId;
+                console.log("User ID:", userID);
     
                 const difficultyResponse = await axios.get('http://localhost:5000/api/performance/students/get-difficulty', { 
                     params: { userID } 
                 });
     
                 const difficulty = difficultyResponse.data.difficulty;
-                console.log('Fetched Difficulty:', difficulty);
+                console.log("Fetched Difficulty:", difficulty);
     
                 const roundResponse = await axios.get('http://localhost:5000/api/round/select-by-difficulty', {
                     params: { difficulty }
                 });
     
                 const round = roundResponse.data;
-                console.log('Fetched Round:', round);
+                setRoundID(round.roundID);    // Set roundID
+                setQBankID(round.QBankID);    // Set qBankID
+                console.log("Set RoundID:", round.roundID);
+                console.log("Set QBankID:", round.QBankID);
     
-                const questionBankResponse = await axios.get('http://localhost:5000/api/round/retrieve-qBank', {
-                    params: { QBankID: round.QBankID }
-                });
-    
-                const questions = questionBankResponse.data;
-                console.log('Fetched Question Bank:', questions);
-    
-                if (questions.length > 0) {
-                    setQuestionBank(questions);  // Store all questions in the bank
-                    setCurrentRound(1);          // Start at the first question
-                } else {
-                    console.error('Question Bank is empty or invalid');
-                }
             } catch (error) {
                 console.error('Error fetching round by difficulty:', error);
             }
@@ -63,135 +56,102 @@ function RoundPage() {
         fetchRoundByDifficulty();
     }, []);
     
-
-    // Load the initial question once the question bank is set
+    // New useEffect to fetch questions only when qBankID is defined
     useEffect(() => {
-        if (questionBank.length > 0) {
-            loadQuestion(currentRound - 1);
-        }
-    }, [questionBank, currentRound]);
-
-    // Load each question and initialize state
-    const loadQuestion = (questionIndex) => {
-        if (questionBank[questionIndex]) {
-            const questionData = questionBank[questionIndex];
-            console.log('Question Data:', questionData.QuestionText);
-            setCurrentQuestion(questionData.QuestionText);
-
-            // Parse AnswerOptions if it's a JSON string
-            let parsedAnswers = [];
-            try {
-                parsedAnswers = JSON.parse(questionData.AnswerOptions).map(option => option.option);
-            } catch (e) {
-                console.error("Failed to parse AnswerOptions:", e);
-            }
-            
-            setAnswers(parsedAnswers);
-            setIsAnswered(false);
+        if (qBankID !== null) {  // Check if qBankID is available before calling fetchQuestion
+            console.log("qBankID is set:", qBankID);
+            console.log("Current questionIndex:", questionIndex);
+    
+            const fetchQuestion = async () => {
+                try {
+                    console.log("Starting fetchQuestion with qBankID:", qBankID, "and questionIndex:", questionIndex);
+                    const response = await axios.get('http://localhost:5000/api/round/get-question', {
+                        params: { qBankID, questionIndex }
+                    });
+    
+                    const questionData = response.data;
+                    console.log("Fetched Question Data:", questionData);
+    
+                    let parsedAnswers = [];
+                    try {
+                        parsedAnswers = JSON.parse(questionData.AnswerOptions).map(option => option.option);
+                        console.log("Parsed Answer Options:", parsedAnswers);
+                    } catch (e) {
+                        console.error("Failed to parse AnswerOptions:", e);
+                    }
+    
+                    setCurrentQuestion({
+                        questionID: questionData.QuestionID,
+                        context: questionData.QuestionContext,
+                        text: questionData.QuestionText,
+                    });
+                    setAnswers(parsedAnswers);
+    
+                } catch (error) {
+                    console.error('Error fetching question:', error);
+                }
+            };
+    
             setTimer(30); // Reset the timer
-            setStartTime(Date.now()); // Record the start time
-            setAttempts(0); // Reset attempts for the new question
-        }
-    };
-
-
-    // Timer logic
-    useEffect(() => {
-        if (disableTimer) {
-            return;
-        }
-
-        if (timer > 0 && !isAnswered && !hasTimerExpired) {
-            const timerInterval = setInterval(() => {
-                setTimer((prev) => prev - 1);
-            }, 1000);
-            return () => clearInterval(timerInterval);
-        } else if (timer === 0 && !hasTimerExpired) {
-            setHasTimerExpired(true);
-            handleNextRound();
-        }
-    }, [timer, isAnswered, hasTimerExpired]);
-
-    // Handle answer submission and load the next question
-    const handleAnswerAndAdvance = (selectedAnswer) => {
-        setAttempts((prevAttempts) => prevAttempts + 1);
-        const timeTaken = (Date.now() - startTime) / 1000;
-        setAnswerTimes((prevTimes) => [...prevTimes, timeTaken]);
-        setIsAnswered(true);
-    
-        // Verify that currentQuestion exists and has the correct answer
-        if (currentQuestion && selectedAnswer === currentQuestion.correctAnswer) {
-            setCorrectAnswersCount((prevCount) => prevCount + 1);
-        }
-    
-        setTimeout(() => {
-            if (currentRound < questionBank.length) {
-                setCurrentRound((prevRound) => prevRound + 1);
-            } else {
-                console.log("Round completed");
-                console.log("Accuracy Rate:", calculateAccuracyRate() + "%");
-                console.log("Average Attempts per Question:", calculateAverageAttempts());
-                console.log("Average Answer Time:", calculateAverageAnswerTime() + "s");
-                navigate('/dashboard'); // Navigate after displaying metrics
-            }
-        }, 500);
-    };
-
-    const handleNextRound = () => {
-        setHasTimerExpired(false);
-        setIsAnswered(false);
-        if (currentRound < questionBank.length) {
-            setCurrentRound((prevRound) => prevRound + 1);
+            fetchQuestion();
         } else {
-            //navigate to dashboard
-            console.log("Round completed");
-            
-            navigate('/dashboard');
+            console.log("qBankID is not set yet. Waiting for qBankID...");
+        }
+    }, [qBankID, questionIndex]);  // Run only when qBankID and questionIndex are available
+
+    
+    const handleNextQuestion = () => {
+        setQuestionIndex((prevIndex) => prevIndex + 1);
+    };
+
+    const handleAnswerAndAdvance = async (selectedAnswer) => {
+        setIsAnswered(true);
+
+        try {
+            const response = await axios.post('http://localhost:5000/api/round/validate-answer', {
+                questionID: currentQuestion.questionID,
+                selectedAnswer,
+            });
+
+            const { isCorrect } = response.data;
+
+            if (isCorrect) {
+                setCorrectAnswersCount(prev => prev + 1);
+                setShowCorrectOverlay(true); // Show correct overlay briefly
+                setTimeout(() => setShowCorrectOverlay(false), 500);
+            }
+
+            setTimeout(() => {
+                handleNextQuestion();
+            }, 1000); // Adjust delay if needed
+
+        } catch (error) {
+            console.error('Error validating answer:', error);
         }
     };
-
-    // Utility functions for calculating metrics
-    const calculateAverageAnswerTime = () => {
-        if (answerTimes.length === 0) return 0;
-        const sum = answerTimes.reduce((acc, time) => acc + time, 0);
-        return (sum / answerTimes.length).toFixed(2);
-    };
-
-    const calculateAccuracyRate = () => {
-        if (questionBank.length === 0) return 0;
-        return ((correctAnswersCount / questionBank.length) * 100).toFixed(2);
-    };
-
-    const calculateAverageAttempts = () => {
-        if (questionBank.length === 0) return 0;
-        return (attempts / questionBank.length).toFixed(2);
-    };
-
-    const questionsPerStar = Math.ceil(questionBank.length / 5);
-    const litStars = Math.floor((currentRound - 1) / questionsPerStar);
 
     return (
         <div className="round-page">
             {currentQuestion ? (
-                <div className="round-container">
+                <div className={`round-container ${showCorrectOverlay ? 'correct-overlay' : ''}`}>
+                    {showCorrectOverlay && (
+                        <div className="tick-mark-overlay"></div>
+                    )}
                     <section className="question-timer-container">
                         <span className="questionNum noselect">
-                            Question: {currentRound}/{questionBank.length}
+                            Question: {currentRound}
                         </span>
                         <span className="timer noselect">Timer: {timer}s</span>
                         <section className="starProgress">
-                            {[...Array(5)].map((_, index) => (
-                                <div key={index} className={`star ${index < litStars ? "lit" : ""}`}></div>
-                            ))}
                         </section>
                     </section>
 
                     <section className="question-container">
                         <div className="question-context-container noselect">
-                            <span>{currentQuestion}</span>
+                            <span>{currentQuestion.context}</span>
                         </div>
                         <div className="question-text-container noselect">
-                            <span>{currentQuestion.questionText}</span>
+                            <span>{currentQuestion.text}</span>
                         </div>
                     </section>
 
@@ -207,7 +167,6 @@ function RoundPage() {
                             </button>
                         ))}
                     </section>
-
                 </div>
             ) : (
                 <LoadingSpinner />

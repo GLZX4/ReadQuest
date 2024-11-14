@@ -16,8 +16,8 @@ body {
     flex-direction: column;
     justify-content: center;
     margin-top: 50px;
-    border-radius: 10px; /* Apply border radius to the entire container */
-    box-sizing: border-box; /* Ensure padding and borders are included in the width/height calculations */
+    border-radius: 10px; 
+    box-sizing: border-box; 
 }
 
 .round-container * {
@@ -112,7 +112,7 @@ body {
     border-left: 4px solid #90C418;
     border-right: 4px solid #90C418;
     border-radius: 0px 10px 0px 0px;
-    background-color: #D1C4E9; /* Optional, ensure consistent background */
+    background-color: #D1C4E9; 
 }
 
 .question-context-container {
@@ -121,9 +121,10 @@ body {
     justify-content: center;
     width: 100%;
     min-height: 200px;
+    border-top-right-radius: 10px;
     padding: 30px;
     background-color: #E2F4FB; /* Light greenish-blue */
-    box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+    box-sizing: border-box; 
 }
 .question-context-container span {
     position: relative;

@@ -60,6 +60,7 @@ header {
     right: 50px;
     display: flex;
     flex-direction: row;
+    gap: 5px;
     justify-content: space-between;
     font-family: 'Inter', sans-serif;
 }

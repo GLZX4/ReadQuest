@@ -15,6 +15,7 @@ function RoundPage() {
     const [qBankID, setQBankID] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [showCorrectOverlay, setShowCorrectOverlay] = useState(false);
+    const [showIncorrectOverlay, setShowIncorrectOverlay] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [roundID, setRoundID] = useState(null);
@@ -31,13 +32,15 @@ function RoundPage() {
                 const userID = decoded.userId;
                 console.log("User ID:", userID);
     
+                // Fetch the difficulty First
                 const difficultyResponse = await axios.get('http://localhost:5000/api/performance/students/get-difficulty', { 
                     params: { userID } 
                 });
     
                 const difficulty = difficultyResponse.data.difficulty;
                 console.log("Fetched Difficulty:", difficulty);
-    
+                
+                // Fetch the round based on the chosen difficulty above
                 const roundResponse = await axios.get('http://localhost:5000/api/round/select-by-difficulty', {
                     params: { difficulty }
                 });
@@ -63,6 +66,7 @@ function RoundPage() {
             console.log("Current questionIndex:", questionIndex);
     
             const fetchQuestion = async () => {
+                // Fetch the question based on the qBankID and questionIndex
                 try {
                     console.log("Starting fetchQuestion with qBankID:", qBankID, "and questionIndex:", questionIndex);
                     const response = await axios.get('http://localhost:5000/api/round/get-question', {
@@ -101,7 +105,10 @@ function RoundPage() {
 
     
     const handleNextQuestion = () => {
+        // internal index counter to keep track of the question index
         setQuestionIndex((prevIndex) => prevIndex + 1);
+        // counter for displaying the current round, important to keep these seperate!
+        setCurrentRound((prevRound) => prevRound + 1);
     };
 
     const handleAnswerAndAdvance = async (selectedAnswer) => {
@@ -117,13 +124,16 @@ function RoundPage() {
 
             if (isCorrect) {
                 setCorrectAnswersCount(prev => prev + 1);
-                setShowCorrectOverlay(true); // Show correct overlay briefly
+                setShowCorrectOverlay(true);
                 setTimeout(() => setShowCorrectOverlay(false), 500);
+            } else {
+                setShowIncorrectOverlay(true);
             }
 
             setTimeout(() => {
                 handleNextQuestion();
             }, 1000); // Adjust delay if needed
+            setIsAnswered(false);
 
         } catch (error) {
             console.error('Error validating answer:', error);

@@ -5,8 +5,9 @@ import "../styles/header.css";
 
 function Header() {
 
-    const [userName, setUserName] = useState('');
+    const [userName, setUserName] = useState('Guest');
     const [userEmail, setUserEmail] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const date = new Date();
     const formattedDate = date.toLocaleString([], {
         hour: '2-digit',
@@ -17,13 +18,16 @@ function Header() {
     useEffect(() => {
         const storedName = localStorage.getItem('name');
         const storedEmail = localStorage.getItem('email');
+        const token = localStorage.getItem('token'); 
 
         if (storedName) {
-            setUserName(storedName);
+            const firstName = storedName.split(' ')[0];
+            setUserName(firstName);
         }
         if (storedEmail) {
             setUserEmail(storedEmail);
         }
+        setIsLoggedIn(!!token); // If token exists, user is logged in
     }, []);
 
     // Function to log out and mark the user as logged out in the database
@@ -33,6 +37,7 @@ function Header() {
             localStorage.removeItem('token');
             localStorage.removeItem('email');
             await axios.post('http://localhost:5000/api/auth/logout', { email: userEmail });
+            setUserName('Guest');
             console.log('Logged out successfully');
             window.location.href = '/login';
         } catch (error) {
@@ -55,8 +60,10 @@ function Header() {
 
             <div className="header-section">
                 <div className="account-container">
-                    <img className="account-rnd-image" alt="User Avatar"></img>
-                    <Link to="/Login" className="account-link">
+                <Link
+                        to={isLoggedIn ? "/dashboard" : "/login"} // Dynamic link based on login status
+                        className="account-link"
+                    >
                         <span className="account-name">{userName || 'Guest'}</span>
                     </Link>
 

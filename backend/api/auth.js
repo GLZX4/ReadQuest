@@ -83,7 +83,8 @@ router.post('/login', async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign({ userId: user.userID, role: user.Role }, JWT_SECRET, { expiresIn: '1h' });
-        res.send({ token });
+        const name = user.Name;
+        res.send({ token, name });
 
         // Update user's login status
         await sql.query`UPDATE Users SET loggedIn = 1 WHERE Email = ${email}`;

@@ -10,7 +10,7 @@ const tutorRoutes = require('./api/tutor');     // Update to correct path
 const adminRoutes = require('./api/admin');     // Update to correct path
 const performanceRoutes = require('./api/performance'); // Update to correct path
 const roundRoutes = require('./api/round');     // Update to correct path
-const metricRoutes = require('./api/metric');   // Update to correct path
+const metricRoutes = require('./api/metric');
 
 // Middleware
 app.use(cors());

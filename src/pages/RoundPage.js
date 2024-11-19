@@ -130,21 +130,41 @@ function RoundPage() {
         console.log("Round Stats:", roundStats);
     
         try {
-            const response = await axios.post(
-                'http://localhost:5000/api/metric/calculateMetrics',
+            const metricResponse = await axios.post(
+                'http://localhost:5000/api/metric/calculate-metrics',
                 roundStats
             );
-    
-            const { metrics, difficulty } = response.data;
-            console.log("Calculated Metrics:", metrics);
-            console.log("Recommended Difficulty:", difficulty);
-    
+        
+            const userID = jwtDecode(localStorage.getItem('token')).userId;
+            const { metrics } = metricResponse.data;
+        
+            const metricsWithUserID = {
+                ...metrics,
+                userID: parseInt(userID, 10), // Ensure userID is an integer
+                totalRoundsPlayed: parseInt(metrics.totalRoundsPlayed, 10),
+                averageAnswerTime: parseFloat(metrics.averageAnswerTime),
+                accuracyRate: parseFloat(metrics.accuracyRate),
+                attemptsPerQuestion: parseFloat(metrics.attemptsPerQuestion),
+                completionRate: parseFloat(metrics.completionRate),
+                consistencyScore: parseFloat(metrics.consistencyScore),
+            };
+            
+        
+            console.log("Calculated Metrics with UserID:", metricsWithUserID);
+        
+            const updateResponse = await axios.post(
+                'http://localhost:5000/api/performance/students/update-metrics',
+                metricsWithUserID
+            );
+        
             navigate("/dashboard");
         } catch (error) {
             console.error("Error updating performance metrics:", error);
             navigate("/dashboard");
         }
+        
     };
+    
     
     
     

@@ -46,11 +46,13 @@ router.get('/tutor/current-specific-metric', async (req, res) => {
         console.error('Error getting performance metrics:', error);
     }
 });
+ 
 
 router.post('/students/update-metrics', async (req, res) => {
     console.log("entered update metrics");
     console.log("updateMetrics req body: " + req.body);
     const { accuracyRate, averageAnswerTime, attemptsPerQuestion, consistency, completionRate, userID } = req.body;
+    console.log("extracted values: " + accuracyRate + " " + averageAnswerTime + " " + attemptsPerQuestion + " " + consistency + " " + completionRate + " " + userID);
 
     if (
         accuracyRate < 0 || accuracyRate > 100 ||
@@ -110,10 +112,6 @@ router.post('/students/update-metrics', async (req, res) => {
         res.status(500).json({ message: 'Error updating performance metrics' });
     }
 });
-
-
-
-module.exports = router;
 
 
 

@@ -15,27 +15,23 @@ const JWT_SECRET = 'your_jwt_secret_here';
 
 // Register endpoint
 router.post('/register', async (req, res) => {
+    // Remove Me!!!!!
     console.log('Received registration request:', req.body); // Debug log
     try {
-        // Extract request body
         const { name, email, password, role, schoolCode } = req.body;
 
-        // Validate request
         if (!name || !email || !password || !role || !schoolCode) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Fetch school ID
         const schoolResult = await sql.query`SELECT schoolID FROM Schools WHERE schoolCode = ${schoolCode}`;
         if (schoolResult.recordset.length === 0) {
             return res.status(400).json({ message: 'Invalid school code.' });
         }
         const schoolID = schoolResult.recordset[0].schoolID;
 
-        // Fetch or insert role ID
         let roleResult = await sql.query`SELECT roleID FROM Roles WHERE Role = ${role}`;
         let roleID;
 
@@ -47,7 +43,6 @@ router.post('/register', async (req, res) => {
             roleID = roleResult.recordset[0].roleID;
         }
 
-        // Insert user into database
         await sql.query`
             INSERT INTO Users (Name, Email, UserPassword, roleID, schoolID) 
             VALUES (${name}, ${email}, ${hashedPassword}, ${roleID}, ${schoolID})

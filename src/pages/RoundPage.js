@@ -227,7 +227,6 @@ function RoundPage() {
         if (disableTimer) {
             return;
         }
-
         if (timer > 0 && !isAnswered) {
             const timerInterval = setInterval(() => {
                 setTimer((prev) => prev - 1);
@@ -237,7 +236,7 @@ function RoundPage() {
         } else if (timer === 0 && !isAnswered) {
             handleTimeout(); // Handle timeout when timer reaches 0
         }
-    }, [timer, isAnswered]);
+    }, [timer, isAnswered, disableTimer]);
 
 
 

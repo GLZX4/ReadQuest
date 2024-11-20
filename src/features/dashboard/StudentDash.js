@@ -4,35 +4,13 @@ import { useNavigate } from "react-router-dom";
 import BarChart from "./graphs/BarChart";
 import RoundScroller from "./graphs/RoundScroller";
 import Achievements from "../progress/Achievements";
+import DashboardLayout from "../dashboard/DashboardLayout";
+import getOrdinalSuffix from "../../services/OrdinalSuffix";
 import "../../styles/dashboard.css";
-
-const studentId = 1; // Assuming studentId is 1 for now
-
-// Function to add ordinal suffixes to day numbers
-const getOrdinalSuffix = (day) => {
-  if (day > 3 && day < 21) return day + "th";
-  switch (day % 10) {
-    case 1:
-      return day + "st";
-    case 2:
-      return day + "nd";
-    case 3:
-      return day + "rd";
-    default:
-      return day + "th";
-  }
-};
-
-// Function to format date to "Month the daySuffix" format
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const options = { month: "long" };
-  const month = new Intl.DateTimeFormat("en-US", options).format(date);
-  const day = date.getDate();
-  return `${month} the ${getOrdinalSuffix(day)}`;
-};
+import { jwtDecode } from 'jwt-decode';
 
 const StudentDash = () => {
+  const [studentId, setStudentId] = useState(0);
   const [numOfRounds, setNumOfRounds] = useState([
     { roundNum: 1, completed: "complete" },
     { roundNum: 2, completed: "partial" },
@@ -43,12 +21,32 @@ const StudentDash = () => {
     { roundNum: 7, completed: "complete" },
     { roundNum: 8, completed: "partial" },
   ]);
-
   const [barChartData, setBarChartData] = useState([]);
   const navigate = useNavigate();
 
+  // Fetch student ID from JWT
   useEffect(() => {
-    // Format initial data for the bar chart
+    try {
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const userID = decoded.userId;
+      setStudentId(userID);
+    } catch (error) {
+      console.error("Error fetching student ID", error);
+    }
+  }, []);
+
+  // Format date helper
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { month: "long" };
+    const month = new Intl.DateTimeFormat("en-US", options).format(date);
+    const day = date.getDate();
+    return `${month} the ${getOrdinalSuffix(day)}`;
+  };
+
+  // Initialize bar chart data
+  useEffect(() => {
     const formattedData = [
       { label: "2024-09-28", value: 150 },
       { label: "2024-09-29", value: 250 },
@@ -62,13 +60,14 @@ const StudentDash = () => {
     setBarChartData(formattedData);
   }, []);
 
+  // Fetch last 5 days of rounds
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/rounds/last-5-days");
         const data = response.data.map((item) => ({
           label: formatDate(item.day),
-          value: item.completedRounds * 50, // This should give meaningful values
+          value: item.completedRounds * 50,
         }));
         setBarChartData(data);
       } catch (error) {
@@ -84,36 +83,45 @@ const StudentDash = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <span className="dashboard-name">John Doe</span>
-      <div className="dashboard-structure">
-        <div className="dashboard-row">
-          <div className="dashboard-item weekProgress">
-            <span><b>Rounds Completed</b></span>
-            <RoundScroller rounds={numOfRounds} />
-          </div>
-          <div className="dashboard-item continueBtn">
-            <span><b>Continue To Play</b></span>
-            <button onClick={navigateToRound}>Continue...</button>
-          </div>
-          <div className="dashboard-item continueBtn">
-            <span><b>Play New Round</b></span>
-            <button className="newRound" onClick={navigateToRound}>New Round...</button>
-          </div>
+    <DashboardLayout role="Student">
+      <div className="dashboard-row">
+        <div className="dashboard-item weekProgress">
+          <span>
+            <b>Rounds Completed</b>
+          </span>
+          <RoundScroller rounds={numOfRounds} />
         </div>
-
-        <div className="dashboard-row">
-          <div className="dashboard-item barGraph">
-            <span><b>Last Rounds in 5 Days</b></span>
-            <BarChart data={barChartData} />
-          </div>
-          <div className="dashboard-item achievements">
-            <span><b>Achievements</b></span>
-            <Achievements studentId={studentId} />
-          </div>
+        <div className="dashboard-item continueBtn">
+          <span>
+            <b>Continue To Play</b>
+          </span>
+          <button onClick={navigateToRound}>Continue...</button>
+        </div>
+        <div className="dashboard-item continueBtn">
+          <span>
+            <b>Play New Round</b>
+          </span>
+          <button className="newRound" onClick={navigateToRound}>
+            New Round...
+          </button>
         </div>
       </div>
-    </div>
+
+      <div className="dashboard-row">
+        <div className="dashboard-item barGraph">
+          <span>
+            <b>Last Rounds in 5 Days</b>
+          </span>
+          <BarChart data={barChartData} />
+        </div>
+        <div className="dashboard-item achievements">
+          <span>
+            <b>Achievements</b>
+          </span>
+          <Achievements studentId={studentId} />
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

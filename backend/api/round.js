@@ -1,30 +1,28 @@
-// backend/api/round.js
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const router = express.Router();
-
-
 module.exports = (pool) => {
+    const router = express.Router();
+
     // Select a round by difficulty and return roundID and qBankID
     router.get('/select-by-difficulty', async (req, res) => {
         const { difficulty } = req.query;
-        console.log('Difficulty in select-by-difficulty:', difficulty, typeof difficulty);
 
         if (typeof difficulty !== 'string') {
             return res.status(400).json({ message: 'Invalid difficulty parameter type' });
         }
 
         try {
-            const rounds = await pool.query`SELECT roundID, QBankID FROM Rounds WHERE DifficultyLevel = ${difficulty}`;
+            const rounds = await pool.query(
+                'SELECT roundID, QBankID FROM Rounds WHERE DifficultyLevel = $1',
+                [difficulty]
+            );
 
-            if (rounds.recordset.length === 0) {
+            if (rounds.rows.length === 0) {
                 return res.status(404).json({ message: 'No rounds found for this difficulty level' });
             }
 
-            const selectedRound = rounds.recordset[Math.floor(Math.random() * rounds.recordset.length)];
+            const selectedRound = rounds.rows[Math.floor(Math.random() * rounds.rows.length)];
             res.json(selectedRound);
         } catch (error) {
             console.error('Error fetching round:', error);
@@ -32,75 +30,78 @@ module.exports = (pool) => {
         }
     });
 
-
-    // Retrieve question bank by qBankID - obsolete!
+    // Retrieve question bank by QBankID
     router.get('/retrieve-qBank', async (req, res) => {
-        const QBankID = req.query.QBankID;
-        console.log('qBank in retrieve-qBank:', QBankID, typeof QBankID);
+        const { QBankID } = req.query;
+
+        if (!QBankID) {
+            return res.status(400).json({ message: 'QBankID is required' });
+        }
 
         try {
-            // Fetch all questions that match the specified QBankID
-            const questionBank = await pool.query`SELECT * FROM QuestionBank WHERE QBankID = ${QBankID}`;
+            const questionBank = await pool.query('SELECT * FROM QuestionBank WHERE QBankID = $1', [QBankID]);
 
-            if (questionBank.recordset.length === 0) {
+            if (questionBank.rows.length === 0) {
                 return res.status(404).json({ message: 'No question bank found for this round' });
             }
 
-            res.json(questionBank.recordset); // Return all questions in the response
+            res.json(questionBank.rows); // Return all questions in the response
         } catch (error) {
             console.error('Error fetching question bank:', error);
             res.status(500).json({ message: 'Error fetching question bank' });
         }
     });
 
-
     // Get a specific question by QBankID and questionIndex
     router.get('/get-question', async (req, res) => {
         const { qBankID, questionIndex } = req.query;
-        console.log("Entered get-question");
-        console.log('qBankID in get-question:', qBankID, typeof qBankID);
-        console.log('questionIndex in get-question:', questionIndex, typeof questionIndex);
 
         if (!qBankID || questionIndex === undefined) {
             return res.status(400).json({ message: 'qBankID and questionIndex are required' });
         }
 
         try {
-            // Convert questionIndex to an integer to ensure it's passed correctly in the pool query
             const questionIdx = parseInt(questionIndex, 10);
-            const result = await pool.query`
-                SELECT *
-                FROM QuestionBank
-                WHERE QBankID = ${qBankID}
-                ORDER BY QuestionID
-                OFFSET ${questionIdx} ROWS
-                FETCH NEXT 1 ROWS ONLY;
-            `;
 
-            if (result.recordset.length === 0) {
+            const result = await pool.query(
+                `SELECT * 
+                 FROM QuestionBank 
+                 WHERE QBankID = $1
+                 ORDER BY QuestionID
+                 OFFSET $2 LIMIT 1`,
+                [qBankID, questionIdx]
+            );
+
+            if (result.rows.length === 0) {
                 return res.status(404).json({ message: 'Question not found' });
             }
 
-            res.json(result.recordset[0]);
+            res.json(result.rows[0]);
         } catch (error) {
             console.error('Error fetching question:', error);
             res.status(500).json({ message: 'Error fetching question' });
         }
     });
 
-
     // Route to validate an answer
     router.post('/validate-answer', async (req, res) => {
         const { questionID, selectedAnswer } = req.body;
 
-        try {
-            const result = await pool.query`SELECT CorrectAnswer FROM QuestionBank WHERE QuestionID = ${questionID}`;
-            const correctAnswer = result.recordset[0]?.CorrectAnswer;
+        if (!questionID || !selectedAnswer) {
+            return res.status(400).json({ message: 'questionID and selectedAnswer are required' });
+        }
 
-            if (!correctAnswer) {
+        try {
+            const result = await pool.query(
+                'SELECT CorrectAnswer FROM QuestionBank WHERE QuestionID = $1',
+                [questionID]
+            );
+
+            if (result.rows.length === 0) {
                 return res.status(404).json({ message: 'Question not found' });
             }
 
+            const correctAnswer = result.rows[0].correctanswer;
             const isCorrect = selectedAnswer === correctAnswer;
 
             res.json({
@@ -112,5 +113,6 @@ module.exports = (pool) => {
             res.status(500).json({ message: 'Error validating answer' });
         }
     });
+
     return router;
-}
+};

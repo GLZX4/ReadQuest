@@ -18,12 +18,14 @@ function AdminDash() {
   useEffect(() => {
     const fetchSchools = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/schoolsFetch');
-        setSchools(response.data);
+          const response = await axios.get('http://localhost:5000/api/admin/schoolsFetch');
+          console.log('Fetched Schools in Frontend:', response.data); // Debugging log
+          setSchools(response.data); // Directly set the response without filtering
       } catch (error) {
-        console.error('Error fetching schools:', error);
+          console.error('Error fetching schools:', error);
       }
-    };
+  };
+  
 
     const fetchAdminData = async () => {
       try {
@@ -97,10 +99,12 @@ function AdminDash() {
             </option>
             {schools.map((school) => (
               <option key={school.schoolID} value={school.schoolID}>
-                {school.schoolName}
+                {school.schoolname || 'Unnamed School'}
               </option>
             ))}
           </select>
+
+
           <button className="code-generate-btn" onClick={codeSubmission}>
             Generate Code
           </button>

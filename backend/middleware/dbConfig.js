@@ -1,29 +1,28 @@
-//backend/dbConfig.js
+const { Pool } = require('pg');
+require('dotenv').config({ path: '../readquestDB.env' }); // Load environment variables
 
-const sql = require('mssql');
+// Set up the PostgreSQL connection pool
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    ssl: { rejectUnauthorized: false }, // Necessary for Supabase
+});
 
-const dbConfig = {
-    user: 'user_db_2218541_readquest',
-    password: 'Milliemolly00',
-    server: 'mssql.chester.network', // For local use: 'localhost'
-    database: 'db_2218541_readquest',
-    options: {
-      encrypt: true, // Use encryption for data transfer (required for Azure)
-      trustServerCertificate: true, // Required if you're developing locally
-    },
-  };
-
-
-  async function connectToDatabase() {
-    try {
-        await sql.connect(dbConfig);
-        console.log('Connected to the database');
-    } catch (error) {
-        console.error('Error connecting to the database:', error);
+// Test the database connection
+pool.connect((err) => {
+    if (err) {
+        console.error('Failed to connect to the database:', err.message);
+        console.log('DB_HOST:', process.env.DB_HOST);
+        console.log('DB_PORT:', process.env.DB_PORT);
+        console.log('DB_NAME:', process.env.DB_NAME);
+        console.log('DB_USER:', process.env.DB_USER);
+        console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
+    } else {
+        console.log('Connected to the PostgreSQL database.');
     }
-  }
-  
-  module.exports = {
-    connectToDatabase,
-    sql,
-};
+});
+
+module.exports = pool;

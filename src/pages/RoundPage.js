@@ -164,10 +164,6 @@ function RoundPage() {
         }
         
     };
-    
-    
-    
-    
 
 
     const handleNextQuestion = () => {

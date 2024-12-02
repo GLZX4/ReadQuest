@@ -93,7 +93,7 @@ function RoundPage() {
                     setCurrentQuestion({
                         questionID: questionData.questionid,
                         context: questionData.questioncontext,
-                        text: questionData.quetiontext,
+                        text: questionData.questiontext,
                     });
                     setAnswers(parsedAnswers);
                     setTotalQuestions(parsedAnswers.length); // Store the total questions for the round

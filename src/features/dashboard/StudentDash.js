@@ -89,7 +89,7 @@ const StudentDash = () => {
           <span>
             <b>Rounds Completed</b>
           </span>
-          <RoundScroller rounds={numOfRounds} />
+          <RoundScroller userID={studentId} />
         </div>
         <div className="dashboard-item continueBtn">
           <span>

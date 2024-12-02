@@ -34,7 +34,7 @@
     transform: scale(1.1);
 }
 
-.round-complete {
+.round-completed {
     background: #4caf50; /* Green for completed */
 }
 

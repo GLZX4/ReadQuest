@@ -8,7 +8,7 @@ function StudentContainer({ student }) {
 
     return (
         <div className="studentContainer">
-            <div className="studentSummary" onClick={toggleExpand}>
+            <div className="studentSummary noselect" onClick={toggleExpand}>
                 <span className=" studentItem studentName">{student.name}</span>
 
                 <span className="toggleDetails">
@@ -19,7 +19,6 @@ function StudentContainer({ student }) {
             {isExpanded ? (
                 <div className="studentDetails">
                     {/* Add detailed information here */}
-                    <span className="studentDetail"><b>Email:</b> {student.Email || "N/A"}</span>
                     <span className="studentDetail"><b>Last Active:</b> {student.LastActive || "Unknown"}</span>
                     <span className="studentItem">
                     <b>Rounds Completed:</b> {student.totalrounds}

@@ -11,19 +11,11 @@ import { jwtDecode } from 'jwt-decode';
 
 const StudentDash = () => {
   const [studentId, setStudentId] = useState(0);
-  const [numOfRounds, setNumOfRounds] = useState([
-    { roundNum: 1, completed: "complete" },
-    { roundNum: 2, completed: "partial" },
-    { roundNum: 3, completed: "complete" },
-    { roundNum: 4, completed: "incomplete" },
-    { roundNum: 5, completed: "incomplete" },
-    { roundNum: 6, completed: "complete" },
-    { roundNum: 7, completed: "complete" },
-    { roundNum: 8, completed: "partial" },
-  ]);
   const [barChartData, setBarChartData] = useState([]);
   const navigate = useNavigate();
 
+
+  
   // Fetch student ID from JWT
   useEffect(() => {
     try {

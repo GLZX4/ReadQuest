@@ -63,6 +63,7 @@ function AdminDash() {
     };
 
     try {
+      console.log('schoolID:', selectedSchoolID);
       await axios.post('http://localhost:5000/api/admin/tutorAccountCode', data);
       console.log('Code Submitted Successfully');
     } catch (error) {
@@ -98,7 +99,7 @@ function AdminDash() {
               Select a School
             </option>
             {schools.map((school) => (
-              <option key={school.schoolID} value={school.schoolID}>
+              <option key={school.schoolid} value={school.schoolid}>
                 {school.schoolname || 'Unnamed School'}
               </option>
             ))}

@@ -39,6 +39,7 @@ function RoundPage() {
                 // Fetch the difficulty First
                 const difficultyResponse = await axios.get('http://localhost:5000/api/performance/students/get-difficulty', { 
                     params: { userID } 
+                    
                 });
     
                 const difficulty = difficultyResponse.data.difficulty;
@@ -50,8 +51,9 @@ function RoundPage() {
                 });
     
                 const round = roundResponse.data;
-                setRoundID(round.roundID); 
-                setQBankID(round.QBankID);    
+                console.log('roundID: ', round.roundid, 'QBankID: ', round.qbankid);
+                setRoundID(round.roundid); 
+                setQBankID(round.qbankid);    
     
             } catch (error) {
                 console.error('Error fetching round by difficulty:', error);
@@ -83,15 +85,15 @@ function RoundPage() {
     
                     let parsedAnswers = [];
                     try {
-                        parsedAnswers = JSON.parse(questionData.AnswerOptions).map((option) => option.option);
+                        parsedAnswers = JSON.parse(questionData.answeroptions).map((option) => option.option);
                     } catch (e) {
                         console.error("Failed to parse answer options:", e);
                     }
     
                     setCurrentQuestion({
-                        questionID: questionData.QuestionID,
-                        context: questionData.QuestionContext,
-                        text: questionData.QuestionText,
+                        questionID: questionData.questionid,
+                        context: questionData.questioncontext,
+                        text: questionData.quetiontext,
                     });
                     setAnswers(parsedAnswers);
                     setTotalQuestions(parsedAnswers.length); // Store the total questions for the round

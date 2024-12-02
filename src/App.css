@@ -1,7 +1,11 @@
 body {
+  position: relative;
   background-color: #1F0333;
+  margin: 0;
+  padding: 0;
 }
 .App {
+  position: relative;
   text-align: center;
 }
 

@@ -16,4 +16,42 @@ body, html {
     margin-top: 100px;
 }
 
+/* mainLayout.css */
+.background-container {
+    position: fixed; /* Sticks it to the viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    pointer-events: none; /* Prevents any interaction with the background */
+    z-index: -1; /* Sends it behind everything */
+    overflow: hidden; /* Ensures nothing escapes */
+}
 
+
+.question-mark{
+    position: absolute;
+    font-size: 20px;
+    color: #47005A;
+    animation: float 10s linear infinite, fade 5s ease-in-out infinite;
+  }
+  
+  
+  @keyframes float {
+    from {
+        transform: translateY(100vh) rotate(0deg); /* Start at the bottom */
+    }
+    to {
+        transform: translateY(-10vh) rotate(360deg); /* Move off the top */
+    }
+  }
+  
+  @keyframes fade {
+    0%, 100% {
+        opacity: 0; /* Start and end invisible */
+    }
+    50% {
+        opacity: 1; /* Fully visible in the middle */
+    }
+  }
+  

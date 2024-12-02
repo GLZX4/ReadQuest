@@ -1,0 +1,38 @@
+/*StudentContainer.css*/
+
+.studentContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap; /* Prevent wrapping since you want a column */
+    align-items: flex-start; /* Align items to the start of the column */
+    gap: 10px; /* Add consistent spacing between items */
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.studentSummary {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    cursor: pointer;
+}
+
+.studentContainer span {
+    margin-bottom: 5px;
+}
+
+.studentDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.studentItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}

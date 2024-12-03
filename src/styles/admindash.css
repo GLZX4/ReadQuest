@@ -24,3 +24,12 @@
 .toggle-school-form {
     max-width: 150px;
 }
+
+.code-generated {
+    font-size: 1.5em;
+}
+
+.Schools-search-bar {
+    width: 50%;
+    margin-bottom: 10px;
+}

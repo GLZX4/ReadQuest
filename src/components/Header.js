@@ -37,7 +37,7 @@ function Header() {
             localStorage.removeItem('token');
             localStorage.removeItem('email');
             await axios.post('http://localhost:5000/api/auth/logout', { email: userEmail });
-            setUserName('Guest');
+            setUserName('');
             console.log('Logged out successfully');
             window.location.href = '/login';
         } catch (error) {
@@ -61,14 +61,13 @@ function Header() {
             <div className="header-section">
                 <div className="account-container">
                 <Link
-                        to={isLoggedIn ? "/dashboard" : "/login"} // Dynamic link based on login status
+                        to={isLoggedIn ? "/dashboard" : "Login"} 
                         className="account-link"
                     >
-                        <span className="account-name">{userName || 'Guest'}</span>
+                        <span className="account-name">{userName || 'Login'}</span>
                     </Link>
 
-                    {/* Only show logout button if user is not 'Guest' */}
-                    {userName !== 'Guest' && (
+                    {userName !== 'Login' && (
                         <button
                             className="logout"
                             onClick={logoutUser}

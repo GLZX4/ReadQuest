@@ -9,3 +9,8 @@
     gap: 15px; /* Adjust gap for larger spacing between student containers */
     max-height: 300px;
 }
+
+.allschools {
+    display: flex;
+    flex: 2;
+}

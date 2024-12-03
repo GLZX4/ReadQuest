@@ -32,7 +32,7 @@ function StudentContainer({ student }) {
                     <span className="studentItem">
                         <b>Completion Rate: </b> {student.completionrate ? `${student.completionrate}%` : "N/A"}
                     </span>
-                </div>
+                </div> 
             ) : null}
         </div>
     );

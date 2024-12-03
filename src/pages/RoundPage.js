@@ -9,11 +9,11 @@ import '../styles/roundpage.css';
 function RoundPage() {
     const disableTimer = false;
     const [timer, setTimer] = useState(30);
+    const [startTime, setStartTime] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [hasTimerExpired, setHasTimerExpired] = useState(false);
     const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
     const [qBankID, setQBankID] = useState(null);
-    const [startTime, setStartTime] = useState(null);
     const [totalAnswerTime, setTotalAnswerTime] = useState(0);
     const [attempts, setAttempts] = useState(0);
     const [totalQuestions, setTotalQuestions] = useState(0);
@@ -96,7 +96,7 @@ function RoundPage() {
                         text: questionData.questiontext,
                     });
                     setAnswers(parsedAnswers);
-                    setTotalQuestions(parsedAnswers.length); // Store the total questions for the round
+                    setTotalQuestions((prevIndex) => prevIndex + 1); 
                 } catch (error) {
                     console.error("Error fetching question:", error);
                     handleRoundComplete();
@@ -115,9 +115,8 @@ function RoundPage() {
         console.log("Handling round completion...");
     
         const userID = jwtDecode(localStorage.getItem('token')).userId;
-        const completionRate =
-            totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
-    
+        const completionRate = totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
+        
         const roundStats = {
             correctAnswersCount,
             totalQuestions,
@@ -130,7 +129,8 @@ function RoundPage() {
         };
     
         console.log("Round Stats:", roundStats);
-    
+
+
         try {
             const metricResponse = await axios.post(
                 'http://localhost:5000/api/metric/calculate-metrics',
@@ -142,14 +142,15 @@ function RoundPage() {
         
             const metricsWithUserID = {
                 ...metrics,
-                userID: parseInt(userID, 10), // Ensure userID is an integer
-                totalRoundsPlayed: parseInt(metrics.totalRoundsPlayed, 10),
-                averageAnswerTime: parseFloat(metrics.averageAnswerTime),
-                accuracyRate: parseFloat(metrics.accuracyRate),
-                attemptsPerQuestion: parseFloat(metrics.attemptsPerQuestion),
-                completionRate: parseFloat(metrics.completionRate),
-                consistencyScore: parseFloat(metrics.consistencyScore),
+                userID: parseInt(userID, 10),
+                totalRoundsPlayed: parseInt(metrics.totalRoundsPlayed || 0, 10),
+                averageAnswerTime: parseFloat(metrics.averageAnswerTime || 0),
+                accuracyRate: parseFloat(metrics.accuracyRate || 0),
+                attemptsPerQuestion: parseFloat(metrics.attemptsPerQuestion || 0),
+                completionRate: parseFloat(metrics.completionRate || 0),
+                consistencyScore: parseFloat(metrics.consistencyScore || 0),
             };
+            
             
         
             console.log("Calculated Metrics with UserID:", metricsWithUserID);
@@ -179,21 +180,35 @@ function RoundPage() {
     };
 
 
-
     const handleAnswerAndAdvance = async (selectedAnswer) => {
         if (isAnswered) return;
         setIsAnswered(true);
         setAttempts((prev) => prev + 1);
     
-        const startTime = Date.now();
+        const endTime = Date.now();
+        const answerTime = (endTime - startTime) / 1000; // Calculate time in seconds
+        console.log(`Answer submitted at: ${endTime}`);
+        console.log(`Time taken to answer: ${answerTime}s`);
     
+        setTotalAnswerTime((prev) => {
+            const updatedTime = prev + answerTime;
+            console.log(`Updated total answer time: ${updatedTime}s`);
+            return updatedTime;
+        });
+    
+        // Proceed with answer validation
+        console.log("Selected Answer:", selectedAnswer, "QuestionID:", currentQuestion.questionID);
         try {
             const response = await axios.post('http://localhost:5000/api/round/validate-answer', {
                 questionID: currentQuestion.questionID,
                 selectedAnswer,
             });
     
-            const { isCorrect } = response.data;
+            console.log("Response from validate-answer:", response.data);
+    
+            const isCorrect = response.data;
+    
+            console.log("Is Correct:", isCorrect);
     
             if (isCorrect) {
                 setCorrectAnswersCount((prev) => prev + 1);
@@ -204,10 +219,8 @@ function RoundPage() {
                 setTimeout(() => setShowIncorrectOverlay(false), 500);
             }
     
-            const answerTime = (Date.now() - startTime) / 1000;
-            setTotalAnswerTime((prev) => prev + answerTime);
             setQuestionsAnswered((prev) => prev + 1);
-
+    
             setTimeout(() => {
                 handleNextQuestion();
             }, 1000);
@@ -215,7 +228,6 @@ function RoundPage() {
             console.error("Error validating answer:", error);
         }
     };
-    
     
 
 
@@ -253,7 +265,6 @@ function RoundPage() {
 
 
 
-    // Reset the timer whenever a new question is loaded
     useEffect(() => {
         if (currentQuestion) {
             console.log("Resetting state for new question...");
@@ -261,7 +272,12 @@ function RoundPage() {
             setHasTimerExpired(false); 
             setIsAnswered(false); 
             setShowCorrectOverlay(false); 
-            setShowIncorrectOverlay(false); 
+            setShowIncorrectOverlay(false);
+    
+            // Start tracking answer time
+            const questionStartTime = Date.now();
+            setStartTime(questionStartTime);
+            console.log(`Start time for question recorded: ${questionStartTime}`);
         }
     }, [currentQuestion]);
 

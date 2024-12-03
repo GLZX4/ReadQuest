@@ -102,11 +102,15 @@ module.exports = (pool) => {
             return res.status(400).json({ message: 'questionID and selectedAnswer are required' });
         }
 
+        console.log('Validating answer:', selectedAnswer, 'for question:', questionID);
+
         try {
             const result = await pool.query(
                 'SELECT CorrectAnswer FROM QuestionBank WHERE QuestionID = $1',
                 [questionID]
             );
+
+            console.log('Correct Answer result:', result.rows, 'selectedAnswer: ',selectedAnswer);
 
             if (result.rows.length === 0) {
                 return res.status(404).json({ message: 'Question not found' });
@@ -115,10 +119,7 @@ module.exports = (pool) => {
             const correctAnswer = result.rows[0].correctanswer;
             const isCorrect = selectedAnswer === correctAnswer;
 
-            res.json({
-                isCorrect,
-                correctAnswer, // Optionally include this if you want the frontend to display it
-            });
+            res.json(isCorrect);
         } catch (error) {
             console.error('Error validating answer:', error);
             res.status(500).json({ message: 'Error validating answer' });

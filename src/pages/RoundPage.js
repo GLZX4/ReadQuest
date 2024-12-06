@@ -119,11 +119,11 @@ function RoundPage() {
   // Handle end of the round
   const handleRoundComplete = async () => {
     console.log("Handling round completion...");
-
+  
     const userID = jwtDecode(localStorage.getItem("token")).userId;
     const completionRate =
       totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
-
+  
     const roundStats = {
       correctAnswersCount,
       totalQuestions,
@@ -134,18 +134,18 @@ function RoundPage() {
       completionRate,
       userID,
     };
-
+  
     console.log("Round Stats:", roundStats);
-
+  
     try {
       const metricResponse = await axios.post(
         "http://localhost:5000/api/metric/calculate-metrics",
         roundStats
       );
-
+  
       const userID = jwtDecode(localStorage.getItem("token")).userId;
       const { metrics } = metricResponse.data;
-
+  
       const metricsWithUserID = {
         ...metrics,
         userID: parseInt(userID, 10),
@@ -156,20 +156,41 @@ function RoundPage() {
         completionRate: parseFloat(metrics.completionRate || 0),
         consistencyScore: parseFloat(metrics.consistencyScore || 0),
       };
-
+  
       console.log("Calculated Metrics with UserID:", metricsWithUserID);
-
-      const updateResponse = await axios.post(
+  
+      // Update performance metrics
+      await axios.post(
         "http://localhost:5000/api/performance/students/update-metrics",
         metricsWithUserID
       );
-
+  
+      // Update achievements progress for roundsPlayed
+      await updateAchievementProgress("roundsPlayed", 1);
+  
       navigate("/dashboard");
     } catch (error) {
       console.error("Error updating performance metrics:", error);
       navigate("/dashboard");
     }
   };
+  
+
+  const updateAchievementProgress = async (metric, value) => {
+    const userID = jwtDecode(localStorage.getItem("token")).userId;
+    console.log(`Updating achievement progress for ${metric} by ${value} for ${userID}`);
+    try {
+      await axios.post("http://localhost:5000/api/achievement/update-progress", {
+        studentId: userID,
+        metric,
+        value,
+      });
+      console.log(`Updated achievement progress for ${metric} by ${value}`);
+    } catch (error) {
+      console.error("Error updating achievement progress:", error);
+    }
+  };
+  
 
   const handleNextQuestion = () => {
     // Increment the question index

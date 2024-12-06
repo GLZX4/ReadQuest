@@ -61,6 +61,7 @@
 
 .achievements-container {
     margin-top: 10px;
+    max-height: 350px;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;

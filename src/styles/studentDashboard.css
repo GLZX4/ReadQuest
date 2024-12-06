@@ -1,0 +1,53 @@
+.weekProgress {
+    flex: 2; /* Medium Tile*/
+}
+
+.continueBtn {
+    flex: 2; /* Small Tile */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.continueBtn button {
+    display: flex;
+    padding: 11px 33px;
+    max-height: 50px;
+    max-width: 180px;
+    text-decoration: none;
+    font-size: 22px;
+    color: white;
+    background: #6225e6;
+    transition: 1s;
+    box-shadow: 6px 6px 0 black;
+    transform: skewX(-15deg);
+    border: none;
+    cursor: pointer;
+    text-wrap: nowrap;
+}
+
+.newRound {
+    background: #90C418 !important;
+    color: black !important;
+}
+
+.continueBtn button:focus {
+    outline: none;
+}
+
+.continueBtn button:hover {
+    transition: 0.5s;
+    box-shadow: 10px 10px 0 #fbc638;
+}
+
+.continueBtn button:active {
+    transition: 0.1s;
+    box-shadow: 2px 2px 0 #fbc638;
+    transform: translate(4px, 4px);
+}
+
+.achievements {
+    flex: 2; /* Medium Tile */
+}

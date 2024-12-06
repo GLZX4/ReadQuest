@@ -7,6 +7,7 @@ import Achievements from "../progress/Achievements";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import getOrdinalSuffix from "../../services/OrdinalSuffix";
 import "../../styles/dashboard.css";
+import "../../styles/studentDashboard.css";
 import { jwtDecode } from 'jwt-decode';
 
 const StudentDash = () => {

@@ -1,7 +1,7 @@
-// src/features/progress/Achievements.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/achievements.css"
+import "../../styles/achievements.css";
+import achievementIcon from "../../assets/images/achievements/Play-10-Rounds.svg";
 
 function Achievements({ studentId }) {
   const [achievements, setAchievements] = useState([]);
@@ -9,32 +9,45 @@ function Achievements({ studentId }) {
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
-        // Assuming the endpoint is `/api/students/:studentId/achievements`
-        const response = await axios.get(`/api/students/${studentId}/achievements`);
+        const response = await axios.get(
+          "http://localhost:5000/api/student/fetch-achievements",
+          { params: { studentId } }
+        );
         setAchievements(response.data);
+        console.log("Achievements", response.data);
       } catch (error) {
-        console.error("Error fetching achievements:", error);
+        console.error("Error fetching achievements", error);
       }
     };
-
-    if (studentId) {
-      fetchAchievements();
-    }
+    fetchAchievements();
   }, [studentId]);
 
   return (
     <div className="achievements-container">
       {achievements.length > 0 ? (
-        achievements.map((achievement, index) => (
-          <div key={index} className={`achievement ${achievement.isUnlocked ? '' : 'locked'}`}>
-            <div className="achievement-icon">
-              <img
-                src={achievement.icon}
-                alt={achievement.name}
-                style={{ filter: achievement.isUnlocked ? 'none' : 'grayscale(100%)' }}
-              />
-            </div>
-            <span className="achievement-name">{achievement.name}</span>
+        achievements.map((achievement) => (
+          <div key={achievement.achievementID} className="achievement-item noselect">
+            <img
+              src={achievementIcon}
+              className="achievement-icon"
+              alt="Achievement Icon"
+            />
+            <h3>{achievement.title}</h3>
+            <p>{achievement.description}</p>
+            <p>Status: {achievement.status}</p>
+            {achievement.progress && (
+              <div className="progress-bar-container">
+                <p><b>Progress: </b></p>
+                <div
+                  className="progress-bar"
+                  style={{
+                    width: `${achievement.progressPercentage}%`,
+                  }}
+                >
+                  <p>{achievement.progressPercentage}%</p>
+                </div>
+              </div>
+            )}
           </div>
         ))
       ) : (

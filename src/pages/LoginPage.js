@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import AuthToggle from '../components/AuthToggle';
+import { jwtDecode } from 'jwt-decode';
 
 function LoginPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [isTutor, setIsTutor] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        if (decoded) {
+          window.location.href = '/dashboard';
+        }
+      } catch (error) {
+        console.error('Invalid token:', error);
+        localStorage.removeItem('token');
+      }
+    }
+  }, []);
 
   return (
     <div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/header.css";
+import HeaderText from "./HeaderText";
 
 function Header() {
 
@@ -33,13 +34,13 @@ function Header() {
     // Function to log out and mark the user as logged out in the database
     const logoutUser = async () => {
         try {
+            await axios.post('http://localhost:5000/api/auth/logout', { email: userEmail });
             localStorage.removeItem('name');
             localStorage.removeItem('token');
             localStorage.removeItem('email');
-            await axios.post('http://localhost:5000/api/auth/logout', { email: userEmail });
             setUserName('');
             console.log('Logged out successfully');
-            window.location.href = '/login';
+            window.location.href = '#/login';
         } catch (error) {
             console.error('Error during logout:', error.response?.data?.message || 'Logout failed');
         }
@@ -47,10 +48,7 @@ function Header() {
 
     return (
         <header>
-            <Link to="/" className="logo-link">
-                <span className="ReadQuest-Title">Read<span className="ReadQuest-Purple">Quest</span>
-                </span>
-            </Link>
+            <HeaderText />
 
             <div className="header-section">
                 <span className="current-time">

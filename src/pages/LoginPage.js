@@ -11,7 +11,7 @@ function LoginPage() {
       try {
         const decoded = jwtDecode(token);
         if (decoded) {
-          window.location.href = '/dashboard';
+          window.location.href = '#/dashboard';
         }
       } catch (error) {
         console.error('Invalid token:', error);

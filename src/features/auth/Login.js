@@ -1,4 +1,3 @@
-// src/features/auth/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../../styles/login.css';
@@ -7,6 +6,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,17 +16,20 @@ function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('name', name);
       localStorage.setItem('email', email); 
-      console.log("Login successful, token:", token);
-      // Redirect to dashboard after successful login
-      window.location.href = '/dashboard';
+      // Use React Router to navigate
+      window.location.href = '#/dashboard';
     } catch (error) {
       setError(error.response?.data?.message || 'Login failed');
     }
   };
 
+  const togglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <div className="login-register-container">
-      <h1 className='noselect'>Login</h1>
+      <h1 className="noselect">Login</h1>
       <form className="login-register" onSubmit={handleLogin}>
         <input
           type="email"
@@ -36,12 +39,16 @@ function Login() {
           required
         />
         <input
-          type="password"
+          type={showPassword ? "text" : "password"} // Use ternary to toggle input type
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <label>
+          <input type="checkbox" onClick={togglePassword} />
+          {showPassword ? "Hide Password" : "Show Password"} {/* Ternary operator for label */}
+        </label>
         <button type="submit">Login</button>
         {error && <p>{error}</p>}
       </form>

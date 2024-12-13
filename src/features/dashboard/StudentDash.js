@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import BarChart from "./graphs/BarChart";
 import RoundScroller from "./graphs/RoundScroller";
 import Achievements from "../progress/Achievements";
@@ -13,7 +12,6 @@ import { jwtDecode } from 'jwt-decode';
 const StudentDash = () => {
   const [studentId, setStudentId] = useState(0);
   const [barChartData, setBarChartData] = useState([]);
-  const navigate = useNavigate();
 
 
   
@@ -72,7 +70,7 @@ const StudentDash = () => {
   }, []);
 
   const navigateToRound = () => {
-    navigate("/round");
+    window.location.href = '#/round';
   };
 
   return (

@@ -9,7 +9,9 @@
 /coverage
 
 # production
-/build
+# Ignore build and distribution folders
+build/
+dist/
 
 # misc
 .DS_Store

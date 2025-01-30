@@ -16,17 +16,14 @@ function DashboardPage() {
 
     if (!token) {
       // Redirect to login if no token is found
-      navigate('/login');
+      window.location.href = '#/login';
     } else {
       try {
-        // Decode the token to get user information
         const decodedToken = jwtDecode(token);
         console.log('Decoded Token:', decodedToken); // Debug log to see decoded data
 
-        // Set the user role to the state
         setUserRole(decodedToken.role);
 
-        // Check if token is expired (optional, can also be handled on backend)
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
           // Token has expired

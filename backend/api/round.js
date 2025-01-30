@@ -1,130 +1,132 @@
 const express = require('express');
+const axios = require('axios');
 require('dotenv').config();
 
-module.exports = (pool) => {
-    const router = express.Router();
+const router = express.Router();
 
-    // Select a round by difficulty and return roundID and qBankID
-    router.get('/select-by-difficulty', async (req, res) => {
-        const { difficulty } = req.query;
-    
-        console.log('Received request for difficulty:', difficulty); // Log the incoming difficulty
-    
-        if (typeof difficulty !== 'string') {
-            console.error('Invalid difficulty parameter type:', typeof difficulty);
-            return res.status(400).json({ message: 'Invalid difficulty parameter type' });
-        }
-    
-        try {
-            console.log('Executing query to fetch rounds with difficulty:', difficulty);
-    
-            const rounds = await pool.query(
-                'SELECT roundID, QBankID FROM Rounds WHERE DifficultyLevel = $1',
-                [difficulty]
-            );
-    
-            console.log('Query executed. Rounds result:', rounds.rows);
-    
-            if (rounds.rows.length === 0) {
-                console.warn('No rounds found for difficulty level:', difficulty);
-                return res.status(404).json({ message: 'No rounds found for this difficulty level' });
+// Proxy: Select a round by difficulty
+router.get('/select-by-difficulty', async (req, res) => {
+    const { difficulty, token } = req.query; // Extract difficulty and token from the query params
+
+    if (!difficulty) {
+        console.error('Difficulty is required');
+        return res.status(400).json({ message: 'Difficulty is required' });
+    }
+
+    if (!token) {
+        console.error('Token is required');
+        return res.status(400).json({ message: 'Token is required' });
+    }
+
+    try {
+        console.log('Proxying request to hosted backend /api/round/select-by-difficulty');
+        console.log('Difficulty:', difficulty);
+        console.log('Token:', token);
+
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/round/select-by-difficulty`,
+            {
+                params: { difficulty },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             }
-    
-            const selectedRound = rounds.rows[Math.floor(Math.random() * rounds.rows.length)];
-            console.log('Selected round:', selectedRound);
-    
-            res.json(selectedRound);
-        } catch (error) {
-            console.error('Error fetching round:', error);
-            res.status(500).json({ message: 'Error fetching round' });
-        }
-    });
-    
+        );
 
-    // Retrieve question bank by QBankID
-    router.get('/retrieve-qBank', async (req, res) => {
-        const { QBankID } = req.query;
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching round by difficulty from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching round' });
+    }
+});
 
-        if (!QBankID) {
-            return res.status(400).json({ message: 'QBankID is required' });
-        }
 
-        try {
-            const questionBank = await pool.query('SELECT * FROM QuestionBank WHERE QBankID = $1', [QBankID]);
+// Proxy: Retrieve question bank by QBankID
+router.get('/retrieve-qBank', async (req, res) => {
+    const { QBankID } = req.query;
 
-            if (questionBank.rows.length === 0) {
-                return res.status(404).json({ message: 'No question bank found for this round' });
+    if (!QBankID) {
+        console.error('QBankID is required');
+        return res.status(400).json({ message: 'QBankID is required' });
+    }
+
+    try {
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/api/round/retrieve-qBank`,
+            { params: { QBankID } }
+        );
+
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching question bank from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching question bank' });
+    }
+});
+
+// Proxy: Get a specific question by QBankID and questionIndex
+router.get('/get-question', async (req, res) => {
+    const { qBankID, questionIndex, token } = req.query;
+
+    console.log('Proxying request to /round/get-question with: ');
+    console.log('Received qBankID:', qBankID);
+    console.log('Received questionIndex:', questionIndex);
+    console.log('Received token:', token);
+
+    if (!qBankID || questionIndex === undefined) {
+        console.error('qBankID and questionIndex are required');
+        return res.status(400).json({ message: 'qBankID and questionIndex are required' });
+    }
+
+    try {
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/round/get-question`,
+            { 
+                params: { qBankID, questionIndex }, 
+                headers: { 
+                    Authorization: `Bearer ${token}` 
+                },
             }
+        );
 
-            res.json(questionBank.rows); // Return all questions in the response
-        } catch (error) {
-            console.error('Error fetching question bank:', error);
-            res.status(500).json({ message: 'Error fetching question bank' });
-        }
-    });
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching question from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching question' });
+    }
+});
 
-    // Get a specific question by QBankID and questionIndex
-    router.get('/get-question', async (req, res) => {
-        const { qBankID, questionIndex } = req.query;
 
-        if (!qBankID || questionIndex === undefined) {
-            return res.status(400).json({ message: 'qBankID and questionIndex are required' });
-        }
+// Proxy: Validate an answer
+router.post('/validate-answer', async (req, res) => {
+    const { questionID, selectedAnswer, token } = req.body;
 
-        try {
-            const questionIdx = parseInt(questionIndex, 10);
+    console.log('Proxying request to /round/validate-answer with: ');
+    console.log('Received questionID:', questionID);
+    console.log('Received selectedAnswer:', selectedAnswer);
+    console.log('Received token:', token);
 
-            const result = await pool.query(
-                `SELECT * 
-                 FROM QuestionBank 
-                 WHERE QBankID = $1
-                 ORDER BY QuestionID
-                 OFFSET $2 LIMIT 1`,
-                [qBankID, questionIdx]
-            );
+    if (!questionID || !selectedAnswer) {
+        console.error('questionID and selectedAnswer are required');
+        return res.status(400).json({ message: 'questionID and selectedAnswer are required' });
+    }
 
-            if (result.rows.length === 0) {
-                return res.status(404).json({ message: 'Question not found' });
+    try {
+        const response = await axios.post(
+            `${process.env.API_BASE_URL}/round/validate-answer`,
+            { questionID, selectedAnswer },
+            {
+                headers: { 
+                    Authorization: `Bearer ${token}` 
+                },
             }
+        );
 
-            res.json(result.rows[0]);
-        } catch (error) {
-            console.error('Error fetching question:', error);
-            res.status(500).json({ message: 'Error fetching question' });
-        }
-    });
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error validating answer from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error validating answer' });
+    }
+});
 
-    // Route to validate an answer
-    router.post('/validate-answer', async (req, res) => {
-        const { questionID, selectedAnswer } = req.body;
 
-        if (!questionID || !selectedAnswer) {
-            return res.status(400).json({ message: 'questionID and selectedAnswer are required' });
-        }
-
-        console.log('Validating answer:', selectedAnswer, 'for question:', questionID);
-
-        try {
-            const result = await pool.query(
-                'SELECT CorrectAnswer FROM QuestionBank WHERE QuestionID = $1',
-                [questionID]
-            );
-
-            console.log('Correct Answer result:', result.rows, 'selectedAnswer: ',selectedAnswer);
-
-            if (result.rows.length === 0) {
-                return res.status(404).json({ message: 'Question not found' });
-            }
-
-            const correctAnswer = result.rows[0].correctanswer;
-            const isCorrect = selectedAnswer === correctAnswer;
-
-            res.json(isCorrect);
-        } catch (error) {
-            console.error('Error validating answer:', error);
-            res.status(500).json({ message: 'Error validating answer' });
-        }
-    });
-
-    return router;
-};
+module.exports = router;

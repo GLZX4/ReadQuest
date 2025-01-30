@@ -10,10 +10,11 @@ function Achievements({ studentId }) {
 
   useEffect(() => {
     const fetchAchievements = async () => {
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
           "http://localhost:5000/api/student/fetch-achievements",
-          { params: { studentId } }
+          { params: { studentId, token } }
         );
         setAchievements(response.data);
         console.log("Achievements", response.data);

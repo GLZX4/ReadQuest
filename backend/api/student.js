@@ -1,86 +1,59 @@
-// backend/api/student.js
 const express = require('express');
+const axios = require('axios');
 require('dotenv').config();
 
 const router = express.Router();
 
-module.exports = (pool) => {
+// Proxy: Get all student rounds completed
+router.get('/completed-rounds', async (req, res) => {
+    const { userID } = req.query;
 
-    // Get all student rounds completed
-    router.get('/completed-rounds', async (req, res) => {
-        const { userID } = req.query;
-    
-        if (!userID) {
-            console.log('userID is required for completed rounds');
-            return res.status(400).json({ message: 'userID is required' });
-        }
-    
-        try {
-            const result = await pool.query(
-                `SELECT 
-                    associationid,
-                    roundid, 
-                    completedat, 
-                    status, 
-                    score 
-                 FROM roundassociation
-                 WHERE userid = $1 AND status = 'completed'
-                 ORDER BY completedat DESC`,
-                [userID]
-            );
-    
-            res.status(200).json(result.rows);
-        } catch (error) {
-            console.error('Error fetching completed rounds:', error);
-            res.status(500).json({ message: 'Error fetching completed rounds' });
-        }
-    });
+    if (!userID) {
+        console.log('userID is required for completed rounds');
+        return res.status(400).json({ message: 'userID is required' });
+    }
 
+    try {
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/api/student/completed-rounds`,
+            { params: { userID } }
+        );
 
-    // Fetch achievements for a specific student
-    router.get('/fetch-achievements', async (req, res) => {
-        const { studentId } = req.query;
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching completed rounds from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching completed rounds' });
+    }
+});
 
-        if (!studentId) {
-            return res.status(400).json({ message: 'Student ID is required' });
-        }
+// Proxy: Fetch achievements for a specific student
+router.get('/fetch-achievements', async (req, res) => {
+    const { studentId, token } = req.query;
+    console.log('entered fetch achievements');
 
-        try {
-            const studentAchievements = await pool.query(
-                `SELECT * FROM studentAchievements WHERE userID = $1`,
-                [studentId]
-            );
+    if (!studentId) {
+        return res.status(400).json({ message: 'Student ID is required' });
+    }
 
-            const achievements = await pool.query(
-                `SELECT * FROM achievements`
-            );
+    console.log('Fetching achievements for student ID:', studentId);
+    console.log('Token:', token);
 
-            const achievementDetailsMap = {};
-            achievements.rows.forEach((achievement) => {
-                achievementDetailsMap[achievement.achievementid] = achievement;
-            });
+    try {
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/student/fetch-achievements`,
+            {
+                params: { studentId },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
 
-            const combinedAchievements = studentAchievements.rows.map((studentAchievement) => {
-                const achievementDetail = achievementDetailsMap[studentAchievement.achievementid];
-                const progressValue = studentAchievement.progress?.roundsPlayed || 0;
-                const unlockConditionValue = achievementDetail.unlockcondition?.value || 1; // Default to 1 to avoid division by 0
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching achievements from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching achievements' });
+    }
+});
 
-                const progressPercentage = Math.round((progressValue / unlockConditionValue) * 100);
-
-                return {
-                    ...studentAchievement,
-                    ...achievementDetail,
-                    progressPercentage: progressPercentage > 100 ? 100 : progressPercentage, // Do not change! capping at 100%
-                };
-            });
-
-            res.status(200).json(combinedAchievements);
-        } catch (error) {
-            console.error('Error fetching achievements:', error);
-            res.status(500).json({ message: 'Error fetching achievements' });
-        }
-    });
-
-
-    return router;
-}
+module.exports = router;

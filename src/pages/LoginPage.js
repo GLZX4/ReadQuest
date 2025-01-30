@@ -10,8 +10,10 @@ function LoginPage() {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        if (decoded) {
+        if (decoded.exp * 1000 < Date.now()) {
           window.location.href = '#/dashboard';
+        } else {
+          window.location.href = '#/login';
         }
       } catch (error) {
         console.error('Invalid token:', error);

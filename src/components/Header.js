@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "../styles/header.css";
 import HeaderText from "./HeaderText";
+import { jwtDecode } from "jwt-decode";
 
 function Header() {
 
@@ -20,6 +21,12 @@ function Header() {
         const storedName = localStorage.getItem('name');
         const storedEmail = localStorage.getItem('email');
         const token = localStorage.getItem('token'); 
+
+        if (token) {
+            const decoded =jwtDecode(token);
+            console.log('decoded:', decoded);
+            console.log('decoded.exp:', decoded.exp);
+        }
 
         if (storedName) {
             const firstName = storedName.split(' ')[0];

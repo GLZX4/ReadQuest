@@ -29,32 +29,34 @@ function RoundPage() {
 
   useEffect(() => {
     const fetchRoundByDifficulty = async () => {
+      console.log("Fetching round triggered!");
       try {
         console.log("Starting fetchRoundByDifficulty...");
         const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
         const userID = decoded.userId;
         console.log("User ID:", userID);
-
-        // Fetch the difficulty First
+        console.log("Token:", token);
+  
+        // Fetch the difficulty first
         const difficultyResponse = await axios.get(
           "http://localhost:5000/api/performance/students/get-difficulty",
           {
-            params: { userID },
+            params: { userID, token }
           }
         );
-
+  
         const difficulty = difficultyResponse.data.difficulty;
         console.log("Fetched Difficulty:", difficulty);
-
+  
         // Fetch the round based on the chosen difficulty above
         const roundResponse = await axios.get(
           "http://localhost:5000/api/round/select-by-difficulty",
           {
-            params: { difficulty },
+            params: { difficulty, token }
           }
         );
-
+  
         const round = roundResponse.data;
         console.log("roundID: ", round.roundid, "QBankID: ", round.qbankid);
         setRoundID(round.roundid);
@@ -63,33 +65,33 @@ function RoundPage() {
         console.error("Error fetching round by difficulty:", error);
       }
     };
-
+  
     fetchRoundByDifficulty();
   }, []);
-
-  // New useEffect to fetch questions only when qBankID is defined
+  
   useEffect(() => {
     if (qBankID !== null) {
       const fetchQuestion = async () => {
         try {
           console.log("Fetching questions...");
+          const token = localStorage.getItem("token"); // Retrieve token again
           const response = await axios.get(
             "http://localhost:5000/api/round/get-question",
             {
-              params: { qBankID, questionIndex },
+              params: { qBankID, questionIndex, token }
             }
           );
-
+  
           const questionData = response.data;
-
+  
           if (!questionData) {
             console.log("No more questions available. Ending round...");
             handleRoundComplete();
             return;
           }
-
+  
           console.log("Fetched Question:", questionData);
-
+  
           let parsedAnswers = [];
           try {
             parsedAnswers = JSON.parse(questionData.answeroptions).map(
@@ -98,7 +100,7 @@ function RoundPage() {
           } catch (e) {
             console.error("Failed to parse answer options:", e);
           }
-
+  
           setCurrentQuestion({
             questionID: questionData.questionid,
             context: questionData.questioncontext,
@@ -111,16 +113,15 @@ function RoundPage() {
           handleRoundComplete();
         }
       };
-
+  
       fetchQuestion();
     }
   }, [qBankID, questionIndex]);
-
-  // Handle end of the round
+  
   const handleRoundComplete = async () => {
     console.log("Handling round completion...");
-  
-    const userID = jwtDecode(localStorage.getItem("token")).userId;
+    const token = localStorage.getItem("token");
+    const userID = jwtDecode(token).userId;
     const completionRate =
       totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
   
@@ -140,10 +141,12 @@ function RoundPage() {
     try {
       const metricResponse = await axios.post(
         "http://localhost:5000/api/metric/calculate-metrics",
-        roundStats
+        roundStats,
+        {
+          params: { token }
+        }
       );
   
-      const userID = jwtDecode(localStorage.getItem("token")).userId;
       const { metrics } = metricResponse.data;
   
       const metricsWithUserID = {
@@ -162,7 +165,10 @@ function RoundPage() {
       // Update performance metrics
       await axios.post(
         "http://localhost:5000/api/performance/students/update-metrics",
-        metricsWithUserID
+        metricsWithUserID,
+        {
+          params: { token } 
+        }
       );
   
       // Update achievements progress for roundsPlayed
@@ -175,16 +181,22 @@ function RoundPage() {
     }
   };
   
-
   const updateAchievementProgress = async (metric, value) => {
-    const userID = jwtDecode(localStorage.getItem("token")).userId;
+    const token = localStorage.getItem("token");
+    const userID = jwtDecode(token).userId;
     console.log(`Updating achievement progress for ${metric} by ${value} for ${userID}`);
     try {
-      await axios.post("http://localhost:5000/api/achievement/update-progress", {
-        studentId: userID,
-        metric,
-        value,
-      });
+      await axios.post(
+        "http://localhost:5000/api/achievement/update-progress",
+        {
+          studentId: userID,
+          metric,
+          value,
+        },
+        {
+          params: { token }
+        }
+      );
       console.log(`Updated achievement progress for ${metric} by ${value}`);
     } catch (error) {
       console.error("Error updating achievement progress:", error);
@@ -225,12 +237,15 @@ function RoundPage() {
       "QuestionID:",
       currentQuestion.questionID
     );
+
+    const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
         "http://localhost:5000/api/round/validate-answer",
         {
           questionID: currentQuestion.questionID,
           selectedAnswer,
+          token
         }
       );
 

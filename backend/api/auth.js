@@ -1,219 +1,40 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const express = require('express');
+const axios = require('axios');
+const { param } = require('./round');
 
-module.exports = (pool) => {
-    const router = express.Router();
+const router = express.Router();
 
-    const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_here';
+router.post('/login', async (req, res) => {
+  try {
+    console.log('req.body:', req.body);
+    const response = await axios.post(`${process.env.API_BASE_URL}/auth/login`, req.body);
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error('Error in /auth/login proxy:', error.message);
+    res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error logging in user' });
+  }
+});
 
-    // Register a new user
-    router.post('/register', async (req, res) => {
-        const { name, email, password, role, schoolCode } = req.body;
+router.post('/register', async (req, res) => {
+  try {
+    const response = await axios.post(`${process.env.API_BASE_URL}/auth/register`, req.body);
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error('Error in /auth/register proxy:', error.message);
+    res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error registering user' });
+  }
+});
 
-        if (!name || !email || !password || !role || !schoolCode) {
-            return res.status(400).json({ message: 'All fields are required.' });
-        }
+router.post('/logout', async (req, res) => {
+  const { email, token } = req.body;
+  try {
+    const response = await axios.post(`${process.env.API_BASE_URL}/auth/logout`, { email, token });
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error('Error in /auth/logout proxy:', error.message);
+    res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error logging out user' });
+  }
+});
 
-        try {
-            // Check if school exists
-            const schoolResult = await pool.query(
-                'SELECT schoolID FROM Schools WHERE schoolCode = $1',
-                [schoolCode]
-            );
-            if (schoolResult.rows.length === 0) {
-                return res.status(400).json({ message: 'Invalid school code.' });
-            }
-            const schoolID = schoolResult.rows[0].schoolid;
-
-            // Check if role exists
-            let roleResult = await pool.query('SELECT roleID FROM Roles WHERE Role = $1', [role]);
-            let roleID;
-
-            if (roleResult.rows.length > 0) {
-                roleID = roleResult.rows[0].roleid;
-            } else {
-                const newRole = await pool.query('INSERT INTO Roles (Role) VALUES ($1) RETURNING roleID', [role]);
-                roleID = newRole.rows[0].roleid;
-            }
-
-            // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            // Insert new user
-            await pool.query(
-                `INSERT INTO Users (Name, Email, UserPassword, roleID, schoolID) 
-                 VALUES ($1, $2, $3, $4, $5)`,
-                [name, email, hashedPassword, roleID, schoolID]
-            );
-            res.status(201).json({ message: 'User registered successfully.' });
-        } catch (error) {
-            console.error('Error during registration:', error);
-            res.status(500).json({ message: 'Internal server error.' });
-        }
-    });
-
-    // Login a user
-    router.post('/login', async (req, res) => {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required.' });
-        }
-
-        try {
-            const result = await pool.query(
-                `SELECT u.*, r.Role 
-                 FROM Users u
-                 JOIN Roles r ON u.roleID = r.roleID
-                 WHERE u.Email = $1`,
-                [email]
-            );
-
-            if (result.rows.length === 0) {
-                return res.status(401).json({ message: 'Invalid email or password.' });
-            }
-
-            const user = result.rows[0];
-
-            // Check password
-            const passwordMatch = await bcrypt.compare(password, user.userpassword);
-            if (!passwordMatch) {
-                return res.status(401).json({ message: 'Invalid email or password.' });
-            }
-
-            // Generate JWT token
-            const token = jwt.sign({ userId: user.userid, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
-            res.json({ token, name: user.name });
-
-            // Update login status
-            await pool.query('UPDATE Users SET loggedIn = TRUE WHERE Email = $1', [email]);
-        } catch (error) {
-            console.error('Error during login:', error);
-            res.status(500).json({ message: 'Error logging in user.' });
-        }
-    });
-
-    // Logout a user
-    router.post('/logout', async (req, res) => {
-        const { email } = req.body;
-
-        console.log('Logging out user:', email);
-
-        if (!email) {
-            return res.status(400).json({ message: 'Email is required.' });
-        }
-
-        try {
-            await pool.query('UPDATE Users SET loggedIn = FALSE WHERE Email = $1', [email]);
-            res.json({ message: 'User logged out successfully.' });
-        } catch (error) {
-            console.error('Error during logout:', error);
-            res.status(500).json({ message: 'Error logging out user.' });
-        }
-    });
-
-
-        // Register an admin user
-    router.post('/register-admin', async (req, res) => {
-        const { name, email, password } = req.body;
-        const role = 'admin'; // The role for this user is always "admin"
-
-        // Validate input
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: 'All fields are required.' });
-        }
-
-        try {
-            // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            // Check if the admin role exists
-            let roleResult = await pool.query('SELECT roleID FROM Roles WHERE Role = $1', [role]);
-            let roleID;
-
-            if (roleResult.rows.length > 0) {
-                roleID = roleResult.rows[0].roleid;
-            } else {
-                // If the admin role doesn't exist, create it
-                const newRole = await pool.query('INSERT INTO Roles (Role) VALUES ($1) RETURNING roleID', [role]);
-                roleID = newRole.rows[0].roleid;
-            }
-
-            // Check if the email already exists
-            const emailCheck = await pool.query('SELECT * FROM Users WHERE Email = $1', [email]);
-            if (emailCheck.rows.length > 0) {
-                return res.status(409).json({ message: 'Email already exists.' });
-            }
-
-            // Insert the admin user into the database
-            await pool.query(
-                `INSERT INTO Users (Name, Email, UserPassword, roleID) 
-                VALUES ($1, $2, $3, $4)`,
-                [name, email, hashedPassword, roleID]
-            );
-
-            res.status(201).json({ message: 'Admin registered successfully.' });
-        } catch (error) {
-            console.error('Error during admin registration:', error);
-            res.status(500).json({ message: 'Internal server error.' });
-        }
-    });
-
-
-        // Register a tutor
-    router.post('/register-tutor', async (req, res) => {
-        const { name, email, password, verificationCode } = req.body;
-
-        if (!name || !email || !password || !verificationCode) {
-            return res.status(400).json({ message: 'All fields are required.' });
-        }
-
-        try {
-            // Check if the verification code exists and is valid
-            const codeResult = await pool.query(
-                `SELECT * FROM VerificationCode WHERE code = $1 AND expirationAt > NOW() AND used = FALSE`,
-                [verificationCode]
-            );
-
-            if (codeResult.rows.length === 0) {
-                return res.status(400).json({ message: 'Invalid or expired verification code.' });
-            }
-
-            const { schoolID } = codeResult.rows[0]; // Retrieve associated school ID
-
-            // Check if the tutor role exists
-            let roleResult = await pool.query('SELECT roleID FROM Roles WHERE Role = $1', ['tutor']);
-            let roleID;
-
-            if (roleResult.rows.length > 0) {
-                roleID = roleResult.rows[0].roleid;
-            } else {
-                // If the tutor role doesn't exist, create it
-                const newRole = await pool.query('INSERT INTO Roles (Role) VALUES ($1) RETURNING roleID', ['tutor']);
-                roleID = newRole.rows[0].roleid;
-            }
-
-            // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            // Insert the new tutor into the Users table
-            await pool.query(
-                `INSERT INTO Users (Name, Email, UserPassword, roleID, schoolID) 
-                VALUES ($1, $2, $3, $4, $5)`,
-                [name, email, hashedPassword, roleID, schoolID]
-            );
-
-            // Mark the verification code as used
-            await pool.query(`UPDATE VerificationCode SET used = TRUE WHERE code = $1`, [verificationCode]);
-
-            res.status(201).json({ message: 'Tutor registered successfully.' });
-        } catch (error) {
-            console.error('Error during tutor registration:', error);
-            res.status(500).json({ message: 'Internal server error.' });
-        }
-    });
-
-    return router;
-};
+module.exports = router;

@@ -1,124 +1,77 @@
 const express = require('express');
+const axios = require('axios');
 require('dotenv').config();
 
-const { calculateDifficultyLevel, addDefaultMetrics } = require('../services/MetricsService');
+const router = express.Router();
 
-module.exports = (pool) => {
-    const router = express.Router();
+// Proxy: Get performance metrics for round selection
+router.get('/students/get-difficulty', async (req, res) => {
+    console.log('Proxying request to /performance/students/get-difficulty');
+    const { userID } = req.query;
+    const token = req.query.token; 
+    
+    console.log('User ID:', userID);
+    console.log('Token:', token);
 
-    // Get performance metrics for round selection
-    router.get('/students/get-difficulty', async (req, res) => {
-        const { userID } = req.query;
-        console.log('userID:', userID);
-
-        try {
-            const result = await pool.query('SELECT * FROM PerformanceMetrics WHERE userID = $1', [userID]);
-            const metrics = result.rows[0];
-
-            if (!metrics) {
-                // Default difficulty level if no metrics exist
-                const defaultDifficulty = 'medium';
-                await addDefaultMetrics(pool, userID);
-                return res.status(200).json({ difficulty: defaultDifficulty });
+    try {
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/performance/students/get-difficulty`,
+            {
+                params: { userID }, // Send userID as a query parameter
+                headers: {
+                    Authorization: `Bearer ${token}`, // Pass the token in headers
+                },
             }
+        );
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error proxying /performance/students/get-difficulty:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error getting difficulty level' });
+    }
+});
 
-            const difficulty = calculateDifficultyLevel(metrics);
-            res.json({ difficulty: String(difficulty) });
-        } catch (error) {
-            console.error('Error getting difficulty level:', error);
-            res.status(500).json({ message: 'Error getting difficulty level' });
-        }
-    });
+// Proxy: Get current performance metrics for a specific student
+router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
+    const { userID } = req.params;
+    const token = req.query.token; // Extract token from the query
+    console.log('Proxying request to /performance/tutor/current-specific-metric with userID:', userID);
 
-
-
-
-    // Get current performance metrics for a specific student
-    router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
-        const { userID } = req.params;
-
-        try {
-            const result = await pool.query('SELECT * FROM PerformanceMetrics WHERE userID = $1', [userID]);
-            const metrics = result.rows[0];
-
-            if (!metrics) {
-                return res.status(404).json({ message: 'Metrics not found for the specified user' });
+    try {
+        const response = await axios.get(
+            `${process.env.API_BASE_URL}/performance/tutor/current-specific-metric/${userID}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Pass the token in headers
+                },
             }
+        );
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error proxying /performance/tutor/current-specific-metric:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error getting performance metrics' });
+    }
+});
 
-            res.json(metrics);
-        } catch (error) {
-            console.error('Error getting performance metrics:', error);
-            res.status(500).json({ message: 'Error getting performance metrics' });
-        }
-    });
+// Proxy: Update student performance metrics
+router.post('/students/update-metrics', async (req, res) => {
+    const token = req.query.token; // Extract token from the query
+    console.log('Proxying request to /performance/students/update-metrics with body:', req.body);
 
+    try {
+        const response = await axios.post(
+            `${process.env.API_BASE_URL}/performance/students/update-metrics`,
+            req.body,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Pass the token in headers
+                },
+            }
+        );
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error proxying /performance/students/update-metrics:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error updating performance metrics' });
+    }
+});
 
-
-
-    router.post('/students/update-metrics', async (req, res) => {
-        console.log('Entered update metrics');
-    
-        const { accuracyRate, averageAnswerTime, attemptsPerQuestion, consistency, completionRate, userID } = req.body;
-    
-        const sanitizedCompletionRate = Math.min(Math.max(completionRate, 0), 100); // Clamp between 0 and 100
-        const sanitizedAccuracyRate = Math.min(Math.max(accuracyRate, 0), 100); // Clamp between 0 and 100
-        const sanitizedAverageAnswerTime = Math.max(averageAnswerTime, 0); // Minimum value of 0
-    
-        // Validation
-        if (
-            sanitizedAccuracyRate < 0 || sanitizedAccuracyRate > 100 ||
-            sanitizedAverageAnswerTime < 0 ||
-            attemptsPerQuestion < 0 ||
-            sanitizedCompletionRate < 0 || sanitizedCompletionRate > 100
-        ) {
-            console.error('Invalid metrics received:', req.body);
-            return res.status(400).json({ message: 'Invalid performance metrics' });
-        }
-    
-        // Calculate the new difficulty level
-        const difficultyLevel = calculateDifficultyLevel({
-            accuracyRate: sanitizedAccuracyRate,
-            averageAnswerTime: sanitizedAverageAnswerTime,
-            attemptsPerQuestion,
-            consistency,
-            completionRate: sanitizedCompletionRate,
-        });
-
-        // Attempt to update or insert the metrics
-        try {
-            await pool.query(
-                `INSERT INTO PerformanceMetrics (
-                    userID, totalRoundsPlayed, averageAnswerTime, accuracyRate, 
-                    attemptsPerQuestion, difficultyLevel, consistencyScore, 
-                    completionRate, lastUpdated
-                ) VALUES (
-                    $1, 1, $2, $3, $4, $5, $6, $7, NOW()
-                )
-                ON CONFLICT (userID) DO UPDATE
-                SET accuracyRate = $3,
-                    averageAnswerTime = $2,
-                    attemptsPerQuestion = $4,
-                    difficultyLevel = $5,
-                    consistencyScore = $6,
-                    completionRate = $7,
-                    totalRoundsPlayed = PerformanceMetrics.totalRoundsPlayed + 1,
-                    lastUpdated = NOW()`,
-                [
-                    userID,
-                    sanitizedAverageAnswerTime,
-                    sanitizedAccuracyRate,
-                    attemptsPerQuestion,
-                    difficultyLevel,
-                    consistency,
-                    sanitizedCompletionRate,
-                ]
-            );
-            res.status(200).json({ message: 'Metrics updated successfully' });
-        } catch (error) {
-            console.error('Error updating performance metrics:', error);
-            res.status(500).json({ message: 'Error updating performance metrics' });
-        }
-    });
-    
-    return router;
-};
+module.exports = router;

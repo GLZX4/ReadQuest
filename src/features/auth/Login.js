@@ -16,13 +16,13 @@ function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('name', name);
       localStorage.setItem('email', email); 
-      // Use React Router to navigate
       window.location.href = '#/dashboard';
     } catch (error) {
       setError(error.response?.data?.message || 'Login failed');
     }
   };
 
+  // Function to toggle password visibility adapted from https://dev.to/annaqharder/hideshow-password-in-react-513a
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -39,7 +39,7 @@ function Login() {
           required
         />
         <input
-          type={showPassword ? "text" : "password"} // Use ternary to toggle input type
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -47,7 +47,7 @@ function Login() {
         />
         <label>
           <input type="checkbox" onClick={togglePassword} />
-          {showPassword ? "Hide Password" : "Show Password"} {/* Ternary operator for label */}
+          {showPassword ? "Hide Password" : "Show Password"}
         </label>
         <button type="submit">Login</button>
         {error && <p>{error}</p>}

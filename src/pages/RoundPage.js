@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../features/round/LoadingSpinner";
+import QuestionRenderer from "../components/QuestionRenderer";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "../styles/roundpage.css";
@@ -24,6 +25,7 @@ function RoundPage() {
   const [answers, setAnswers] = useState([]);
   const [roundID, setRoundID] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [question, setQuestion] = useState(null);
   const [currentRound, setCurrentRound] = useState(1);
   const navigate = useNavigate();
 
@@ -88,9 +90,11 @@ function RoundPage() {
             console.log("No more questions available. Ending round...");
             handleRoundComplete();
             return;
+          } else {
+            setQuestion(questionData);
           }
   
-          console.log("Fetched Question:", questionData);
+          console.log("Fetched Question:", question);
   
           let parsedAnswers = [];
           try {
@@ -321,48 +325,13 @@ function RoundPage() {
 
   return (
     <div className="round-page">
-      {currentQuestion ? (
-        <div
-          className={`round-container ${
-            showCorrectOverlay ? "correct-overlay" : ""
-          }`}
-        >
-          {showCorrectOverlay && <div className="tick-mark-overlay"></div>}
-          <section className="question-timer-container">
-            <span className="questionNum noselect">
-              Question: {currentRound}
-            </span>
-            <span className="timer noselect">Timer: {timer}s</span>
-            <section className="starProgress"></section>
-          </section>
-
-          <section className="question-container">
-            <div className="question-context-container noselect">
-              <span>{currentQuestion.context}</span>
-            </div>
-            <div className="question-text-container noselect">
-              <span>{currentQuestion.text}</span>
-            </div>
-          </section>
-
-          <section className="answers-container">
-            {answers.map((answer, index) => (
-              <button
-                key={index}
-                className={`answer-button answer-${index + 1}`}
-                onClick={() => handleAnswerAndAdvance(answer)}
-                disabled={isAnswered}
-              >
-                {answer}
-              </button>
-            ))}
-          </section>
-        </div>
+      {question ? (
+        <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} />
       ) : (
-        <LoadingSpinner />
+        <LoadingSpinner></LoadingSpinner>
       )}
     </div>
   );
-}
+};
 
 export default RoundPage;

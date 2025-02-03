@@ -4,6 +4,7 @@ import AddSchool from "../../components/AddSchool";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import TutorCodeGenerator from "../../components/tutorCodeGeneration"
 import SchoolsList from "../../components/SchoolsList";
+import axiosInstance from "../../services/axiosInstance";
 import "../../styles/admindash.css";
 
 function AdminDash() {
@@ -17,23 +18,31 @@ function AdminDash() {
   });
 
   useEffect(() => {
+
     const fetchSchools = async () => {
+      const token = localStorage.getItem("token");
+      console.log("Token in AdminDash:", token);
+    
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/admin/schoolsFetch"
-        );
+        const response = await axios.post("http://localhost:5000/api/admin/schoolsFetch", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+    
         console.log("Fetched Schools in Frontend:", response.data);
         setSchools(response.data);
       } catch (error) {
         console.error("Error fetching schools:", error);
       }
     };
+    
 
     const fetchAdminData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/admin/fetchAdminData"
-        );
+        const response = await axiosInstance.post("/api/admin/fetchAdminData", {
+          token: localStorage.getItem("token"),
+        });
         setAdminData(response.data);
       } catch (error) {
         console.error("Error fetching admin data:", error);

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
-const { param } = require('./round');
 
 const router = express.Router();
 
@@ -35,6 +34,20 @@ router.post('/logout', async (req, res) => {
     console.error('Error in /auth/logout proxy:', error.message);
     res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error logging out user' });
   }
+});
+
+router.post('/register-admin', async (req, res) => {
+  try {
+    const response = await axios.post(`${process.env.API_BASE_URL}/auth/register-admin`, req.body);
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error('Error in /auth/register proxy:', error.message);
+    res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error registering user' });
+  }
+});
+
+router.post('/test', async (req, res) => {
+  res.status(200).json({ message: 'Test successful' });
 });
 
 module.exports = router;

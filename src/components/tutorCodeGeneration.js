@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../services/axiosInstance";
 
 function TutorCodeGenerator({ schools }) {
   const [selectedSchoolID, setSelectedSchoolID] = useState("");
@@ -43,10 +43,7 @@ function TutorCodeGenerator({ schools }) {
 
     try {
       console.log("schoolID:", selectedSchoolID);
-      await axios.post(
-        "http://localhost:5000/api/admin/tutorAccountCode",
-        data
-      );
+      await axiosInstance.post("/api/admin/tutorAccountCode", { data });
       console.log("Code Submitted Successfully");
     } catch (error) {
       console.error("Code Submission Failed", error);

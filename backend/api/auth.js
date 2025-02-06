@@ -36,6 +36,16 @@ router.post('/logout', async (req, res) => {
   }
 });
 
+router.post('/register-tutor', async (req, res) => {
+  try {
+    const response = await axios.post(`${process.env.API_BASE_URL}/auth/register-tutor`, req.body);
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error('Error in /auth/register proxy:', error.message);
+    res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error registering user' });
+  }
+});
+
 router.post('/register-admin', async (req, res) => {
   try {
     const response = await axios.post(`${process.env.API_BASE_URL}/auth/register-admin`, req.body);

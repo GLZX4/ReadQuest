@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddSchool from "../../components/AddSchool";
 import DashboardLayout from "../dashboard/DashboardLayout";
-import TutorCodeGenerator from "../../components/tutorCodeGeneration"
+import TutorCodeGenerator from "../../components/tutorCodeGeneration";
 import SchoolsList from "../../components/SchoolsList";
-import axiosInstance from "../../services/axiosInstance";
 import "../../styles/admindash.css";
 
 function AdminDash() {
@@ -18,43 +17,41 @@ function AdminDash() {
   });
 
   useEffect(() => {
-
     const fetchSchools = async () => {
       const token = localStorage.getItem("token");
-      console.log("Token in AdminDash:", token);
-    
+
       try {
-        const response = await axios.post("http://localhost:5000/api/admin/schoolsFetch", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await axios.get("http://localhost:5000/api/admin/schoolsFetch", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-    
-        console.log("Fetched Schools in Frontend:", response.data);
-        setSchools(response.data);
+        console.log("Fetched Schools:", response.data);
+        setSchools(response.data); // Properly update the state
       } catch (error) {
-        console.error("Error fetching schools:", error);
+        console.error("Error fetching schools:", error.response?.data || error.message);
       }
     };
-    
 
     const fetchAdminData = async () => {
+      const token = localStorage.getItem("token");
+
       try {
-        const response = await axiosInstance.post("/api/admin/fetchAdminData", {
-          token: localStorage.getItem("token"),
+        const response = await axios.get("http://localhost:5000/api/admin/fetchAdminData", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setAdminData(response.data);
+        console.log("Fetched Admin Data:", response.data);
+        setAdminData(response.data); // Properly update the state
       } catch (error) {
-        console.error("Error fetching admin data:", error);
+        console.error("Error fetching admin data:", error.response?.data || error.message);
       }
     };
 
+    // Fetch data on component mount
     fetchSchools();
     fetchAdminData();
   }, []);
 
   const filteredSchools = schools.filter((school) =>
-    school.schoolname.toLowerCase().includes(searchQuery.toLowerCase())
+    school.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const toggleAddSchoolVisibility = () =>
@@ -63,9 +60,8 @@ function AdminDash() {
   return (
     <DashboardLayout role="Admin">
       <div className="dashboard-row">
-        
         <div className="dashboard-item">
-        <TutorCodeGenerator schools={schools} />
+          <TutorCodeGenerator schools={schools} />
         </div>
 
         <div className="dashboard-item new-school">
@@ -78,10 +74,9 @@ function AdminDash() {
           </button>
           {isAddSchoolVisible && <AddSchool />}
         </div>
-
       </div>
+
       <div className="dashboard-row">
-        
         <div className="dashboard-item">
           <h2>System Status</h2>
           <span>{adminData.systemStatus}</span>
@@ -92,16 +87,15 @@ function AdminDash() {
         <div className="dashboard-item allschools">
           <h2>All Schools</h2>
           <input
-          type="text"
-          className="Schools-search-bar"
-          placeholder="Search for a school..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        {/* Pass Filtered Schools */}
-        <SchoolsList schools={filteredSchools} />
+            type="text"
+            className="Schools-search-bar"
+            placeholder="Search for a school..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {/* Pass Filtered Schools */}
+          <SchoolsList schools={filteredSchools} />
         </div>
-
       </div>
     </DashboardLayout>
   );

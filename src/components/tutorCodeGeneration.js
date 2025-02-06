@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axiosInstance from "../services/axiosInstance";
+import axios from "axios";
 
 function TutorCodeGenerator({ schools }) {
   const [selectedSchoolID, setSelectedSchoolID] = useState("");
@@ -41,12 +41,16 @@ function TutorCodeGenerator({ schools }) {
       createdAt,
     };
 
+    const token = localStorage.getItem("token");
     try {
-      console.log("schoolID:", selectedSchoolID);
-      await axiosInstance.post("/api/admin/tutorAccountCode", { data });
-      console.log("Code Submitted Successfully");
+      const response = await axios.post('http://localhost:5000/api/admin/tutorAccountCode', data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log('Generated Tutor Account Code:', response.data);
+      return response.data;
     } catch (error) {
-      console.error("Code Submission Failed", error);
+      console.error('Error generating tutor account code:', error.response?.data || error.message);
+      throw error;
     }
   };
 
@@ -65,7 +69,7 @@ function TutorCodeGenerator({ schools }) {
         </option>
         {schools.map((school) => (
           <option key={school.schoolid} value={school.schoolid}>
-            {school.schoolname || "Unnamed School"}
+            {school.name || "Unnamed School"}
           </option>
         ))}
       </select>

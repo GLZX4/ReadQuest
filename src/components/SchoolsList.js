@@ -9,7 +9,7 @@ function SchoolsList({ schools }) {
       {schools.map((school) => (
         <div className="schoolItem" key={school.schoolid}>
           <span className="schoolname">
-            <b>School Name:</b> {school.schoolname || "Unnamed School"}
+            <b>School Name:</b> {school.name || "Unnamed School"}
           </span>
           <span>
             <b>Address:</b> {school.address || "N/A"}

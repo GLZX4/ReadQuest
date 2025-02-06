@@ -11,14 +11,25 @@ function AddSchool() {
         contactPhone: ''
     });
 
+    const addSchool = async (schoolData) => {
+        const token = localStorage.getItem('token');
+      
+        try {
+          const response = await axios.post('http://localhost:5000/api/admin/addSchool', schoolData, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          console.log('School Added:', response.data);
+          return response.data;
+        } catch (error) {
+          console.error('Error adding school:', error.response?.data || error.message);
+          throw error;
+        }
+      };
+      
+
     const SchoolSubmit = (e) => {
         e.preventDefault(); 
-        try {
-            axios.post('http://localhost:5000/api/admin/addSchool', newSchool);
-            console.log('School Added successfully.');
-        } catch (error) {
-            console.error(error.response?.data?.message || 'School Addition Failed');
-        }
+        addSchool(newSchool);
     }
 
     const handleInputChange = (e) => {

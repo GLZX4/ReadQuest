@@ -40,6 +40,7 @@ function Header() {
 
     // Function to log out and mark the user as logged out in the database
     const logoutUser = async () => {
+        console.log('Logging out user:', userEmail);
         try {
             await axios.post('http://localhost:5000/api/auth/logout', { email: userEmail });
             localStorage.removeItem('name');

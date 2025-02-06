@@ -3,12 +3,16 @@ const axios = require('axios');
 
 const router = express.Router();
 
-router.get('/fetchTutorData', async (req, res) => {
+router.get('/fetch-Tutor-Data', async (req, res) => {
+  console.log('Entered fetch-tutor-date proxy');
   try {
-    const response = await axios.get(`${process.env.API_BASE_URL}/fetchTutorData`);
+    const response = await axios.get(`${process.env.API_BASE_URL}/tutor/fetch-Tutor-Data`, {
+      params: req.query, // Forward query parameters
+      headers: { Authorization: req.headers.authorization }, // Forward token in headers
+    });
     res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('Error in /tutor proxy:', error.message);
+    console.error('Error in /tutor/fetch-tutor-date proxy:', error.message);
     res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching tutor data' });
   }
 });
@@ -16,11 +20,11 @@ router.get('/fetchTutorData', async (req, res) => {
 
 router.get('/studentsList', async (req, res) => {
   try {
-    console.log('req.body:', req.body);
+    console.log('req.query:', req.query);
     console.log('req.headers:', req.headers);
 
-    // Forward the data to the hosted backend
-    const response = await axios.post(`${process.env.API_BASE_URL}/tutor/studentsList`, req.body, {
+    const response = await axios.get(`${process.env.API_BASE_URL}/tutor/studentsList`, {
+      params: req.query, // Forward query parameters
       headers: { Authorization: req.headers.authorization }, // Forward token in headers
     });
 
@@ -30,6 +34,7 @@ router.get('/studentsList', async (req, res) => {
     res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching students list' });
   }
 });
+
 
 
 module.exports = router;

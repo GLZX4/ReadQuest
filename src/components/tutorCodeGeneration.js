@@ -54,6 +54,8 @@ function TutorCodeGenerator({ schools }) {
     }
   };
 
+  
+
   return (
     <div className="code-generation">
       <h2>Tutor Account Code Generation</h2>

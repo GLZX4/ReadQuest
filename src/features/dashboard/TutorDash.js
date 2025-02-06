@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../dashboard/DashboardLayout';
 import StudentContainer from '../../components/StudentContainer';
+import '../../styles/tutorDashboard.css';
 
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
@@ -8,26 +9,63 @@ import axios from 'axios';
 function TutorDash() {
   const [userID, setUserID] = useState(0);
   const [studentList, setStudentList] = useState([]);
+  const [tutorData, setTutorData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
-        const userID = decoded.userId;
-        setUserID(userID);
+        const tutorID = decoded.userId;
+        setUserID(tutorID);
 
-        const response = await axios.get('http://localhost:5000/api/tutor/studentsList', {
-          params: { tutorID: userID },
+        // Send GET request with query parameters and Authorization header
+        const response = await axios.get("http://localhost:5000/api/tutor/studentsList", {
+          params: { tutorID },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         setStudentList(response.data);
       } catch (error) {
-        console.error('Error fetching student list:', error);
+        if (error.response?.status === 401) {
+          console.error('Token expired. Please log in again.');
+          localStorage.removeItem('token');
+          alert('Your session has expired. Please log in again.');
+          window.location.href = '#/login';
+        } else {
+          console.error('Error fetching students data:', error.response?.data || error.message);
+          throw error;
+        }
       }
     };
 
+    const fetchTutorData = async () => {
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const userid = decoded.userId;
+
+      try {
+          const token = localStorage.getItem('token');
+          const response = await axios.get('http://localhost:5000/api/tutor/fetch-Tutor-Data', {
+            params: { userid },
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          console.log('Fetched Tutor Data:', response.data);
+          setTutorData(response.data);
+      } catch (error) {
+        if (error.response?.status === 401) {
+          console.error('Token expired. Please log in again.');
+          localStorage.removeItem('token');
+          alert('Your session has expired. Please log in again.');
+          window.location.href = '#/login';
+        } else {
+          console.error('Error fetching tutor data:', error.response?.data || error.message);
+          throw error;
+        }
+      }
+  };
     fetchData();
+    fetchTutorData();
   }, []);
 
   return (
@@ -35,11 +73,31 @@ function TutorDash() {
       <div className="dashboard-row">
 
         <div className="dashboard-item studentList">
-        <h2>List of Your Students</h2>
-        {studentList.map((student, index) => (
-            <StudentContainer key={index} student={student} />
-        ))}
-      </div>
+          <h2>List of Your Students</h2>
+          {studentList.map((student, index) => (
+              <StudentContainer key={index} student={student} />
+          ))}
+        </div>
+        <div className="dashboard-item schoolCode">
+          <h2>Your School Code:</h2>
+          <div className="CodeContainer">
+            <span className="schoolIDDisplay">
+              {tutorData.schoolCode || "Not Assigned"}
+            </span>
+          </div>
+          {tutorData.schoolCode && (
+            <button
+              className="copy-btn"
+              onClick={() => {
+                navigator.clipboard.writeText(tutorData.schoolCode);
+                alert("School Code copied to clipboard!");
+              }}
+            >
+              Copy Code
+            </button>
+          )}
+        </div>
+
 
       </div>
     </DashboardLayout>

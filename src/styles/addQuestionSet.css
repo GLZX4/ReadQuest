@@ -1,0 +1,150 @@
+.addQuestionSet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it overlays everything */
+  }
+  
+  .addQuestionSet-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addQuestionSet-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .addQuestionSet-header h2 {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .close-btn {
+    background: #ff4d4f;
+    color: #fff;
+    border: none;
+    max-height: 50px;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .close-btn:hover {
+    background: #e04343;
+  }
+
+  .addQuestionSet-selectType {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addQuestionSet-btnGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .addQuestionSet-btnGroup button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer; 
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .addQuestionSet-btnGroup button:hover {
+    background: #0056b3;
+  }
+
+  .addQuestionSet-questionNums {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .question-circle {
+    width: 30px;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .question-circle.active {
+    background: #4caf50;
+    color: white;
+  }
+  
+  .question-circle:hover {
+    background: #81c784;
+  }
+  
+  .addQuestionSet-questionContent {
+    margin-top: 5px;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  
+  .addQuestionSet-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+  .addQuestion-btn, .removeQuestion-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .removeQuestion-btn {
+    background-color: #ff4d4f;
+  }
+  
+  .addQuestion-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .removeQuestion-btn:hover {
+    background-color: #e04343;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  

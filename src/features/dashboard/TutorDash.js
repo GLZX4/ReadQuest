@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../dashboard/DashboardLayout';
 import StudentContainer from '../../components/StudentContainer';
+import AddQuestionSet from '../../components/AddQuestionSet';
 import '../../styles/tutorDashboard.css';
 
 import { jwtDecode } from 'jwt-decode';
@@ -10,6 +11,7 @@ function TutorDash() {
   const [userID, setUserID] = useState(0);
   const [studentList, setStudentList] = useState([]);
   const [tutorData, setTutorData] = useState({});
+  const [showAddQuestionSet, setShowAddQuestionSet] = useState(false); // State to toggle the modal
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,9 +99,25 @@ function TutorDash() {
             </button>
           )}
         </div>
-
-
       </div>
+
+      <div className='dashboard-row'>
+      <div className="dashboard-item addQuestions">
+          <h2>Add Questions</h2>
+          <button
+            className="addQuestions-Btn"
+            onClick={() => setShowAddQuestionSet(true)} // Show the modal
+          >
+            Add Question Set
+          </button>
+        </div>
+      </div>
+
+      {/* Conditional Rendering for AddQuestionSet */}
+      {showAddQuestionSet && (
+        <AddQuestionSet onClose={() => setShowAddQuestionSet(false)} />
+      )}
+
     </DashboardLayout>
   );
 }

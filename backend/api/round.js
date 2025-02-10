@@ -6,32 +6,12 @@ const router = express.Router();
 
 // Proxy: Select a round by difficulty
 router.get('/select-by-difficulty', async (req, res) => {
-    const { difficulty, token } = req.query; // Extract difficulty and token from the query params
-
-    if (!difficulty) {
-        console.error('Difficulty is required');
-        return res.status(400).json({ message: 'Difficulty is required' });
-    }
-
-    if (!token) {
-        console.error('Token is required');
-        return res.status(400).json({ message: 'Token is required' });
-    }
-
     try {
-        console.log('Proxying request to hosted backend /api/round/select-by-difficulty');
-        console.log('Difficulty:', difficulty);
-        console.log('Token:', token);
-
         const response = await axios.get(
-            `${process.env.API_BASE_URL}/round/select-by-difficulty`,
-            {
-                params: { difficulty },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+            `${process.env.API_BASE_URL}/round/select-by-difficulty`,{
+                params: req.query,
+                headers: { Authorization: req.query.Authorization },
+            });
 
         res.status(response.status).json(response.data);
     } catch (error) {

@@ -6,10 +6,15 @@ function LoginPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
+    console.log('token in login:', token);
+    console.log('email in login:', email);
     
     if (token) {
       try {
+        console.log('Found Token')
         const decoded = jwtDecode(token);
+        console.log('decoded:', decoded);
         if (decoded.exp * 1000 < Date.now()) {
           window.location.href = '#/dashboard';
         } else {

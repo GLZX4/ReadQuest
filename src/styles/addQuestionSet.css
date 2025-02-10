@@ -115,7 +115,8 @@
     display: flex;
     justify-content: space-between;
   }
-  .addQuestion-btn, .removeQuestion-btn {
+
+  .controlBtn {
     background-color: #007bff;
     color: white;
     border: none;
@@ -125,8 +126,12 @@
     font-size: 14px;
   }
   
-  .removeQuestion-btn {
+  .remove {
     background-color: #ff4d4f;
+  }
+
+  .publish {
+    background-color: #4caf50;
   }
   
   .addQuestion-btn:hover {

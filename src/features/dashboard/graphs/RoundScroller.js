@@ -18,11 +18,14 @@ function RoundScroller({ userID }) {
 
   useEffect(() => {
     const fetchCompletedRounds = async () => {
+      const token = localStorage.getItem("token");
       try {
         console.log("Fetching completed rounds for student ID:", userID);
         const roundResponse = await axios.get(
-          "http://localhost:5000/api/student/completed-rounds",
-          { params: { userID } } // Directly use userID from props
+          "http://localhost:5000/api/student/completed-rounds",{
+          params: { userID }, 
+          headers: { Authorization: `Bearer ${token}` } 
+        } 
         );
         setRounds(roundResponse.data);
         console.log("Rounds:", roundResponse.data); // Debugging log

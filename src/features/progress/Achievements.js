@@ -11,10 +11,12 @@ function Achievements({ studentId }) {
   useEffect(() => {
     const fetchAchievements = async () => {
       const token = localStorage.getItem("token");
+      console.log('token:', token);
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/student/fetch-achievements",
-          { params: { studentId, token } }
+          "http://localhost:5000/api/student/fetch-achievements",{ 
+          params: { studentId }, 
+          headers: { Authorization: `Bearer ${token}` } }
         );
         setAchievements(response.data);
         console.log("Achievements", response.data);
@@ -28,9 +30,12 @@ function Achievements({ studentId }) {
   }, [studentId]);
 
   if (loading) {
-    return <div className="achievements-container">Loading achievements...
-      <LoadingSpinner/>
-    </div>;
+    return (
+      <div className="achievements-container">
+        Loading achievements...
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
@@ -38,7 +43,7 @@ function Achievements({ studentId }) {
       {achievements.length > 0 ? (
         achievements.map((achievement) => (
           <div
-            key={achievement.studentachievementid} // Use a unique key
+            key={achievement.achievementId} // Use the unique achievementId
             className="achievement-item noselect"
           >
             <img
@@ -46,9 +51,8 @@ function Achievements({ studentId }) {
               className="achievement-icon"
               alt="Achievement Icon"
             />
-            <h3>{achievement.title}</h3>
-            <p>{achievement.description}</p>
-            <p>Status: {achievement.status}</p>
+            <h3>{achievement.type}</h3>
+            <p>Status: {achievement.isUnlocked ? "Unlocked" : "Locked"}</p>
             {achievement.progress && (
               <div className="progress-bar-container">
                 <p>

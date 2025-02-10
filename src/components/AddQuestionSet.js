@@ -4,6 +4,8 @@ import FillInTheBlankQuestion from "../components/AddingQuestions/FillInTheBlank
 import TrueFalseQuestion from "../components/AddingQuestions/TrueFalseQuestion";
 import "../styles/addQuestionSet.css";
 
+import axios from 'axios';
+
 function AddQuestionSet({ onClose }) {
   const [questions, setQuestions] = useState([
     { type: "", data: {} },
@@ -33,6 +35,32 @@ function AddQuestionSet({ onClose }) {
     const updatedQuestions = [...questions];
     updatedQuestions[index].data = newData;
     setQuestions(updatedQuestions);
+  };
+
+  const handlePublishQuestionSet = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Assuming authentication token is required
+      const payload = {
+        questions,
+        questionType: questions[0].type, // Include the type for the entire set
+      };
+
+      const response = await axios.post(
+        "http://localhost:5000/api/tutor/add-Question-Set", // Update with your backend endpoint
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Question Set Published Successfully!");
+        onClose(); // Close the modal
+      }
+    } catch (error) {
+      console.error("Error publishing question set:", error);
+      alert("Failed to publish question set. Please try again.");
+    }
   };
 
   const renderQuestionComponent = (question, index) => {
@@ -125,14 +153,18 @@ function AddQuestionSet({ onClose }) {
 
             {/* Add/Remove Question Controls */}
             <div className="addQuestionSet-controls">
-              <button className="addQuestion-btn" onClick={handleAddQuestion}>
+              <button className="controlBtn add" onClick={handleAddQuestion}>
                 Add Question
               </button>
               <button
-                className="removeQuestion-btn"
+                className="controlBtn remove"
                 onClick={handleRemoveQuestion}
               >
                 Remove Question
+              </button>
+              <button className="controlBtn publish"
+              onClick={handlePublishQuestionSet}>
+                Publish Question Set
               </button>
             </div>
           </>

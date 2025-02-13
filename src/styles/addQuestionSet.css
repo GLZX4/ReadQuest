@@ -107,10 +107,17 @@
   
   .addQuestionSet-questionContent {
     margin-top: 5px;
-    margin-bottom: 25px;
+    margin-bottom: 5px;
     text-align: center;
   }
-  
+
+  .addQuestionSet-difficulty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
   .addQuestionSet-controls {
     display: flex;
     justify-content: space-between;

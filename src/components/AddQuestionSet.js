@@ -7,6 +7,8 @@ import "../styles/addQuestionSet.css";
 import axios from 'axios';
 
 function AddQuestionSet({ onClose }) {
+
+  const [difficulty, setDifficulty] = useState("easy");
   const [questions, setQuestions] = useState([
     { type: "", data: {} },
   ]);
@@ -42,7 +44,8 @@ function AddQuestionSet({ onClose }) {
       const token = localStorage.getItem("token"); // Assuming authentication token is required
       const payload = {
         questions,
-        questionType: questions[0].type, // Include the type for the entire set
+        questionType: questions[0].type,
+        difficulty,
       };
 
       const response = await axios.post(
@@ -149,6 +152,15 @@ function AddQuestionSet({ onClose }) {
                 questions[currentQuestionIndex],
                 currentQuestionIndex
               )}
+            </div>
+
+            <div className="addQuestionSet-difficulty">
+              <h4>Select the Difficulty Level for Whole Round:</h4>
+              <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
             </div>
 
             {/* Add/Remove Question Controls */}

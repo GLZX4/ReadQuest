@@ -31,7 +31,7 @@ async function createWindow() {
     width: 1200, 
     height: 900,
     minWidth: 900,
-    minHeight: 800,
+    minHeight: 700,
     icon: path.join(__dirname, 'public/icon.ico'),
    });
    

@@ -18,6 +18,7 @@ function TutorDash() {
       try {
         const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
+        console.log('token:', token);
         const tutorID = decoded.userId;
         setUserID(tutorID);
 

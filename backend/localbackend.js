@@ -10,6 +10,7 @@ const adminRoutes = require('./api/admin');
 const performanceRoutes = require('./api/performance');
 const roundRoutes = require('./api/round');
 const achievementRoutes = require('./api/achievement.js');
+const mertricRoutes = require('./api/metric.js');
 
 const app = express();
 const PORT = 5000;
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/performance', performanceRoutes);
 app.use('/api/round', roundRoutes);
 app.use('/api/achievement', achievementRoutes);
+app.use('/api/metric', mertricRoutes);
 
 // Catch-all for unmatched routes
 app.use((req, res, next) => {

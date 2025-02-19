@@ -3,17 +3,30 @@ import MultipleChoiceQuestion from "./questions/MultipleChoiceQuestions";
 import SentenceReorderQuestion from "./questions/SentenceReorderQuestion";
 import DragDropQuestion from "./questions/DragDropQuestions";
 
-const QuestionRenderer = ({ question, onAnswer }) => {
-    switch (question.type) {
-        case "multiple_choice":
-            return <MultipleChoiceQuestion question={question} onAnswer={onAnswer} />;
-        case "sentence_reorder":
-            return <SentenceReorderQuestion question={question} onAnswer={onAnswer} />;
-        case "drag_drop":
-            return <DragDropQuestion question={question} onAnswer={onAnswer} />;
+const QuestionRenderer = ({ question, onAnswer, timer }) => {
+    console.log("QuestionRenderer question: ", question);
+    console.log("QuestionRenderer answeroptions: ", question.answeroptions);
+    switch (question.questiontype) {
+        case "multipleChoice":
+            return <MultipleChoiceQuestion 
+            question={question}
+            options={question.answeroptions}
+            onAnswer={onAnswer}
+            timer={timer}
+            />;
+        case "sentenceReorder":
+            return <SentenceReorderQuestion 
+            question={question} 
+            onAnswer={onAnswer} 
+            />;
+        case "dragDrop":
+            return <DragDropQuestion 
+            question={question} 
+            onAnswer={onAnswer} 
+            />;
         default:
-            return <div>Invalid question type</div>;
-    }
+            return <p>Unknown question type: {question.questiontype}</p>;    
+        }
 };
 
 export default QuestionRenderer;

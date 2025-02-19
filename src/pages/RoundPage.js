@@ -9,7 +9,7 @@ import "../styles/roundpage.css";
 
 function RoundPage() {
   const disableTimer = false;
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(90);
   const [startTime, setStartTime] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [hasTimerExpired, setHasTimerExpired] = useState(false);
@@ -55,7 +55,8 @@ function RoundPage() {
         const roundResponse = await axios.get(
           "http://localhost:5000/api/round/select-by-difficulty",
           {
-            params: { difficulty, token }
+            params: { difficulty },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
   
@@ -75,7 +76,7 @@ function RoundPage() {
     if (qBankID !== null) {
       const fetchQuestion = async () => {
         try {
-          console.log("Fetching questions...");
+          console.log("Fetching questions with qbID:", qBankID, " Index:", questionIndex);
           const token = localStorage.getItem("token"); // Retrieve token again
           const response = await axios.get(
             "http://localhost:5000/api/round/get-question",
@@ -92,18 +93,24 @@ function RoundPage() {
             return;
           } else {
             setQuestion(questionData);
+            console.log("Fetched Question:", questionData);
           }
   
           console.log("Fetched Question:", question);
   
           let parsedAnswers = [];
           try {
-            parsedAnswers = JSON.parse(questionData.answeroptions).map(
-              (option) => option.option
-            );
+              // If answeroptions is a string, parse it. Otherwise, use it directly
+              const answerOptionsData = typeof questionData.answeroptions === "string" 
+                  ? JSON.parse(questionData.answeroptions) 
+                  : questionData.answeroptions;
+          
+              parsedAnswers = answerOptionsData.map((option) => option.option);
+              console.log("Parsed Answers:", parsedAnswers);
           } catch (e) {
-            console.error("Failed to parse answer options:", e);
+              console.error("Failed to parse answer options:", e);
           }
+          
   
           setCurrentQuestion({
             questionID: questionData.questionid,
@@ -126,9 +133,8 @@ function RoundPage() {
     console.log("Handling round completion...");
     const token = localStorage.getItem("token");
     const userID = jwtDecode(token).userId;
-    const completionRate =
-      totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
-  
+    const completionRate = totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
+    
     const roundStats = {
       correctAnswersCount,
       totalQuestions,
@@ -139,48 +145,27 @@ function RoundPage() {
       completionRate,
       userID,
     };
-  
+    
     console.log("Round Stats:", roundStats);
-  
+    
     try {
-      const metricResponse = await axios.post(
-        "http://localhost:5000/api/metric/calculate-metrics",
-        roundStats,
+      // ✅ SINGLE REQUEST to process metrics
+      const response = await axios.post(
+        "http://localhost:5000/api/metric/process-metrics",
+        roundStats,  // Send the stats directly in the request body
         {
-          params: { token }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
-      const { metrics } = metricResponse.data;
-  
-      const metricsWithUserID = {
-        ...metrics,
-        userID: parseInt(userID, 10),
-        totalRoundsPlayed: parseInt(metrics.totalRoundsPlayed || 0, 10),
-        averageAnswerTime: parseFloat(metrics.averageAnswerTime || 0),
-        accuracyRate: parseFloat(metrics.accuracyRate || 0),
-        attemptsPerQuestion: parseFloat(metrics.attemptsPerQuestion || 0),
-        completionRate: parseFloat(metrics.completionRate || 0),
-        consistencyScore: parseFloat(metrics.consistencyScore || 0),
-      };
-  
-      console.log("Calculated Metrics with UserID:", metricsWithUserID);
-  
-      // Update performance metrics
-      await axios.post(
-        "http://localhost:5000/api/performance/students/update-metrics",
-        metricsWithUserID,
-        {
-          params: { token } 
-        }
-      );
-  
+    
+      console.log("✅ Metrics Processed Successfully:", response.data);
+    
       // Update achievements progress for roundsPlayed
       await updateAchievementProgress("roundsPlayed", 1);
-  
+    
       navigate("/dashboard");
     } catch (error) {
-      console.error("Error updating performance metrics:", error);
+      console.error("❌ Error processing metrics:", error);
       navigate("/dashboard");
     }
   };
@@ -326,7 +311,7 @@ function RoundPage() {
   return (
     <div className="round-page">
       {question ? (
-        <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} />
+        <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} timer={timer} />
       ) : (
         <LoadingSpinner></LoadingSpinner>
       )}

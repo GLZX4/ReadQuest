@@ -6,11 +6,11 @@ const router = express.Router();
 
 // Proxy: Select a round by difficulty
 router.get('/select-by-difficulty', async (req, res) => {
+    console.log('Params in select-by-difficulty:', req.query);
     try {
-        const response = await axios.get(
-            `${process.env.API_BASE_URL}/round/select-by-difficulty`,{
+        const response = await axios.get(`${process.env.API_BASE_URL}/round/select-by-difficulty`,{
                 params: req.query,
-                headers: { Authorization: req.query.Authorization },
+                headers: { Authorization: req.headers.authorization },
             });
 
         res.status(response.status).json(response.data);
@@ -31,8 +31,7 @@ router.get('/retrieve-qBank', async (req, res) => {
     }
 
     try {
-        const response = await axios.get(
-            `${process.env.API_BASE_URL}/api/round/retrieve-qBank`,
+        const response = await axios.get(`${process.env.API_BASE_URL}/api/round/retrieve-qBank`,
             { params: { QBankID } }
         );
 
@@ -67,6 +66,7 @@ router.get('/get-question', async (req, res) => {
                 },
             }
         );
+        console.log('Response from hosted backend for new question:', response.data);
 
         res.status(response.status).json(response.data);
     } catch (error) {
@@ -83,7 +83,6 @@ router.post('/validate-answer', async (req, res) => {
     console.log('Proxying request to /round/validate-answer with: ');
     console.log('Received questionID:', questionID);
     console.log('Received selectedAnswer:', selectedAnswer);
-    console.log('Received token:', token);
 
     if (!questionID || !selectedAnswer) {
         console.error('questionID and selectedAnswer are required');
@@ -100,6 +99,8 @@ router.post('/validate-answer', async (req, res) => {
                 },
             }
         );
+
+        console.log('Response from hosted backend for answer validation:', response.data);
 
         res.status(response.status).json(response.data);
     } catch (error) {

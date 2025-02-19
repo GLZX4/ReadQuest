@@ -1,0 +1,15 @@
+.true-false-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.true-button {
+    background-color: green;
+    color: white;
+}
+
+.false-button {
+    background-color: red;
+    color: white;
+}

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../features/round/LoadingSpinner";
 import QuestionRenderer from "../components/QuestionRenderer";
+import Alerter from "../components/alerter";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "../styles/roundpage.css";
@@ -27,6 +28,7 @@ function RoundPage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [question, setQuestion] = useState(null);
   const [currentRound, setCurrentRound] = useState(1);
+  const [alert, setAlert] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -108,7 +110,7 @@ function RoundPage() {
               parsedAnswers = answerOptionsData.map((option) => option.option);
               console.log("Parsed Answers:", parsedAnswers);
           } catch (e) {
-              console.error("Failed to parse answer options:", e);
+            return (<Alerter message={"failed to parse Answers" + e} type='error'></Alerter>)
           }
           
   
@@ -120,7 +122,6 @@ function RoundPage() {
           setAnswers(parsedAnswers);
           setTotalQuestions((prevIndex) => prevIndex + 1);
         } catch (error) {
-          console.error("Error fetching question:", error);
           handleRoundComplete();
         }
       };
@@ -136,39 +137,40 @@ function RoundPage() {
     const completionRate = totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
     
     const roundStats = {
-      correctAnswersCount,
-      totalQuestions,
-      totalAnswerTime,
-      totalAttempts: attempts,
-      roundsPlayed: currentRound,
-      totalRoundsAvailable: 10,
-      completionRate,
-      userID,
+        correctAnswersCount,
+        totalQuestions,
+        totalAnswerTime,
+        totalAttempts: attempts,
+        roundsPlayed: currentRound,
+        totalRoundsAvailable: 10,
+        completionRate,
+        userID,
     };
-    
+
     console.log("Round Stats:", roundStats);
-    
+
     try {
-      // ✅ SINGLE REQUEST to process metrics
-      const response = await axios.post(
-        "http://localhost:5000/api/metric/process-metrics",
-        roundStats,  // Send the stats directly in the request body
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-    
-      console.log("✅ Metrics Processed Successfully:", response.data);
-    
-      // Update achievements progress for roundsPlayed
-      await updateAchievementProgress("roundsPlayed", 1);
-    
-      navigate("/dashboard");
+        // ✅ SINGLE REQUEST to process metrics
+        const response = await axios.post(
+            "http://localhost:5000/api/metric/process-metrics",
+            roundStats,  // Send the stats directly in the request body
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+
+        console.log("✅ Metrics Processed Successfully:", response.data);
+
+        // Update achievements progress for roundsPlayed
+        await updateAchievementProgress("roundsPlayed", 1);
+        await updateStreakProgress(userID);
+
+        navigate("/dashboard");
     } catch (error) {
-      console.error("❌ Error processing metrics:", error);
-      navigate("/dashboard");
+        setAlert({ message: "Failed to update achievements: " + error.message, type: "error" });
     }
-  };
+};
+
   
   const updateAchievementProgress = async (metric, value) => {
     const token = localStorage.getItem("token");
@@ -191,8 +193,25 @@ function RoundPage() {
       console.error("Error updating achievement progress:", error);
     }
   };
-  
 
+  const updateStreakProgress = async (studentId) => {
+    console.log("Updating streak progress...");
+    try {
+        const token = localStorage.getItem("token");
+        const response = await axios.post(
+            "http://localhost:5000/api/student/update-streak",
+            { studentId },
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        console.log("Updated Streak:", response.data);
+    } catch (error) {
+        setAlert({ message: "Error updating Streak: " + error.message, type: "error" });
+    }
+  };
+
+  
   const handleNextQuestion = () => {
     // Increment the question index
     if (answers.length > 0) {
@@ -202,6 +221,8 @@ function RoundPage() {
       handleRoundComplete(); // End the round if no more answers are available
     }
   };
+
+
 
   const handleAnswerAndAdvance = async (selectedAnswer) => {
     if (isAnswered) return;
@@ -308,13 +329,24 @@ function RoundPage() {
     }
   }, [currentQuestion]);
 
-  return (
+  //clear alert after 5 seconds
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => setAlert(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+  
+
+return (
     <div className="round-page">
-      {question ? (
-        <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} timer={timer} />
-      ) : (
-        <LoadingSpinner></LoadingSpinner>
-      )}
+        {alert && <Alerter message={alert.message} type={alert.type} />}
+        
+        {question ? (
+            <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} timer={timer} />
+        ) : (
+            <LoadingSpinner />
+        )}
     </div>
   );
 };

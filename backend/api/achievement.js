@@ -32,4 +32,19 @@ router.post('/update-progress', async (req, res) => {
     }
 });
 
+// Proxy: Fetch achievements for a specific student
+router.get('/fetch-achievements', async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.API_BASE_URL}/achievement/fetch-achievements`, {
+                params: req.query,
+                headers: { Authorization: req.query.Authorization },
+            });
+
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching achievements from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching achievements' });
+    }
+});
+
 module.exports = router;

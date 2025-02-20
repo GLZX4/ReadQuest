@@ -1,78 +1,72 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/achievements.css";
-import achievementIcon from "../../assets/images/achievements/Play-10-Rounds.svg";
+import Alerter from "../../components/alerter";
 import LoadingSpinner from "../round/LoadingSpinner";
+import achievementIcon from "../../assets/images/achievements/Play-10-Rounds.svg";
+import "../../styles/achievements.css";
 
 function Achievements({ studentId }) {
   const [achievements, setAchievements] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     const fetchAchievements = async () => {
+      if (!studentId) return;
+
       const token = localStorage.getItem("token");
-      console.log('token:', token);
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/student/fetch-achievements",{ 
-          params: { studentId }, 
-          headers: { Authorization: `Bearer ${token}` } }
+          "http://localhost:5000/api/achievement/fetch-achievements", 
+          {
+            params: { studentId },
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
+
         setAchievements(response.data);
-        console.log("Achievements", response.data);
+        console.log("Updated Achievements State:", response.data);
       } catch (error) {
-        console.error("Error fetching achievements", error);
+        setAlert({ message: "Error fetching achievements: " + error.message, type: "error" });
       } finally {
-        setLoading(false); // Set loading to false after fetch
+        setLoading(false);
       }
     };
+
     fetchAchievements();
   }, [studentId]);
 
-  if (loading) {
-    return (
-      <div className="achievements-container">
-        Loading achievements...
-        <LoadingSpinner />
-      </div>
+
+  // Auto-clear alert after 5 seconds
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => setAlert(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
+
+  if (loading) return (
+    <div className="achievements-container">
+      <LoadingSpinner />
+    </div>
     );
-  }
 
   return (
     <div className="achievements-container">
-      {achievements.length > 0 ? (
-        achievements.map((achievement) => (
-          <div
-            key={achievement.achievementId} // Use the unique achievementId
-            className="achievement-item noselect"
-          >
-            <img
-              src={achievementIcon}
-              className="achievement-icon"
-              alt="Achievement Icon"
-            />
-            <h3>{achievement.type}</h3>
-            <p>Status: {achievement.isUnlocked ? "Unlocked" : "Locked"}</p>
-            {achievement.progress && (
-              <div className="progress-bar-container">
-                <p>
-                  <b>Progress: </b>
-                </p>
-                <div
-                  className="progress-bar"
-                  style={{
-                    width: `${achievement.progressPercentage || 0}%`,
-                  }}
-                >
-                  <p>{achievement.progressPercentage || 0}%</p>
-                </div>
-              </div>
-            )}
+      {alert && <Alerter message={alert.message} type={alert.type} />}
+      {achievements.map((achievement) => (
+        <div 
+          key={achievement.achievementId} 
+          className={`achievement-item ${achievement.isUnlocked ? 'unlocked' : 'locked'}`}
+        >
+          <img src={achievementIcon} className="achievement-icon" alt="Achievement Icon" />
+          <span>{achievement.type}</span>
+          <p>Status: <b>{achievement.isUnlocked ? "Unlocked" : "Locked"}</b></p>
+          <div className="progress-bar-container">
+            <div className="progress-bar" style={{ width: `${achievement.progressPercentage}%` }} />
           </div>
-        ))
-      ) : (
-        <p>No achievements yet...</p>
-      )}
+        </div>
+      ))}
     </div>
   );
 }

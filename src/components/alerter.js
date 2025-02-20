@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/alerter.css";
 
 function Alerter({ message, type }) {
 
@@ -29,9 +30,16 @@ function Alerter({ message, type }) {
     }
     
     return (
-        <div className="alerter-body">
-            <strong>{alertContent}</strong>
-            <p className={alertClass}>{message}</p>
+        <div className="alerter-container">
+            <div className="alerter-header">
+                <strong>{alertContent}</strong>
+                <button className="close-alerter">X</button>
+            </div>
+            <div className="alerter-body">
+                <p className={alertClass}>{message}</p>
+            </div>
         </div>
     )
 }
+
+export default Alerter;

@@ -21,18 +21,33 @@ router.get('/completed-rounds', async (req, res) => {
     }
 });
 
-// Proxy: Fetch achievements for a specific student
-router.get('/fetch-achievements', async (req, res) => {
+router.get('/get-streak', async (req, res) => {
+    console.log('Entered get-streak proxy');
     try {
-        const response = await axios.get(`${process.env.API_BASE_URL}/student/fetch-achievements`, {
+        const response = await axios.get(`${process.env.API_BASE_URL}/student/get-streak`, {
                 params: req.query,
                 headers: { Authorization: req.query.Authorization },
             });
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching completed rounds from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching completed rounds' });
+    }
+});
+
+router.post('/update-streak', async (req, res) => {
+    console.log('Entered update Streak for: ', req.body);
+
+    try {
+        const response = await axios.post(`${process.env.API_BASE_URL}/student/update-streak`,
+            req.body, {
+            headers: { Authorization: req.headers.authorization },
+        });
 
         res.status(response.status).json(response.data);
     } catch (error) {
-        console.error('Error fetching achievements from API:', error.message);
-        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching achievements' });
+        console.error('Error in local proxy /process-metrics:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error processing metrics' });
     }
 });
 

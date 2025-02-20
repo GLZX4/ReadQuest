@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import BarChart from "./graphs/BarChart";
+import StreakTracker from "../progress/streakTracker";
 import RoundScroller from "./graphs/RoundScroller";
 import Achievements from "../progress/Achievements";
 import DashboardLayout from "../dashboard/DashboardLayout";
@@ -27,48 +27,6 @@ const StudentDash = () => {
     }
   }, []);
 
-  // Format date helper
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { month: "long" };
-    const month = new Intl.DateTimeFormat("en-US", options).format(date);
-    const day = date.getDate();
-    return `${month} the ${getOrdinalSuffix(day)}`;
-  };
-
-  // Initialize bar chart data
-  useEffect(() => {
-    const formattedData = [
-      { label: "2024-09-28", value: 150 },
-      { label: "2024-09-29", value: 250 },
-      { label: "2024-09-30", value: 100 },
-      { label: "2024-10-01", value: 200 },
-      { label: "2024-10-02", value: 300 },
-    ].map((item) => ({
-      label: formatDate(item.label),
-      value: item.value,
-    }));
-    setBarChartData(formattedData);
-  }, []);
-
-  // Fetch last 5 days of rounds
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/rounds/last-5-days");
-        const data = response.data.map((item) => ({
-          label: formatDate(item.day),
-          value: item.completedRounds * 50,
-        }));
-        setBarChartData(data);
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const navigateToRound = () => {
     window.location.href = '#/round';
   };
@@ -76,18 +34,20 @@ const StudentDash = () => {
   return (
     <DashboardLayout role="Student">
       <div className="dashboard-row">
-        <div className="dashboard-item weekProgress">
+        <div className="dashboard-item streakTracker">
           <span>
-            <b>Rounds Completed</b>
+            <b>Streak Tracker 🔥</b>
           </span>
-          <RoundScroller userID={studentId} />
+          <StreakTracker studentId={studentId}></StreakTracker>
         </div>
+
         <div className="dashboard-item continueBtn">
           <span>
             <b>Continue To Play</b>
           </span>
           <button onClick={navigateToRound}>Continue...</button>
         </div>
+
         <div className="dashboard-item continueBtn">
           <span>
             <b>Play New Round</b>
@@ -96,14 +56,15 @@ const StudentDash = () => {
             New Round...
           </button>
         </div>
+        
       </div>
 
       <div className="dashboard-row">
         <div className="dashboard-item barGraph">
           <span>
-            <b>Last Rounds in 5 Days</b>
+            <b>Spare</b>
           </span>
-          <BarChart data={barChartData} />
+          
         </div>
         <div className="dashboard-item achievements">
           <span>

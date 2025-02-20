@@ -1,17 +1,13 @@
-.weekProgress {
+.streakTracker {
     flex: 2; /* Medium Tile*/
 }
 
 .continueBtn {
     flex: 2; /* Small Tile */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
 }
 
 .continueBtn button {
+    position: relative;
     display: flex;
     padding: 11px 33px;
     max-height: 50px;

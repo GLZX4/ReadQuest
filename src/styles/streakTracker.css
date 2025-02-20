@@ -1,0 +1,42 @@
+
+.streak-container p {
+    font-size: 1em;
+}
+
+.streak-count {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #FF5733; /* Red flame color */
+}
+
+.streak-best {
+    font-size: 1em;
+    font-weight: bold;
+    color: #009688; /* Green color */
+}
+
+.streak-bar-container {
+    padding: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.streak-bar-container span {
+    font-size: 0.9em;
+}
+
+
+.streak-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.streak-progress {
+    height: 100%;
+    background: #FF5733;
+    transition: width 1.3s ease-in-out;
+}

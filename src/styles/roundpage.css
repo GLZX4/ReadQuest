@@ -5,6 +5,7 @@
     min-width: 100px;
     min-height: 100px;
     width: 80%;
+    max-width: 800px;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/alerter.css";
 
 function Alerter({ message, type }) {
+    const [visible, setVisible] = useState(true);
+
+    const handleClose = () => {
+        setVisible(false);
+    };
+    if (!visible) return null; // Hide when closed
 
     let alertContent;
     let alertClass;
@@ -33,7 +39,7 @@ function Alerter({ message, type }) {
         <div className="alerter-container">
             <div className="alerter-header">
                 <strong>{alertContent}</strong>
-                <button className="close-alerter">X</button>
+                <button className="close-alerter" onClick={handleClose}>X</button>
             </div>
             <div className="alerter-body">
                 <p className={alertClass}>{message}</p>

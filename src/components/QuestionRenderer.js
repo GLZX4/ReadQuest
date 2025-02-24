@@ -6,6 +6,7 @@ import DragDropQuestion from "./questions/DragDropQuestions";
 const QuestionRenderer = ({ question, onAnswer, timer }) => {
     console.log("QuestionRenderer question: ", question);
     console.log("QuestionRenderer answeroptions: ", question.answeroptions);
+    console.log("question.questiontype: ", question.questiontype);
     switch (question.questiontype) {
         case "multipleChoice":
             return <MultipleChoiceQuestion 
@@ -19,7 +20,7 @@ const QuestionRenderer = ({ question, onAnswer, timer }) => {
             question={question} 
             onAnswer={onAnswer} 
             />;
-        case "dragDrop":
+        case "drag_drop":
             return <DragDropQuestion 
             question={question} 
             onAnswer={onAnswer} 

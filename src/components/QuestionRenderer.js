@@ -19,11 +19,13 @@ const QuestionRenderer = ({ question, onAnswer, timer }) => {
             return <SentenceReorderQuestion 
             question={question} 
             onAnswer={onAnswer} 
+            timer={timer}
             />;
         case "drag_drop":
             return <DragDropQuestion 
             question={question} 
             onAnswer={onAnswer} 
+            timer={timer}
             />;
         default:
             return <p>Unknown question type: {question.questiontype}</p>;    

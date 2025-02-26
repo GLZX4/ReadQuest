@@ -1,13 +1,48 @@
-/* General container */
+.round-container-dragDrop {
+    position: relative;
+    top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #D1C4E9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px
+}
+
+.timerButton-Group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.timer {
+    font-weight: normal;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 .drag-drop-question {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    color: white; /* Ensures readability on dark background */
+    color: #000; 
+    background-color: #e8e8e8;
+    border-radius: 20px;
+    box-shadow: inset 0px 0px 20px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-/* Styling for draggable items */
 .drag-items {
     display: flex;
     gap: 10px;
@@ -17,41 +52,44 @@
 }
 
 .draggable {
-    padding: 12px 18px;
-    background: #6a5acd; /* Soft purple */
+    padding: 15px 25px;
+    background: #6a5acd;
     border: 2px solid #4b0082;
     border-radius: 8px;
     color: white;
     font-weight: bold;
     cursor: grab;
     user-select: none;
-    transition: background 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .draggable:hover {
     background: #483d8b;
 }
 
-/* Drop zone container */
 .drop-zones {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
 .drop-zone {
     width: 120px;
     height: 50px;
     background: rgba(255, 255, 255, 0.1);
-    border: 2px dashed #ffcc00;
+    border: 3px dashed #ffcc00;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: white;
-    transition: background 0.3s ease-in-out;
+    color: #000;
+    transition: all 0.3s ease-in-out;
 }
 
 .drop-zone:hover {
@@ -62,16 +100,16 @@
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* Submit button styling */
 .submit-answer {
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 25px 45px;
     background: #ffcc00;
     border: none;
     border-radius: 5px;
     font-weight: bold;
+    font-size: 1em;
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .submit-answer:hover {

@@ -13,7 +13,7 @@ function MainLayout({ children }) {
         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
             <Header />
             <main className="content-container">
-                <div className="background-container"></div>
+                <div className="background-container noselect"></div>
                 {children}
             </main>
             <Footer />

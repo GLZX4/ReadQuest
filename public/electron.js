@@ -62,17 +62,17 @@ function startBackend() {
 
   try {
     backendProcess = spawn("node", [backendPath], {
-      shell: true,
-      detached: true,       // Allow backend to run independently
-      windowsHide: true,    // Hide the terminal window on Windows
-      stdio: "ignore"       // Prevent console logs from opening a new terminal
+      detached: true,       // Run process independently
+      windowsHide: true,    // Hide the terminal window
+      stdio: "ignore"       // Ignore output so it doesn't trigger a new terminal
     });
 
-    backendProcess.unref(); // Ensure the backend process is detached properly
+    backendProcess.unref(); // Fully detach the process
   } catch (error) {
     console.error("❌ Failed to start backend process.", error);
   }
 }
+
 
 
 app.on("ready", () => {

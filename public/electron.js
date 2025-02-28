@@ -1,100 +1,87 @@
-const { app, BrowserWindow } = require('electron');
-const { spawn } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+const { app, BrowserWindow } = require("electron");
+const { spawn } = require("child_process");
+const path = require("path");
+const fs = require("fs");
 
 let mainWindow;
 let backendProcess;
 let isDev = false;
 
-const logFilePath = path.join(app.getPath('userData'), 'main-process.log');
-const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
+const logFilePath = path.join(app.getPath("userData"), "main-process.log");
+const logStream = fs.createWriteStream(logFilePath, { flags: "a" });
 
-// Redirect console logs
+// Redirect console logs to file and terminal
 console.log = (...args) => {
-  logStream.write(`[LOG] ${new Date().toISOString()} ${args.join(' ')}\n`);
-  process.stdout.write(`[LOG] ${new Date().toISOString()} ${args.join(' ')}\n`);
+  logStream.write(`[LOG] ${new Date().toISOString()} ${args.join(" ")}\n`);
+  process.stdout.write(`[LOG] ${new Date().toISOString()} ${args.join(" ")}\n`);
 };
 
 console.error = (...args) => {
-  logStream.write(`[ERROR] ${new Date().toISOString()} ${args.join(' ')}\n`);
-  process.stderr.write(`[ERROR] ${new Date().toISOString()} ${args.join(' ')}\n`);
+  logStream.write(`[ERROR] ${new Date().toISOString()} ${args.join(" ")}\n`);
+  process.stderr.write(`[ERROR] ${new Date().toISOString()} ${args.join(" ")}\n`);
 };
 
 // Log app start
-console.log("Electron app started");
+console.log("🚀 Electron app started");
 
 async function createWindow() {
-  isDev = await import('electron-is-dev').then((mod) => mod.default);
+  isDev = await import("electron-is-dev").then((mod) => mod.default);
 
-  mainWindow = new BrowserWindow({ 
-    width: 1200, 
+  mainWindow = new BrowserWindow({
+    width: 1200,
     height: 900,
     minWidth: 900,
     minHeight: 700,
-    icon: path.join(__dirname, 'public/icon.ico'),
-   });
-   
-  mainWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
+    icon: path.join(__dirname, "public/icon.ico"),
+  });
 
-  console.log('isDev:', isDev);
-  console.log('Load URL:', isDev
-    ? 'http://localhost:3000'
-    : `file://${path.join(__dirname, '../build/index.html')}`);
+  const appURL = isDev
+    ? "http://localhost:3000"
+    : `file://${path.join(__dirname, "../build/index.html")}`;
 
-  mainWindow.on('closed', () => (mainWindow = null));
+  mainWindow.loadURL(appURL);
+
+  console.log("🛠️  isDev:", isDev);
+  console.log("🌍 Loading URL:", appURL);
+
+  mainWindow.on("closed", () => (mainWindow = null));
 }
 
 function startBackend() {
-  const backendPath = isDev
-    ? path.join(__dirname, "../backend/server.js")
-    : path.join(process.resourcesPath, "output-folder/backend/server.js");
+  const devBackendPath = path.join(__dirname, "backend", "localbackend.js");
+  const prodBackendPath = path.join(process.resourcesPath, "backend", "localbackend.js");
 
-  const logFile = path.join(app.getPath("userData"), "backend.log");
+  const backendPath = isDev ? devBackendPath : prodBackendPath;
 
-  console.log("Backend log file:", logFile);
+  console.log("📂 Backend Path:", backendPath);
+
+  if (!fs.existsSync(backendPath)) {
+    console.error("❌ Backend file does not exist:", backendPath);
+    return;
+  }
 
   try {
     backendProcess = spawn("node", [backendPath], {
       shell: true,
+      detached: true,       // Allow backend to run independently
+      windowsHide: true,    // Hide the terminal window on Windows
+      stdio: "ignore"       // Prevent console logs from opening a new terminal
     });
 
-    // Pipe backend process output to the log file
-    const logStream = fs.createWriteStream(logFile, { flags: "a" });
-
-    backendProcess.stdout.pipe(logStream);
-    backendProcess.stderr.pipe(logStream);
-
-    backendProcess.on("error", (err) => {
-      console.error("Failed to start subprocess:", err);
-      fs.appendFileSync(logFile, `Failed to start subprocess: ${err.message}\n`);
-    });
-
-    backendProcess.on("exit", (code) => {
-      const exitMessage = `Backend process exited with code ${code}\n`;
-      console.log(exitMessage);
-      fs.appendFileSync(logFile, exitMessage);
-    });
+    backendProcess.unref(); // Ensure the backend process is detached properly
   } catch (error) {
-    console.error("Failed to start backend process.", error);
-    fs.appendFileSync(logFile, `Failed to start backend process: ${error.message}\n`);
+    console.error("❌ Failed to start backend process.", error);
   }
 }
 
 
-
-
-app.on('ready', () => {
+app.on("ready", () => {
   startBackend();
   createWindow();
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     if (backendProcess) {
       backendProcess.kill();
     }
@@ -102,7 +89,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (mainWindow === null) {
     startBackend();
     createWindow();

@@ -1,7 +1,7 @@
 import React from "react";
 import MultipleChoiceQuestion from "./questions/MultipleChoiceQuestions";
-import SentenceReorderQuestion from "./questions/SentenceReorderQuestion";
 import DragDropQuestion from "./questions/DragDropQuestions";
+import TrueFalseQuestion from "./questions/TrueFalseQuestion";
 
 const QuestionRenderer = ({ question, onAnswer, timer }) => {
     console.log("QuestionRenderer question: ", question);
@@ -15,14 +15,14 @@ const QuestionRenderer = ({ question, onAnswer, timer }) => {
             onAnswer={onAnswer}
             timer={timer}
             />;
-        case "sentenceReorder":
-            return <SentenceReorderQuestion 
+        case "drag_drop":
+            return <DragDropQuestion 
             question={question} 
             onAnswer={onAnswer} 
             timer={timer}
             />;
-        case "drag_drop":
-            return <DragDropQuestion 
+        case "trueFalse":
+            return <TrueFalseQuestion 
             question={question} 
             onAnswer={onAnswer} 
             timer={timer}

@@ -1,0 +1,124 @@
+@keyframes wanderBackground {
+    0% { transform: scale(1.1) translate(0, 0); }
+    25% { transform: scale(1.12) translate(-3px, 2px); }
+    50% { transform: scale(1.1) translate(3px, -2px); }
+    75% { transform: scale(1.12) translate(-2px, -3px); }
+    100% { transform: scale(1.1) translate(0, 0); }
+}
+
+
+.dashboard-card-scroller {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 20px;
+    scroll-snap-type: x mandatory;
+}
+  
+.dashboard-card {
+    flex: 0 0 250px;
+    height: 450px;
+    background: #fff;
+    border: 2px solid #A8A8A8;
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.4s ease-in-out;
+    cursor: pointer;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    position: relative; 
+    overflow: hidden; 
+}
+
+.dashboard-card span {
+    position: relative;
+    z-index: 2;
+    align-self: flex-end;
+    transition: all 0.4s ease-in-out;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.dashboard-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px);
+    opacity: 1;
+    transition: filter 0.4s ease-out, transform 0.4s ease-out;
+    transform: scale(1.11);
+}
+
+
+.streakCard::before {
+    background-image: url(../../assets/images/card-scroller/streak-card-background.svg);
+}
+
+.continueCard::before {
+    background-image: url(../../assets/images/card-scroller/continue-card-background.svg);
+}
+
+.newRoundCard::before {
+    background-image: url(../../assets/images/card-scroller/new-round-card-background.svg);
+}
+
+.achievementCard::before {
+    background-image: url(../../assets/images/card-scroller/achievement-card-background.svg);
+}
+
+
+.dashboard-card:hover::before {
+    filter: blur(0px);
+    transform: scale(1.1); 
+    animation: wanderBackground 4s infinite alternate ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.dashboard-card:hover {
+    transform: scale(1.05);
+}
+
+.dashboard-card.expanded::before {
+    filter: blur(0px);
+    opacity: 0;
+}
+
+.dashboard-card.expanded {
+    flex: 0 0 400px;
+    height: 400px;
+    transition: all 0.4s ease-in-out;
+    cursor: auto;
+}
+
+.dashboard-card.expanded span {
+    align-self: flex-start;
+}
+
+.streakCard-expandedContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    z-index: 1;
+    transition: all 0.4s ease-in-out;
+}

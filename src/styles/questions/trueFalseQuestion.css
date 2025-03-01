@@ -1,15 +1,37 @@
-.true-false-container {
+.true-false-question {
+    text-align: center;
+    padding: 20px;
+}
+
+.true-false-options {
     display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+    justify-content: center;
+    gap: 20px;
+}
+
+.true-button, .false-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
 }
 
 .true-button {
-    background-color: green;
+    background-color: #4CAF50;
     color: white;
 }
 
 .false-button {
-    background-color: red;
+    background-color: #FF5733;
     color: white;
+}
+
+.true-button:hover, .false-button:hover {
+    opacity: 0.8;
+}
+
+.selected {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

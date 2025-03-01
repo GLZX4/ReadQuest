@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="294" height="444" viewBox="0 0 294 444" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip_path_1">
+      <rect width="294" height="444" />
+    </clipPath>
+    <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Segoe+UI+Emoji</style>
+  </defs>
+  <g clip-path="url(#clip_path_1)">
+    <rect width="294" height="444" fill="#FFFFFF" fill-rule="evenodd" />
+    <text dx="0" dy="52.418" fill="#757575" font-family="Segoe UI Emoji" font-size="72" font-weight="normal" transform="matrix(0.906 0.423 -0.423 0.906 7 370)">🎮</text>
+    <text dx="0" dy="69.891" fill="#757575" font-family="Segoe UI Emoji" font-size="96" font-weight="normal" transform="matrix(0.829 -0.559 0.559 0.829 180.024 364.575)">🎮</text>
+    <text dx="0" dy="52.418" fill="#000000" font-family="Segoe UI Emoji" font-size="72" font-weight="normal" transform="matrix(0.961 -0.276 0.276 0.961 131.308 423)">⏩</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.731 0.682 -0.682 0.731 57.4 333)">⏩</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.946 0.326 -0.326 0.946 175 265)">⏩</text>
+    <text dx="0" dy="52.418" fill="#000000" font-family="Segoe UI Emoji" font-size="72" font-weight="normal" transform="matrix(0.921 0.391 -0.391 0.921 81 363)">🕹️</text>
+    <text dx="0" dy="69.891" fill="#000000" font-family="Segoe UI Emoji" font-size="96" font-weight="normal" transform="matrix(0.883 -0.469 0.469 0.883 88.373 337)">🕹️</text>
+    <text dx="0" dy="17.473" fill="#757575" font-family="Segoe UI Emoji" font-size="24" font-weight="normal" transform="matrix(0.875 -0.485 0.485 0.875 94.726 348.384)">🎮</text>
+    <text dx="0" dy="52.418" fill="#000000" font-family="Segoe UI Emoji" font-size="72" font-weight="normal" transform="matrix(0.921 0.391 -0.391 0.921 230 243)">🕹️</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.643 -0.766 0.766 0.643 237 443)">🕹️</text>
+    <text dx="0" dy="17.473" fill="#757575" font-family="Segoe UI Emoji" font-size="24" font-weight="normal" transform="matrix(0.875 -0.485 0.485 0.875 221 437)">🎮</text>
+  </g>
+</svg>

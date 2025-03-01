@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="294" height="444" viewBox="0 0 294 444" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip_path_1">
+      <rect width="294" height="444" />
+    </clipPath>
+    <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Segoe+UI+Emoji</style>
+  </defs>
+  <g clip-path="url(#clip_path_1)">
+    <rect width="294" height="444" fill="#FFFFFF" fill-rule="evenodd" />
+    <text dx="0" dy="52.418" fill="#000000" font-family="Segoe UI Emoji" font-size="72" font-weight="normal" transform="matrix(0.809 -0.588 0.588 0.809 147.824 420)">🎯</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.454 -0.891 0.891 0.454 193.34 369.466)">🎯</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.682 0.731 -0.731 0.682 106 362)">🎯</text>
+    <text dx="0" dy="69.891" fill="#000000" font-family="Segoe UI Emoji" font-size="96" font-weight="normal" transform="matrix(0.961 -0.276 0.276 0.961 207.362 384)">🎲</text>
+    <text dx="0" dy="69.891" fill="#000000" font-family="Segoe UI Emoji" font-size="96" font-weight="normal" transform="matrix(0.914 -0.407 0.407 0.914 -35 408)">🔄</text>
+    <text dx="0" dy="52.418" fill="#000000" font-family="Segoe UI Emoji" font-size="72" font-weight="normal" transform="matrix(0.087 -0.996 0.996 0.087 127 390)">🔄</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.829 0.559 -0.559 0.829 127 403)">🎲</text>
+    <text dx="0" dy="34.945" fill="#000000" font-family="Segoe UI Emoji" font-size="48" font-weight="normal" transform="matrix(0.829 0.559 -0.559 0.829 253 285)">🎲</text>
+    <text dx="0" dy="17.473" fill="#000000" font-family="Segoe UI Emoji" font-size="24" font-weight="normal" transform="matrix(-0.682 -0.731 0.731 -0.682 164.134 420.631)">🔄</text>
+  </g>
+</svg>

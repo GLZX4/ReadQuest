@@ -12,7 +12,7 @@ router.get('/completed-rounds', async (req, res) => {
     try {
         const response = await axios.get(`${process.env.API_BASE_URL}/student/completed-rounds`, {
                 params: req.query,
-                headers: { Authorization: req.query.Authorization },
+                headers: { Authorization: req.headers.authorization },
             });
         res.status(response.status).json(response.data);
     } catch (error) {
@@ -22,11 +22,12 @@ router.get('/completed-rounds', async (req, res) => {
 });
 
 router.get('/get-streak', async (req, res) => {
-    console.log('Entered get-streak proxy');
+    console.log('Entered get-streak proxy with: ', req.query);
+    console.log('req.headers:', req.headers);
     try {
         const response = await axios.get(`${process.env.API_BASE_URL}/student/get-streak`, {
                 params: req.query,
-                headers: { Authorization: req.query.Authorization },
+                headers: { Authorization: req.headers.authorization },
             });
         res.status(response.status).json(response.data);
     } catch (error) {

@@ -3,6 +3,7 @@ import Login from "../features/auth/Login";
 import StudentRegister from "../features/auth/StudentRegister";
 import TutorRegister from "../features/auth/TutorRegister";
 import AdminRegister from "../features/auth/AdminRegister";
+import Alerter from "../components/alerter";  // Import Alerter component
 import { AnimatePresence, motion } from "framer-motion";
 import "../styles/authToggle.css";
 
@@ -10,6 +11,7 @@ function AuthToggle() {
     const [isLogin, setIsLogin] = useState(true);
     const [isTutor, setIsTutor] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [alert, setAlert] = useState(null);  // 🔔 Store alert message
 
     const toggleForm = () => {
         setIsLogin(!isLogin);
@@ -21,7 +23,15 @@ function AuthToggle() {
 
     const toggleAdmin = () => {
         setIsAdmin(!isAdmin);
-    }
+    };
+
+    const showSuccessMessage = (message) => {
+        setAlert({ message, type: "success" });
+        setIsLogin(true); // Automatically switch to login after successful registration
+
+        // Remove alert after 5 seconds
+        setTimeout(() => setAlert(null), 5000);
+    };
 
     const animationVariants = {
         hidden: { opacity: 0, x: -100 },
@@ -31,6 +41,9 @@ function AuthToggle() {
 
     return (
         <div className="authContainer">
+            {/* ✅ Display alert if exists */}
+            {alert && <Alerter message={alert.message} type={alert.type} />}
+
             <AnimatePresence wait>
                 {isLogin ? (
                     <motion.div
@@ -54,7 +67,7 @@ function AuthToggle() {
                         transition={{ duration: 0.5 }}
                         className="auth-form"
                     >
-                        <AdminRegister />
+                        <AdminRegister onSuccess={showSuccessMessage} />
                     </motion.div>
                 ) : isTutor ? (
                     <motion.div
@@ -66,7 +79,7 @@ function AuthToggle() {
                         transition={{ duration: 0.5 }}
                         className="auth-form"
                     >
-                        <TutorRegister />
+                        <TutorRegister onSuccess={showSuccessMessage} />
                     </motion.div>
                 ) : (
                     <motion.div
@@ -78,7 +91,7 @@ function AuthToggle() {
                         transition={{ duration: 0.5 }}
                         className="auth-form"
                     >
-                        <StudentRegister />
+                        <StudentRegister onSuccess={showSuccessMessage} />
                     </motion.div>
                 )}
             </AnimatePresence>

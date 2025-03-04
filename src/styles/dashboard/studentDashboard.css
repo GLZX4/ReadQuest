@@ -96,7 +96,7 @@
 
 .dashboard-card.expanded {
     flex: 0 0 400px;
-    height: 400px;
+    height: 450px;
     transition: all 0.4s ease-in-out;
     cursor: auto;
 }

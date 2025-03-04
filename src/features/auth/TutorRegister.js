@@ -1,34 +1,36 @@
-// src/features/auth/TutorRegister.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function TutorRegister() {
+function TutorRegister({ onSuccess }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatpassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
     const [verificationCode, setVerificationCode] = useState('');
     const [error, setError] = useState('');
 
     const handleRegister = async (e) => {
+        e.preventDefault();
 
         if (password !== repeatPassword) {
             setError('Passwords do not match');
             return;
         }
 
-        e.preventDefault();
+        const toSubmit = { name, email, password, role: "tutor", verificationCode };
+        console.log('Tutor Registering:', toSubmit);
+
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register-tutor', {
-                name,
-                email,
-                password,
-                verificationCode
-            });
-            console.log("Tutor Registration successful", response.data);
-            window.location.href = '/login'; // Redirect to login after successful registration
+            const response = await axios.post('http://localhost:5000/api/auth/register-tutor', toSubmit);
+            console.log("✅ Tutor Registration successful", response.data);
+
+            setError(''); 
+
+            if (onSuccess) {
+                onSuccess("Tutor account created successfully! Please log in.");
+            }
         } catch (err) {
-            console.error('Error during tutor registration:', err);
+            console.error('❌ Error during tutor registration:', err);
             setError(err.response?.data?.message || 'Tutor registration failed');
         }
     };
@@ -62,7 +64,7 @@ function TutorRegister() {
                     type="password"
                     placeholder="Repeat Password"
                     value={repeatPassword}
-                    onChange={(e) => setRepeatpassword(e.target.value)}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
                     required
                 />
                 <input
@@ -72,9 +74,11 @@ function TutorRegister() {
                     onChange={(e) => setVerificationCode(e.target.value)}
                     required
                 />
+                <input type="hidden" value="tutor" name="role" />
                 <button type="submit">Register</button>
             </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+
+            {error && <p id="error-code" style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 }

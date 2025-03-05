@@ -27,7 +27,7 @@ header {
 
 .ReadQuest-Title {
     font-family: 'Bakbak One', sans-serif;
-    display: inline-flex; /* Ensures motion animations apply */
+    display: inline-flex;
     font-size: 3rem;
     font-weight: bold;
     cursor: pointer;
@@ -94,13 +94,13 @@ header {
   .animated-text span {
     display: inline-block;
     animation: wave 1s infinite ease-in-out;
-    animation-play-state: paused; /* Start paused */
-    transform-origin: bottom; /* Animation pivot */
+    animation-play-state: paused;
+    transform-origin: bottom;
     transition: transform 0.3s ease-in-out;
   }
   
   .logo-link:hover .animated-text span {
-    animation-play-state: running; /* Activate animation on hover */
+    animation-play-state: running;
   }
   
   .animated-text span:nth-child(1) {
@@ -137,7 +137,7 @@ header {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-10px); /* Adjust height as needed */
+      transform: translateY(-10px);
     }
   }
   

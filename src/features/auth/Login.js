@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();  // ✅ Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // ✅ Prevent default form submission behavior
+    event.preventDefault();
 
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", {
@@ -22,11 +22,9 @@ function Login() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("name", name);
+      window.dispatchEvent(new Event("storage"));
 
-      console.log("🔄 Forcing re-check of Auth State...");
-      window.dispatchEvent(new Event("storage")); // ✅ Forces Auth state update
-
-      navigate("/dashboard"); // ✅ Redirect without full reload
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error.response?.data?.message || error.message);
     }

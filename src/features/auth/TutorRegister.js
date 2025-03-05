@@ -30,7 +30,7 @@ function TutorRegister({ onSuccess }) {
                 onSuccess("Tutor account created successfully! Please log in.");
             }
         } catch (err) {
-            console.error('❌ Error during tutor registration:', err);
+            console.error('Error during tutor registration:', err);
             setError(err.response?.data?.message || 'Tutor registration failed');
         }
     };

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import "../styles/header.css";
 import HeaderText from "./HeaderText";
-import { AuthContext } from "../services/authContext"; // Import context
+import { AuthContext } from "../services/authContext";
 
 function Header() {
-    const { userName, isLoggedIn, logoutUser } = useContext(AuthContext);  // Use the auth state
+    const { userName, isLoggedIn, logoutUser } = useContext(AuthContext);
 
     const date = new Date();
     const formattedDate = date.toLocaleString([], { hour: "2-digit", minute: "2-digit" });

@@ -3,7 +3,7 @@ import Login from "../features/auth/Login";
 import StudentRegister from "../features/auth/StudentRegister";
 import TutorRegister from "../features/auth/TutorRegister";
 import AdminRegister from "../features/auth/AdminRegister";
-import Alerter from "../components/alerter";  // Import Alerter component
+import Alerter from "../components/alerter";
 import { AnimatePresence, motion } from "framer-motion";
 import "../styles/authToggle.css";
 
@@ -11,7 +11,7 @@ function AuthToggle() {
     const [isLogin, setIsLogin] = useState(true);
     const [isTutor, setIsTutor] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [alert, setAlert] = useState(null);  // 🔔 Store alert message
+    const [alert, setAlert] = useState(null); 
 
     const toggleForm = () => {
         setIsLogin(!isLogin);
@@ -27,7 +27,7 @@ function AuthToggle() {
 
     const showSuccessMessage = (message) => {
         setAlert({ message, type: "success" });
-        setIsLogin(true); // Automatically switch to login after successful registration
+        setIsLogin(true);
 
         // Remove alert after 5 seconds
         setTimeout(() => setAlert(null), 5000);
@@ -41,7 +41,6 @@ function AuthToggle() {
 
     return (
         <div className="authContainer">
-            {/* ✅ Display alert if exists */}
             {alert && <Alerter message={alert.message} type={alert.type} />}
 
             <AnimatePresence wait>

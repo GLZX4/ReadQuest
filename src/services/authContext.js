@@ -11,10 +11,6 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem("token");
         const storedName = localStorage.getItem("name");
 
-        console.log("Checking user status...");
-        console.log("Token from storage:", token);
-        console.log("Stored name from storage:", storedName);
-
         if (token) {
             try {
                 const decoded = jwtDecode(token);
@@ -28,8 +24,6 @@ export const AuthProvider = ({ children }) => {
 
                 setIsLoggedIn(true);
                 setUserName(storedName ? storedName.split(" ")[0] : "User");
-
-                console.log("✅ User logged in:", storedName);
             } catch (error) {
                 console.error("Error decoding token:", error);
                 logoutUser();
@@ -37,7 +31,6 @@ export const AuthProvider = ({ children }) => {
         } else {
             setIsLoggedIn(false);
             setUserName("Guest");
-            console.log("🚪 No valid token, user set to Guest");
         }
     };
 
@@ -51,7 +44,6 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const logoutUser = () => {
-        console.log("🔴 Logging out...");
         localStorage.removeItem("name");
         localStorage.removeItem("token");
         localStorage.removeItem("email");

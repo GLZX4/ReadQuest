@@ -80,7 +80,8 @@ const StudentDash = () => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                <button onClick={() => window.location.href = '#/round'}>Continue...</button>
+                <button  className="roundBtn continueBtn" 
+                onClick={() => window.location.href = '#/round'}>Continue...</button>
                 <button className="close-btn" onClick={(e) => {
                     e.stopPropagation(); 
                     toggleExpand("continue");
@@ -104,7 +105,7 @@ const StudentDash = () => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                <button className="newRound" onClick={() => window.location.href = '#/round'}>New Round...</button>
+                <button className="roundBtn newRound" onClick={() => window.location.href = '#/round'}>New Round...</button>
                 <button className="close-btn" onClick={(e) => {
                     e.stopPropagation(); 
                     toggleExpand("newRound");

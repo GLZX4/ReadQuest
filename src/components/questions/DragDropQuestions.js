@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ReturnButton from "../../features/round/returnButton";
+import ReturnButton from "../common/returnButton";
 import "../../styles/questions/dragDropQuestion.css";
 
 const DragDropQuestion = ({ question, onAnswer, timer }) => {

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import MultipleChoiceQuestion from "../components/AddingQuestions/MultipleChoiceQuestion";
-import FillInTheBlankQuestion from "../components/AddingQuestions/FillInTheBlankQuestion";
-import TrueFalseQuestion from "../components/AddingQuestions/TrueFalseQuestion";
-import "../styles/addQuestionSet.css";
+import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
+import FillInTheBlankQuestion from "./FillInTheBlankQuestion";
+import TrueFalseQuestion from "./TrueFalseQuestion";
+import "../../styles/addQuestionSet.css";
 
 import axios from 'axios';
 

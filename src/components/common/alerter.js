@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/alerter.css";
+import "../../styles/alerter.css";
 
 function Alerter({ message, type }) {
     const [visible, setVisible] = useState(true);

@@ -1,9 +1,9 @@
 // src/pages/RoundPage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import LoadingSpinner from "../features/round/LoadingSpinner";
-import QuestionRenderer from "../components/QuestionRenderer";
-import Alerter from "../components/alerter";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import QuestionRenderer from "../components/questions/QuestionRenderer";
+import Alerter from "../components/common/alerter";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "../styles/roundpage.css";

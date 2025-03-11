@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/schoolList.css";
+import "../../styles/schoolList.css";
 
 function SchoolsList({ schools }) {
     

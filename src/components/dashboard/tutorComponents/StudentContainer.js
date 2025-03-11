@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/studentContainer.css";
+import "../../../styles/studentContainer.css";
 
 function StudentContainer({ student }) {
     const [isExpanded, setIsExpanded] = useState(false);

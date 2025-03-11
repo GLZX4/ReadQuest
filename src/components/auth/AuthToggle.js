@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import Login from "../features/auth/Login";
-import StudentRegister from "../features/auth/StudentRegister";
-import TutorRegister from "../features/auth/TutorRegister";
-import AdminRegister from "../features/auth/AdminRegister";
-import Alerter from "../components/alerter";
+import Login from "./Login";
+import StudentRegister from "./StudentRegister";
+import TutorRegister from "./TutorRegister";
+import AdminRegister from "./AdminRegister";
+import Alerter from "../common/alerter";
 import { AnimatePresence, motion } from "framer-motion";
-import "../styles/authToggle.css";
+import "../../styles/authToggle.css";
 
 function AuthToggle() {
     const [isLogin, setIsLogin] = useState(true);

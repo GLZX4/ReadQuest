@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import "../styles/header.css";
+import "../../styles/header.css";
 import HeaderText from "./HeaderText";
-import { AuthContext } from "../services/authContext";
+import { AuthContext } from "../../services/authContext";
 
 function Header() {
     const { userName, isLoggedIn, logoutUser } = useContext(AuthContext);

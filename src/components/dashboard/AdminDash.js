@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AddSchool from "../../components/AddSchool";
+import AddSchool from "../schools/AddSchool";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import TutorCodeGenerator from "../../components/tutorCodeGeneration";
-import SchoolsList from "../../components/SchoolsList";
+import SchoolsList from "../schools/SchoolsList";
 import "../../styles/admindash.css";
 
 function AdminDash() {

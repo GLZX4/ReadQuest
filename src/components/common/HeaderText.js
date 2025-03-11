@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import "../styles/header.css";
+import "../../styles/header.css";
 
 const waveVariants = {
   rest: { y: 0 },

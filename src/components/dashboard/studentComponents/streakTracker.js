@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Alerter from "../../components/alerter";
-import "../../styles/streakTracker.css";
+import Alerter from "../../common/alerter";
+import "../../../styles/streakTracker.css";
 
 const StreakTracker = ({ studentId }) => {
     const [streak, setStreak] = useState({ current: 0, best: 0 });

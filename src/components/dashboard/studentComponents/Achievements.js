@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Alerter from "../../components/alerter";
-import LoadingSpinner from "../round/LoadingSpinner";
-import achievementIcon from "../../assets/images/achievements/Play-10-Rounds.svg";
-import "../../styles/achievements.css";
+import Alerter from "../../common/alerter";
+import LoadingSpinner from "../../common/LoadingSpinner";
+import achievementIcon from "../../../assets/images/achievements/Play-10-Rounds.svg";
+import "../../../styles/achievements.css";
 
 function Achievements({ studentId }) {
   const [achievements, setAchievements] = useState([]);

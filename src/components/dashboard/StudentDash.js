@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import StreakTracker from "../progress/streakTracker";
-import Achievements from "../progress/Achievements";
+import StreakTracker from "./studentComponents/streakTracker";
+import Achievements from "./studentComponents/Achievements";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import "../../styles/dashboard.css";
 import "../../styles/dashboard/studentDashboard.css";

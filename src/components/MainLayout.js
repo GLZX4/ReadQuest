@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./common/Header";
+import Footer from "./common/Footer";
 import "../styles/mainLayout.css";
 import { startBackgroundAnimation } from "../services/BackgroundFiller";
 import { AuthContext } from "../services/authContext";  // Import the context

@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import AdminDash from '../features/dashboard/AdminDash';
-import StudentDash from '../features/dashboard/StudentDash';
-import TutorDash from '../features/dashboard/TutorDash';
-import LoadingSpinner from '../features/round/LoadingSpinner';
+import AdminDash from '../components/dashboard/AdminDash';
+import StudentDash from '../components/dashboard/StudentDash';
+import TutorDash from '../components/dashboard/TutorDash';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 function DashboardPage() {
   const navigate = useNavigate();

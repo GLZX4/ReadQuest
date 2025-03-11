@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../dashboard/DashboardLayout';
-import StudentContainer from '../../components/StudentContainer';
-import AddQuestionSet from '../../components/AddQuestionSet';
+import StudentContainer from '../dashboard/tutorComponents/StudentContainer';
+import AddQuestionSet from '../addingQuestions/AddQuestionSet';
 import '../../styles/tutorDashboard.css';
 
 import { jwtDecode } from 'jwt-decode';

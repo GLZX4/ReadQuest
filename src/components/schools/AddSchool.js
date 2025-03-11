@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import '../styles/addschool.css';
+import '../../styles/addschool.css';
 import axios from 'axios';
 
 function AddSchool() {

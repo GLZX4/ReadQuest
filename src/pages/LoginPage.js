@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import AuthToggle from '../components/AuthToggle';
+import AuthToggle from '../components/auth/AuthToggle';
 import { jwtDecode } from 'jwt-decode';
 
 function LoginPage() {

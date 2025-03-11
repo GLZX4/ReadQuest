@@ -1,7 +1,7 @@
 import React from "react";
-import MultipleChoiceQuestion from "./questions/MultipleChoiceQuestions";
-import DragDropQuestion from "./questions/DragDropQuestions";
-import TrueFalseQuestion from "./questions/TrueFalseQuestion";
+import MultipleChoiceQuestion from "./MultipleChoiceQuestions";
+import DragDropQuestion from "./DragDropQuestions";
+import TrueFalseQuestion from "./TrueFalseQuestion";
 
 const QuestionRenderer = ({ question, onAnswer, timer }) => {
     console.log("QuestionRenderer question: ", question);

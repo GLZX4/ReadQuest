@@ -41,6 +41,7 @@
     flex-direction: column;
     justify-content: space-between;
     gap: 20px;
+    z-index: 2;
 }
 
 .dashboard-row {

@@ -72,6 +72,7 @@ header {
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 .logout:hover {

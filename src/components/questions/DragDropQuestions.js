@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import ReturnButton from "../../features/round/returnButton";
-import "../../styles/questions/dragDropQuestion.css"
+import "../../styles/questions/dragDropQuestion.css";
 
 const DragDropQuestion = ({ question, onAnswer, timer }) => {
-  // ✅ Provide a default empty object if additionalData is missing
   const additionalData = question.additionalData || {};
-  const dropZones = additionalData.dropZones || 4; // Default to 4 drop zones if undefined
+  const dropZones = additionalData.dropZones || 4;
 
   const [currentDrops, setCurrentDrops] = useState(Array(dropZones).fill(null));
 
@@ -15,11 +14,25 @@ const DragDropQuestion = ({ question, onAnswer, timer }) => {
     setCurrentDrops(updatedDrops);
   };
 
+  const handleSubmit = () => {
+    const formattedAnswer = currentDrops
+        .map((item, index) => ({
+            id: item?.id ?? null,
+            position: index + 1
+        }))
+        .filter(item => item.id !== null);
+
+    console.log("📝 Formatted Answer Sent to Backend:", JSON.stringify(formattedAnswer, null, 2));
+
+    onAnswer(formattedAnswer);
+};
+
+
   return (
     <div className="round-container-dragDrop">
       <div className="timerButton-Group">
-        <h3 className="timer noselect">Time reamaining: <b>{timer}s</b></h3>
-        <ReturnButton></ReturnButton>
+        <h3 className="timer noselect">Time remaining: <b>{timer}s</b></h3>
+        <ReturnButton />
       </div>
       <div className="drag-drop-question">
         <h2>{question.questiontext}</h2>
@@ -50,9 +63,9 @@ const DragDropQuestion = ({ question, onAnswer, timer }) => {
           ))}
         </div>
 
-        <button className="submit-answer" onClick={() => onAnswer(currentDrops)}>Submit</button>
-        </div>
+        <button className="submit-answer" onClick={handleSubmit}>Submit</button>
       </div>
+    </div>
   );
 };
 

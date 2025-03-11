@@ -4,9 +4,9 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap; /* Prevent wrapping since you want a column */
-    align-items: flex-start; /* Align items to the start of the column */
-    gap: 10px; /* Add consistent spacing between items */
+    flex-wrap: nowrap; 
+    align-items: flex-start; 
+    gap: 10px; 
     border: 1px solid gray;
     border-radius: 5px;
     padding: 10px;

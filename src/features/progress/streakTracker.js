@@ -9,8 +9,6 @@ const StreakTracker = ({ studentId }) => {
 
     useEffect(() => {
         if (!studentId) return;
-
-        // ✅ Check if streak exists in localStorage
         const cachedStreak = localStorage.getItem(`streak-${studentId}`);
         if (cachedStreak) {
             setStreak(JSON.parse(cachedStreak));

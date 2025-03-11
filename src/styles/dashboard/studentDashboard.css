@@ -114,7 +114,7 @@
     flex-direction: column;
     gap: 10px;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     position: absolute;
     top: 0;
     left: 0;
@@ -125,11 +125,6 @@
     border-radius: 15px;
     z-index: 1;
     box-sizing: border-box;
-}
-
-
-.close-btn {
-    margin: auto 0;
 }
 
 .roundBtn {

@@ -44,8 +44,7 @@ npm start
 Download the latest executable from the releases page below:
 
 ```bash
-[git clone https://github.com/GLZX4/ReadQuest.git
-cd ReadQuest](https://github.com/GLZX4/ReadQuest/releases)
+https://github.com/GLZX4/ReadQuest/releases
 ```
 
 ### 2. Install and Run the Application 

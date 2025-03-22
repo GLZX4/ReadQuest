@@ -18,7 +18,7 @@ ReadQuest is an educational platform designed to improve children's reading comp
 
 ---
 
-## 🧪 Getting Started (Local Development)
+## Getting Started (Local Development)
 
 ### 1. Clone the Repository
 

@@ -37,3 +37,18 @@ node localbackend
 ```bash
 npm start
 ```
+
+## Getting Started (Deployment)
+
+### 1. Download the Executable
+Download the latest executable from the releases page below:
+
+```bash
+[git clone https://github.com/GLZX4/ReadQuest.git
+cd ReadQuest](https://github.com/GLZX4/ReadQuest/releases)
+```
+
+### 2. Install and Run the Application 
+Install the applicaton with the installer and then run the application once installed.
+You can then login as normal.
+

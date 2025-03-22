@@ -28,8 +28,12 @@ cd ReadQuest
 ```
 
 ### 2. Start LocalBackend Server
+```bash
 cd backend
 node localbackend
+```
 
 ### 3. Start Frontend
+```bash
 npm start
+```

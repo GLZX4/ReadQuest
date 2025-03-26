@@ -6,11 +6,15 @@ import QuestionRenderer from "../components/questions/QuestionRenderer";
 import Alerter from "../components/common/alerter";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import startSound1 from "../assets/audio/newRound.wav";
+import startSound2 from "../assets/audio/newRound2.wav";
+import startSound3 from "../assets/audio/newRound3.wav";
 import "../styles/roundpage.css";
 
 function RoundPage() {
   const disableTimer = false;
   const [timer, setTimer] = useState(90);
+  const [hasPlayedRoundSound, setHasPlayedRoundSound] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [hasTimerExpired, setHasTimerExpired] = useState(false);
@@ -30,6 +34,9 @@ function RoundPage() {
   const [currentRound, setCurrentRound] = useState(1);
   const [alert, setAlert] = useState(null);
   const navigate = useNavigate();
+
+  const roundStartSounds = [startSound1, startSound2, startSound3];
+
 
   useEffect(() => {
     const fetchRoundByDifficulty = async () => {
@@ -76,6 +83,11 @@ function RoundPage() {
   
   useEffect(() => {
     if (qBankID !== null) {
+      if (!hasPlayedRoundSound) {
+        const randomSound = new Audio(roundStartSounds[Math.floor(Math.random() * roundStartSounds.length)]);
+        randomSound.play().catch(e => console.warn("🔇 Failed to play round-start sound:", e));
+        setHasPlayedRoundSound(true);
+      }      
       const fetchQuestion = async () => {
         try {
           console.log("Fetching questions with qbID:", qBankID, " Index:", questionIndex);

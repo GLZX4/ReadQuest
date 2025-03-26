@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Alerter from "../common/alerter";
+
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -26,14 +28,18 @@ function Login() {
 
       navigate("/dashboard");
     } catch (error) {
-      console.error("Login failed:", error.response?.data?.message || error.message);
+      const message = error.response?.data?.message || "Login failed. Please try again.";
+      setError(null);
+      setTimeout(() => setError(message), 10);
+      console.error("Login failed:", message);
     }
   };
 
-    // Function to toggle password visibility adapted from https://dev.to/annaqharder/hideshow-password-in-react-513a
   return (
     <div className="login-register-container">
       <h1 className="noselect">Login</h1>
+
+
       <form className="login-register" onSubmit={handleLogin}>
         <input
           type="email"
@@ -54,8 +60,8 @@ function Login() {
           {showPassword ? "Hide Password" : "Show Password"}
         </label>
         <button type="submit">Login</button>
-        {error && <p>{error}</p>}
       </form>
+      {error && <Alerter message={error} type="error" onClose={() => setError(null)} />}
     </div>
   );
 }

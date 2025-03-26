@@ -1,16 +1,53 @@
-# ReadQuest - Enhancing Language and literacy through gamification 
+# ReadQuest  
+*Enhancing Language and Literacy Through Gamification*
 
+ReadQuest is an educational platform designed to improve children's reading comprehension and literacy through gamified learning. Students complete interactive reading rounds, earn rewards, and track their progress — all while tutors monitor performance and adjust difficulty based on live metrics.
 
+>  **Note:** This project is currently in **Alpha**. Some features and endpoints are incomplete or broken. Expect bugs and placeholder content.
 
-## Available Scripts
+---
 
+## Features (In Progress)
 
-To start the program, start the server using:
-### `cd backend`
+-  Student login and round-based reading tasks
+-  Tutor dashboard to assign and review question sets
+-  Gamified elements: achievements, streaks, visual progress
+-  Basic performance tracking (accuracy, time, attempts)
+-  Difficulty adjustment logic
+-  Admin panel
 
-Then use:
-### `node localbackend`
+---
 
-Then in a new command prompt, Use: 
-### `npm start`
+## Getting Started (Local Development)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/GLZX4/ReadQuest.git
+cd ReadQuest
+```
+
+### 2. Start LocalBackend Server
+```bash
+cd backend
+node localbackend
+```
+
+### 3. Start Frontend
+```bash
+npm start
+```
+
+## Getting Started (Deployment)
+
+### 1. Download the Executable
+Download the latest executable from the releases page below:
+
+```bash
+https://github.com/GLZX4/ReadQuest/releases
+```
+
+### 2. Install and Run the Application 
+Install the applicaton with the installer and then run the application once installed.
+You can then login as normal.
 

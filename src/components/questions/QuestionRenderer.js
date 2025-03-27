@@ -2,6 +2,7 @@ import React from "react";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestions";
 import DragDropQuestion from "./DragDropQuestions";
 import TrueFalseQuestion from "./TrueFalseQuestion";
+import FillInTheBlankQuestion from "./FillInTheBlankQuestion";
 
 const QuestionRenderer = ({ question, onAnswer, timer }) => {
     console.log("QuestionRenderer question: ", question);
@@ -27,6 +28,12 @@ const QuestionRenderer = ({ question, onAnswer, timer }) => {
             onAnswer={onAnswer} 
             timer={timer}
             />;
+        case "fillInTheBlank":
+            return <FillInTheBlankQuestion 
+            question={question} 
+            onAnswer={onAnswer} 
+            timer={timer}
+         />;
         default:
             return <p>Unknown question type: {question.questiontype}</p>;    
         }

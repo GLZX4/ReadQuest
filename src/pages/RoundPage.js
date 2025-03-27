@@ -162,7 +162,6 @@ function RoundPage() {
     console.log("Round Stats:", roundStats);
 
     try {
-        // ✅ SINGLE REQUEST to process metrics
         const response = await axios.post(
             "http://localhost:5000/api/metric/process-metrics",
             roundStats,  // Send the stats directly in the request body
@@ -171,7 +170,7 @@ function RoundPage() {
             }
         );
 
-        console.log("✅ Metrics Processed Successfully:", response.data);
+        console.log(" Metrics Processed Successfully:", response.data);
 
         // Update achievements progress for roundsPlayed
         await updateAchievementProgress("roundsPlayed", 1);

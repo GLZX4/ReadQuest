@@ -11,7 +11,7 @@ const MultipleChoiceQuestion = ({ question, options, onAnswer, timer }) => {
       {/* Timer & Question Number */}
       <div className="question-timer-container">
         <div className="questionNum">Question {question.questionid}</div>
-        <div className="timer">{timer}s</div> {/* Assuming fixed 30s timer */}
+        <div className="timer">{timer}s</div>
         <div className="starProgress">
           <div className="star"></div>
           <div className="star"></div>
@@ -19,25 +19,25 @@ const MultipleChoiceQuestion = ({ question, options, onAnswer, timer }) => {
         </div>
       </div>
 
-      {/* Question Context */}
+      {/* Question Text */}
       <div className="question-context-container">
         <span>{question.questiontext}</span>
       </div>
 
-      {/* Actual Question Text */}
+      {/* Additional context if available */}
       <div className="question-text-container">
         <span>{question.questioncontext || "Read the question carefully!"}</span>
       </div>
 
-      {/* Answer Options Grid */}
+      {/* Answer Options */}
       <div className="answers-container">
-        {options.map((option, index) => (
+        {options.map(({ option, label }, index) => (
           <button
             key={index}
-            className={`answer-button answer-${index + 1}`} // Matches .answer-1, .answer-2, etc.
-            onClick={() => onAnswer(option.id)}
+            className={`answer-button answer-${index + 1}`}
+            onClick={() => onAnswer(option)} // Send "A", "B", "C", etc.
           >
-            {option.option}
+            {label.toUpperCase()}
           </button>
         ))}
       </div>

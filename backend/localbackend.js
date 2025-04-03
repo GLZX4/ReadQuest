@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const dotenv = require('dotenv'); // Ensure dotenv is required
+const dotenv = require('dotenv');
 const cors = require('cors');
 
 const authRoutes = require('./api/auth');
@@ -15,7 +15,6 @@ const metricRoutes = require('./api/metric.js');
 const app = express();
 const PORT = 5000;
 
-// ✅ Ensure dotenv is loaded correctly
 const envPath = process.env.NODE_ENV === "production"
   ? path.join(__dirname, ".env")  // In packaged Electron app
   : path.join(__dirname, "../backend/.env"); // In development mode
@@ -43,11 +42,11 @@ app.use('/api/metric', metricRoutes);
 
 // Catch-all for unmatched routes
 app.use((req, res, next) => {
-  console.log(`⚠️ Unmatched request: ${req.method} ${req.url}`);
+  console.log(`Unmatched request: ${req.method} ${req.url}`);
   res.status(404).json({ message: "Route not found" });
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`✅ Local backend running on port ${PORT}`);
+  console.log(`Local backend running on port ${PORT}`);
 });

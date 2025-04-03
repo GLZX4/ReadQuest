@@ -7,8 +7,8 @@ router.get('/fetch-Tutor-Data', async (req, res) => {
   console.log('Entered fetch-tutor-date proxy');
   try {
     const response = await axios.get(`${process.env.API_BASE_URL}/tutor/fetch-Tutor-Data`, {
-      params: req.query, // Forward query parameters
-      headers: { Authorization: req.headers.authorization }, // Forward token in headers
+      params: req.query, 
+      headers: { Authorization: req.headers.authorization },
     });
     res.status(response.status).json(response.data);
   } catch (error) {
@@ -21,8 +21,8 @@ router.get('/fetch-Tutor-Data', async (req, res) => {
 router.get('/studentsList', async (req, res) => {
   try {
     const response = await axios.get(`${process.env.API_BASE_URL}/tutor/studentsList`, {
-      params: req.query, // Forward query parameters
-      headers: { Authorization: req.headers.authorization }, // Forward token in headers
+      params: req.query, 
+      headers: { Authorization: req.headers.authorization }, 
     });
 
     res.status(response.status).json(response.data);

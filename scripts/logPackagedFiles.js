@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = async (context) => {
-    const outputPath = context.appOutDir;  // The packaged app directory
+    const outputPath = context.appOutDir;
     const logFile = path.join(outputPath, "packaged-files.log");
 
     function listFiles(dir, fileList = []) {
@@ -11,7 +11,7 @@ module.exports = async (context) => {
             if (fs.statSync(fullPath).isDirectory()) {
                 listFiles(fullPath, fileList);
             } else {
-                fileList.push(fullPath.replace(outputPath, '')); // Relative paths
+                fileList.push(fullPath.replace(outputPath, ''));
             }
         });
         return fileList;

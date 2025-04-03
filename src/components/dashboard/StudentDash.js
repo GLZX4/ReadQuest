@@ -11,6 +11,8 @@ import { jwtDecode } from 'jwt-decode';
 const StudentDash = () => {
   const [studentId, setStudentId] = useState(0);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [level, setLevel] = useState(null);
+
 
   useEffect(() => {
     try {
@@ -22,6 +24,8 @@ const StudentDash = () => {
       console.error("Error fetching student ID", error);
     }
   }, []);
+
+
 
   const toggleExpand = (cardId) => {
     if (expandedCard === cardId) {

@@ -6,9 +6,6 @@ const router = express.Router();
 
 // Proxy: Get all student rounds completed
 router.get('/completed-rounds', async (req, res) => {
-    console.log('Entered completed-rounds proxy');
-    console.log('req.query:', req.query);
-    console.log('req.headers:', req.headers);
     try {
         const response = await axios.get(`${process.env.API_BASE_URL}/student/completed-rounds`, {
                 params: req.query,
@@ -49,6 +46,21 @@ router.post('/update-streak', async (req, res) => {
     } catch (error) {
         console.error('Error in local proxy /process-metrics:', error.message);
         res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error processing metrics' });
+    }
+});
+
+router.get('/get-level', async (req, res) => {
+    console.log('Entered get-level proxy with: ', req.query);
+    console.log('req.headers:', req.headers);
+    try {
+        const response = await axios.get(`${process.env.API_BASE_URL}/student/get-level`, {
+                params: req.query,
+                headers: { Authorization: req.headers.authorization },
+            });
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching level from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching completed rounds' });
     }
 });
 

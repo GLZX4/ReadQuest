@@ -4,7 +4,11 @@ import "../../styles/questions/dragDropQuestion.css";
 
 const DragDropQuestion = ({ question, onAnswer, timer }) => {
   const additionalData = question.additionalData || {};
-  const dropZones = additionalData.dropZones || 4;
+  const dropZones = Math.max(
+    additionalData.dropZones || 0,
+    question.answeroptions?.length || 0
+  );
+  
 
   const [currentDrops, setCurrentDrops] = useState(Array(dropZones).fill(null));
 

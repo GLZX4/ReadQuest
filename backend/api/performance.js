@@ -17,9 +17,9 @@ router.get('/students/get-difficulty', async (req, res) => {
         const response = await axios.get(
             `${process.env.API_BASE_URL}/performance/students/get-difficulty`,
             {
-                params: { userID }, // Send userID as a query parameter
+                params: { userID },
                 headers: {
-                    Authorization: `Bearer ${token}`, // Pass the token in headers
+                    Authorization: `Bearer ${token}`,
                 },
             }
         );
@@ -33,7 +33,7 @@ router.get('/students/get-difficulty', async (req, res) => {
 // Proxy: Get current performance metrics for a specific student
 router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
     const { userID } = req.params;
-    const token = req.query.token; // Extract token from the query
+    const token = req.query.token; 
     console.log('Proxying request to /performance/tutor/current-specific-metric with userID:', userID);
 
     try {
@@ -41,7 +41,7 @@ router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
             `${process.env.API_BASE_URL}/performance/tutor/current-specific-metric/${userID}`,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Pass the token in headers
+                    Authorization: `Bearer ${token}`, 
                 },
             }
         );
@@ -54,7 +54,7 @@ router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
 
 // Proxy: Update student performance metrics
 router.post('/students/update-metrics', async (req, res) => {
-    const token = req.query.token; // Extract token from the query
+    const token = req.query.token;
     console.log('Proxying request to /performance/students/update-metrics with body:', req.body);
 
     try {
@@ -63,7 +63,7 @@ router.post('/students/update-metrics', async (req, res) => {
             req.body,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Pass the token in headers
+                    Authorization: `Bearer ${token}`,
                 },
             }
         );

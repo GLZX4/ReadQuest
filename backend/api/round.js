@@ -46,11 +46,6 @@ router.get('/retrieve-qBank', async (req, res) => {
 router.get('/get-question', async (req, res) => {
     const { qBankID, questionIndex, token } = req.query;
 
-    console.log('Proxying request to /round/get-question with: ');
-    console.log('Received qBankID:', qBankID);
-    console.log('Received questionIndex:', questionIndex);
-    console.log('Received token:', token);
-
     if (!qBankID || questionIndex === undefined) {
         console.error('qBankID and questionIndex are required');
         return res.status(400).json({ message: 'qBankID and questionIndex are required' });

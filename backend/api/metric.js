@@ -5,8 +5,6 @@ const router = express.Router();
 
 // Proxy: Process metrics
 router.post('/process-metrics', async (req, res) => {
-    console.log('🔹 Forwarding metrics to hosted backend:', req.body);
-
     try {
         const response = await axios.post(`${process.env.API_BASE_URL}/metric/process-metrics`,
             req.body, {

@@ -63,6 +63,24 @@ header {
   text-decoration: underline;
 }
 
+.account-name::after {
+  content: '';
+  margin-left: 4px;
+}
+
+.level-badge {
+  background: linear-gradient(145deg, #fbc531, #e1a100);
+  color: #fff;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-left: 8px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+
+
 .logout {
   background: #472c5b;
   color: #fff;

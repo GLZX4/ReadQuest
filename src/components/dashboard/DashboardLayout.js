@@ -11,6 +11,8 @@ function DashboardLayout({ role, children }) {
 
   useEffect(() => {
     const fetchLevel = async () => {
+      if (role.toLowerCase() !== "student") return;
+  
       try {
         const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
@@ -29,14 +31,17 @@ function DashboardLayout({ role, children }) {
     };
   
     fetchLevel();
-  }, []);
+  }, [role]);
   
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-title-structure">
         <span className="dashboard-name">{role}</span>
-        <StudentLevel level={level} xp={xp}></StudentLevel>
+
+        {role.toLowerCase() === "student" && (
+          <StudentLevel level={level} xp={xp} />
+        )}
       </div>
       <div className="dashboard-structure">{children}</div>
     </div>

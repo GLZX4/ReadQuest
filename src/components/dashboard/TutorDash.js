@@ -76,13 +76,13 @@ function TutorDash() {
       <div className="dashboard-row">
 
         <div className="dashboard-item studentList">
-          <h2>List of Your Students</h2>
+          <h2 className='noselect'>List of Your Students</h2>
           {studentList.map((student, index) => (
               <StudentContainer key={index} student={student} />
           ))}
         </div>
         <div className="dashboard-item schoolCode">
-          <h2>Your School Code:</h2>
+          <h2 className='noselect'>Your School Code:</h2>
           <div className="CodeContainer">
             <span className="schoolIDDisplay">
               {tutorData.schoolCode || "Not Assigned"}
@@ -104,17 +104,16 @@ function TutorDash() {
 
       <div className='dashboard-row'>
       <div className="dashboard-item addQuestions">
-          <h2>Add Questions</h2>
+          <h2 className='noselect'>Add Questions</h2>
           <button
             className="addQuestions-Btn"
-            onClick={() => setShowAddQuestionSet(true)} // Show the modal
+            onClick={() => setShowAddQuestionSet(true)} 
           >
             Add Question Set
           </button>
         </div>
       </div>
 
-      {/* Conditional Rendering for AddQuestionSet */}
       {showAddQuestionSet && (
         <AddQuestionSet onClose={() => setShowAddQuestionSet(false)} />
       )}

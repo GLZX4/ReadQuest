@@ -18,11 +18,8 @@ function StudentContainer({ student }) {
 
             {isExpanded ? (
                 <div className="studentDetails">
-                    {/* Add detailed information here */}
                     <span className="studentDetail"><b>Last Active:</b> {student.LastActive || "Unknown"}</span>
-                    <span className="studentItem">
-                    <b>Rounds Completed:</b> {student.totalrounds}
-                    </span>
+                    <span className="studentItem"><b>Rounds Completed:</b> {student.totalrounds}</span>
                     <span className="studentItem">
                         <b>Average Score:</b> {student.averagescore ? student.averagescore.toFixed(2) : "N/A"}
                     </span>

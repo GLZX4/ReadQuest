@@ -1,44 +1,40 @@
-/*StudentContainer.css*/
-
 .studentContainer {
-    position: relative;
+    border: 2px solid #d1c4e9;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .studentContainer:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  }
+  
+  .studentSummary {
     display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap; 
-    align-items: flex-start; 
-    gap: 10px; 
-    border: 1px solid gray;
-    border-radius: 5px;
-    padding: 10px;
-    overflow-y: auto;
-}
-
-.studentSummary {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    cursor: pointer;
-}
-
-.studentName {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-.studentContainer span {
-    margin-bottom: 5px;
-}
-
-.studentDetails {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.studentItem {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-}
+    cursor: pointer;
+  }
+  
+  .studentName {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .studentDetails {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .studentItem {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+  }
+  
+  

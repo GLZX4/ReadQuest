@@ -9,31 +9,26 @@ const StreakTracker = ({ studentId }) => {
 
     useEffect(() => {
         if (!studentId) return;
-        const cachedStreak = localStorage.getItem(`streak-${studentId}`);
-        if (cachedStreak) {
-            setStreak(JSON.parse(cachedStreak));
-            return;
-        }
-
+    
         const fetchStreak = async () => {
             const token = localStorage.getItem("token");
-            console.log("token in fetchStreak: ", token);
             try {
                 const response = await axios.get("http://localhost:5000/api/student/get-streak", {
                     params: { studentId },
                     headers: { Authorization: `Bearer ${token}` }
                 });
-
+    
                 setStreak(response.data);
                 localStorage.setItem(`streak-${studentId}`, JSON.stringify(response.data));
-                console.log("✅ Fetched and stored streak data.");
+                console.log("✅ Fetched and stored fresh streak data.");
             } catch (error) {
                 setAlert({ message: "Error fetching streak: " + error.message, type: "error" });
             }
         };
-
+    
         fetchStreak();
     }, [studentId]);
+    
 
     useEffect(() => {
         if (alert) {

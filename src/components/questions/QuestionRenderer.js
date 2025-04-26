@@ -5,9 +5,7 @@ import TrueFalseQuestion from "./TrueFalseQuestion";
 import FillInTheBlankQuestion from "./FillInTheBlankQuestion";
 
 const QuestionRenderer = ({ question, onAnswer, timer }) => {
-    console.log("QuestionRenderer question: ", question);
-    console.log("QuestionRenderer answeroptions: ", question.answeroptions);
-    console.log("question.questiontype: ", question.questiontype);
+
     switch (question.questiontype) {
         case "multipleChoice":
             return <MultipleChoiceQuestion 

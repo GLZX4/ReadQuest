@@ -19,8 +19,9 @@ function DashboardPage() {
       window.location.href = '#/login';
     } else {
       try {
+        console.log('Token:', token); 
         const decodedToken = jwtDecode(token);
-        console.log('Decoded Token:', decodedToken); // Debug log to see decoded data
+        console.log('Decoded Token:', decodedToken);
 
         setUserRole(decodedToken.role);
 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import StreakTracker from "./studentComponents/streakTracker";
 import Achievements from "./studentComponents/Achievements";
 import DashboardLayout from "../dashboard/DashboardLayout";
+import DashboardCard from "./studentComponents/DashboardCard";
 import "../../styles/dashboard.css";
 import "../../styles/dashboard/studentDashboard.css";
 import cardSwipeSound from "../../assets/audio/card-swipe.wav";
@@ -45,103 +46,50 @@ const StudentDash = () => {
     <DashboardLayout role="Student">
       <div className="dashboard-card-scroller">
         
-        <div className={`dashboard-card streakCard ${expandedCard === "streak" ? "expanded" : ""}`}
-            onClick={() => expandedCard ? null : toggleExpand("streak")}
-            onMouseEnter={playHoverSound}
+        <DashboardCard 
+          title="Streak Tracker" 
+          cardId="streakCard" 
+          expandedCard={expandedCard} 
+          toggleExpand={toggleExpand} 
+          playHoverSound={playHoverSound}
         >
-          <span className="noselect"><b>Streak Tracker</b></span>
-          <AnimatePresence>
-            {expandedCard === "streak" && (
-              <motion.div
-                className="streakCard-expandedContent"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <StreakTracker studentId={studentId} />
-                <button className="close-btn" onClick={(e) => {
-                    e.stopPropagation(); 
-                    toggleExpand("streak");
-                }}>✖ Close</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <StreakTracker studentId={studentId} />
+        </DashboardCard>
 
-        </div>
-
-        <div className={`dashboard-card continueCard ${expandedCard === "continue" ? "expanded" : ""}`}
-            onClick={() => expandedCard ? null : toggleExpand("continue")}
-            onMouseEnter={playHoverSound}
+        <DashboardCard 
+          title="Continue To Play" 
+          cardId="continueCard" 
+          expandedCard={expandedCard} 
+          toggleExpand={toggleExpand} 
+          playHoverSound={playHoverSound}
         >
-          <span className="noselect"><b>Continue To Play</b></span>
-          <AnimatePresence>
-            {expandedCard === "continue" && (
-              <motion.div
-                className="streakCard-expandedContent"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <button  className="roundBtn continueBtn" 
-                onClick={() => window.location.href = '#/round'}>Continue...</button>
-                <button className="close-btn" onClick={(e) => {
-                    e.stopPropagation(); 
-                    toggleExpand("continue");
-                }}>✖ Close</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+          <button className="roundBtn continueBtn" onClick={() => window.location.href = '#/round'}>
+            Continue...
+          </button>
+        </DashboardCard>
 
-        <div className={`dashboard-card newRoundCard ${expandedCard === "newRound" ? "expanded" : ""}`}
-            onClick={() => expandedCard ? null : toggleExpand("newRound")}
-            onMouseEnter={playHoverSound}
+        <DashboardCard 
+          title="Play New Round" 
+          cardId="newRoundCard" 
+          expandedCard={expandedCard} 
+          toggleExpand={toggleExpand} 
+          playHoverSound={playHoverSound}
         >
-          <span className="noselect"><b>Play New Round</b></span>
-          <AnimatePresence>
-            {expandedCard === "newRound" && (
-              <motion.div
-                className="streakCard-expandedContent"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <button className="roundBtn newRound" onClick={() => window.location.href = '#/round'}>New Round...</button>
-                <button className="close-btn" onClick={(e) => {
-                    e.stopPropagation(); 
-                    toggleExpand("newRound");
-                }}>✖ Close</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+          <button className="roundBtn newRound" onClick={() => window.location.href = '#/round'}>
+            New Round...
+          </button>
+        </DashboardCard>
 
-        <div className={`dashboard-card achievementCard ${expandedCard === "achievements" ? "expanded" : ""}`}
-            onClick={() => expandedCard ? null : toggleExpand("achievements")}
-            onMouseEnter={playHoverSound}
+        <DashboardCard 
+          title="Achievements" 
+          cardId="achievementCard" 
+          expandedCard={expandedCard} 
+          toggleExpand={toggleExpand} 
+          playHoverSound={playHoverSound}
         >
-          <span className="noselect"><b>Achievements</b></span>
-          <AnimatePresence>
-            {expandedCard === "achievements" && (
-              <motion.div
-                className="streakCard-expandedContent"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Achievements studentId={studentId} />
-                <button className="close-btn" onClick={(e) => {
-                    e.stopPropagation(); 
-                    toggleExpand("achievements");
-                }}>✖ Close</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+          <Achievements studentId={studentId} />
+        </DashboardCard>
+
       </div>
     </DashboardLayout>
   );

@@ -7,7 +7,7 @@ const validator = require("html-validator");
 const stylelint = require("stylelint");
 const chokidar = require("chokidar");
 
-const reactComponentsDir = path.join(__dirname, "../src/components"); // Adjust if needed
+const reactComponentsDir = path.join(__dirname, "../src/components");
 const cssDirectory = path.join(__dirname, "../src/styles");
 
 // Function to extract JSX content, Meaning that the only returned content is HTML and associating JS Components
@@ -36,10 +36,10 @@ async function validateReactComponents() {
 
         try {
             const result = await validator({ data: jsxContent, format: "json" });
-            console.log(`\n📄 Validating ${file}... \n`);
+            console.log(`\nValidating ${file}... \n`);
 
             if (result.messages.length === 0) {
-                console.log("✅ No JSX/HTML errors found!");
+                console.log("No JSX/HTML errors found!");
             } else {
                 result.messages.forEach(msg => {
                     console.log(`${msg.type.toUpperCase()} in ${file}: ${msg.message}`);
@@ -57,7 +57,7 @@ async function validateCSS() {
 
     for (const file of cssFiles) {
         const filePath = path.join(cssDirectory, file);
-        console.log(`\n🎨 Linting ${file}...`);
+        console.log(`\nLinting ${file}...`);
 
         const result = await stylelint.lint({
             files: filePath,
@@ -80,7 +80,7 @@ function watchFiles() {
     console.log("\n Watching for changes in JSX and CSS files...");
 
     chokidar.watch([`${reactComponentsDir}/*.js`, `${reactComponentsDir}/*.jsx`, `${cssDirectory}/*.css`]).on("change", filePath => {
-        console.log(`\n🔄 Detected change in: ${filePath}`);
+        console.log(`\nDetected change in: ${filePath}`);
         if (filePath.endsWith(".js") || filePath.endsWith(".jsx")) validateReactComponents();
         if (filePath.endsWith(".css")) validateCSS();
     });

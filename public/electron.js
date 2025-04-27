@@ -28,7 +28,7 @@ console.error = (...args) => {
 };
 
 // Log app start
-console.log("🚀 Electron app started");
+console.log("Electron app started");
 
 async function createWindow() {
   isDev = await import("electron-is-dev").then((mod) => mod.default);
@@ -40,7 +40,7 @@ async function createWindow() {
     minHeight: 700,
     icon: path.join(__dirname, "public/icon.ico"),
     webPreferences: {
-        devTools: isDev // 🔒 Disable DevTools
+        devTools: isDev
     }
   });
 
@@ -51,8 +51,8 @@ async function createWindow() {
 
   mainWindow.loadURL(appURL);
 
-  console.log("🛠️  isDev:", isDev);
-  console.log("🌍 Loading URL:", appURL);
+  console.log(" isDev:", isDev);
+  console.log(" Loading URL:", appURL);
 
   mainWindow.on("closed", () => (mainWindow = null));
 }
@@ -61,12 +61,12 @@ function startBackend() {
   const devBackendPath = path.join(__dirname, "..", "backend", "localbackend.js");
   const prodBackendPath = path.join(process.resourcesPath, "backend", "localbackend.js");
 
-  const backendPath = app.isPackaged ? prodBackendPath : devBackendPath; // Automatically detect mode
+  const backendPath = app.isPackaged ? prodBackendPath : devBackendPath;
 
-  console.log("📂 Backend Path:", backendPath);
+  console.log(" Backend Path:", backendPath);
 
   if (!fs.existsSync(backendPath)) {
-      console.error("❌ Backend file does not exist:", backendPath);
+      console.error("Backend file does not exist:", backendPath);
       return;
   }
 
@@ -79,7 +79,7 @@ function startBackend() {
 
       backendProcess.unref();
   } catch (error) {
-      console.error("❌ Failed to start backend process.", error);
+      console.error("Failed to start backend process.", error);
   }
 }
 
@@ -111,10 +111,10 @@ async function checkStorageBeforeLaunch() {
 function checkWritePermissions(directory) {
   try {
       fs.accessSync(directory, fs.constants.W_OK);
-      console.log(`✅ Write permission granted for: ${directory}`);
+      console.log(`Write permission granted for: ${directory}`);
       return true;
   } catch (err) {
-      console.error(`🚫 No write permission for: ${directory}`);
+      console.error(`No write permission for: ${directory}`);
       dialog.showErrorBox(
           "Permission Denied",
           `ReadQuest does not have write access to ${directory}. Try running as administrator.`
@@ -153,14 +153,14 @@ function checkInternetConnection() {
     return new Promise((resolve) => {
         dns.lookup('google.com', (err) => {
             if (err) {
-                console.error("🚫 No internet connection detected.");
+                console.error("No internet connection detected.");
                 dialog.showErrorBox(
                     "Internet Connection Required",
                     "An active internet connection is required to use ReadQuest."
                 );
                 resolve(false);
             } else {
-                console.log("✅ Internet connection detected.");
+                console.log("Internet connection detected.");
                 resolve(true);
             }
         });
@@ -184,7 +184,6 @@ function checkScreenResolution() {
 }
 
 
-// ✅ Update "app.on('ready')" to check the returned value
 app.on("ready", async () => {
   const hasEnoughStorage = await checkStorageBeforeLaunch();
   const hasInternet = await checkInternetConnection();

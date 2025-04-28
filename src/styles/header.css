@@ -27,8 +27,8 @@ header {
 
 .window-controls {
   display: flex;
-  gap: 10px;
-  margin-left: auto;
+  gap: 8px;
+  margin-left: 12px;
   -webkit-app-region: no-drag;
 }
 
@@ -38,17 +38,18 @@ header {
   font-size: 18px;
   padding: 4px 8px;
   cursor: pointer;
+  color: black;
+  transition: background-color 0.3s;
 }
 
 .window-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 6px;
 }
 
 .window-button.close:hover {
-  background-color: rgba(255, 0, 0, 0.2);
+  background-color: rgba(255,0,0,0.2);
 }
-
 
 .logo-link, .account-link{
     text-decoration: none;
@@ -112,8 +113,6 @@ header {
   font-size: 0.9rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
-
-
 
 .logout {
   background: #472c5b;

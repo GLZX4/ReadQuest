@@ -3,22 +3,22 @@ import Header from "./common/Header";
 import Footer from "./common/Footer";
 import "../styles/mainLayout.css";
 import { startBackgroundAnimation } from "../services/BackgroundFiller";
-import { AuthContext } from "../services/authContext";  // Import the context
+import { AuthContext } from "../services/authContext"; 
 
 function MainLayout({ children }) {
-    const { userName, isLoggedIn } = useContext(AuthContext);  // Access auth state
+    const { userName, isLoggedIn } = useContext(AuthContext); 
 
     useEffect(() => {
         startBackgroundAnimation();
     }, []);
 
-    console.log("MainLayout Re-rendered: ", userName, isLoggedIn); // Debugging
-
     return (
         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-            <Header />  {/* No need to pass props */}
+            <Header />  
             <main className="content-container">
-                <div className="background-container noselect"></div>
+                <div className="background-container noselect">
+                    <div className="background-blur-layer"></div>
+                </div>
                 {children}
             </main>
             <Footer />

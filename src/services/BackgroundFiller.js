@@ -5,28 +5,64 @@ export function startBackgroundAnimation() {
             console.error("Background container not found.");
             return;
         }
-
+    
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('question-mark-wrapper');
+    
         const questionMark = document.createElement('div');
         questionMark.classList.add('question-mark');
         questionMark.textContent = '?';
-
-        // Randomize size, position, and animation duration
-        const size = Math.random() * 80 + 30; // Random size between 10px and 60px
-        const left = Math.random() * 100; // Random horizontal position (0% to 100%)
-        const duration = Math.random() * 10 + 5; // Random animation duration (5s to 15s)
-
+    
+        const size = Math.random() * 80 + 30;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 10 + 5;
+    
+        wrapper.style.left = `${left}vw`;
         questionMark.style.fontSize = `${size}px`;
-        questionMark.style.left = `${left}vw`; // Position relative to viewport width
         questionMark.style.animationDuration = `${duration}s`;
-
-        // Append the question mark to the background container
-        backgroundContainer.appendChild(questionMark);
-
-        // Remove the question mark after animation ends
+    
+        wrapper.dataset.spawnX = left;
+        wrapper.dataset.depth = Math.random() * 0.5 + 0.5; // 0.5 - 1.0
+    
+        wrapper.appendChild(questionMark);
+        backgroundContainer.appendChild(wrapper);
+    
         setTimeout(() => {
-            questionMark.remove();
+            wrapper.remove();
         }, duration * 1000);
     }
+    
+    setInterval(createQuestionMark, 500);
 
-    setInterval(createQuestionMark, 500); // Create a question mark every 500ms
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+        const { innerWidth, innerHeight } = window;
+        mouseX = (e.clientX / innerWidth) - 0.5;
+        mouseY = (e.clientY / innerHeight) - 0.5;
+    });
+
+    function animateParallax() {
+        const wrappers = document.querySelectorAll('.question-mark-wrapper');
+        wrappers.forEach(wrapper => {
+            const depth = parseFloat(wrapper.dataset.depth || 1);
+            const spawnX = parseFloat(wrapper.dataset.spawnX || 50); // 0-100 vw
+    
+            const distanceFromCenter = Math.abs(spawnX - 50) / 50; // 0 (center) to 1 (edge)
+    
+            const finalDepth = depth * (0.5 + distanceFromCenter * 0.5); 
+            // closer to center = smaller movement, edge = bigger
+    
+            const offsetX = mouseX * 30 * finalDepth;
+            const offsetY = mouseY * 30 * finalDepth;
+    
+            wrapper.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        });
+    
+        requestAnimationFrame(animateParallax);
+    }
+    
+
+    requestAnimationFrame(animateParallax);
 }

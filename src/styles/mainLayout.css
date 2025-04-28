@@ -11,6 +11,11 @@ body, html {
     height: 100%; /* MUST NOT BE CHANGED */
 }
 
+html, body, #root {
+    background-color: transparent;
+    border-radius: 16px;
+}
+
 .content-container {
     flex: 1;
     padding: 20px; 
@@ -19,40 +24,72 @@ body, html {
 
 /* mainLayout.css */
 .background-container {
-    position: fixed; /* Sticks it to the viewport */
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* Full width of the viewport */
-    height: 100vh; /* Full height of the viewport */
-    pointer-events: none; /* Prevents any interaction with the background */
-    z-index: -1; /* Sends it behind everything */
-    overflow: hidden; /* Ensures nothing escapes */
+    width: 100vw;
+    height: 100vh;
+    background-color: #1F0333;
+    z-index: -1; 
+    overflow: hidden; 
 }
 
-
-.question-mark{
+.background-blur-layer {
     position: absolute;
-    font-size: 20px;
-    color: #47005A;
-    animation: float 10s linear infinite, fade 5s ease-in-out infinite;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    z-index: -2;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 70%);
+    filter: blur(20px);
   }
+  
+
+.question-mark-wrapper {
+    position: absolute;
+    top: 0;
+    user-select: none;
+    pointer-events: none;
+    transition: transform 0.2s ease; /* Smooth parallax movement */
+}
+
+.question-mark {
+    animation: float 10s linear infinite, fade 5s ease-in-out infinite;
+    color: #47005A;
+    opacity: 0.6;
+}
+  
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
   
   
   @keyframes float {
     from {
-        transform: translateY(100vh) rotate(0deg); /* Start at the bottom */
+        transform: translateY(100vh) rotate(0deg);
     }
     to {
-        transform: translateY(-10vh) rotate(360deg); /* Move off the top */
+        transform: translateY(-10vh) rotate(360deg);
     }
   }
   
   @keyframes fade {
     0%, 100% {
-        opacity: 0; /* Start and end invisible */
+        opacity: 0; 
     }
     50% {
-        opacity: 1; /* Fully visible in the middle */
+        opacity: 1; 
     }
   }
-  
+

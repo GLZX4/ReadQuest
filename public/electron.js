@@ -39,9 +39,6 @@ async function createWindow() {
     minWidth: 900,
     minHeight: 700,
     icon: path.join(__dirname, "public/icon.ico"),
-    frame: false,
-    transparent: true, 
-    titleBarStyle: 'hidden',
     webPreferences: {
       devTools: isDev
     }

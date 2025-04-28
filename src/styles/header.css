@@ -16,6 +16,40 @@ header {
     box-sizing: border-box;
 }
 
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  -webkit-app-region: drag;
+}
+
+.window-controls {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  -webkit-app-region: no-drag;
+}
+
+.window-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.window-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.window-button.close:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+
 .logo-link, .account-link{
     text-decoration: none;
     color: inherit;

@@ -1,5 +1,5 @@
 const { app, BrowserWindow, dialog } = require("electron");
-const { spawn } = require("child_process");
+const { fork } = require('child_process');
 const path = require("path");
 const checkDiskSpace = require("check-disk-space").default;
 const fs = require("fs");
@@ -39,11 +39,18 @@ async function createWindow() {
     minWidth: 900,
     minHeight: 700,
     icon: path.join(__dirname, "public/icon.ico"),
+    frame: false,
+    transparent: true, 
+    titleBarStyle: 'hidden',
     webPreferences: {
-        devTools: isDev
+      devTools: isDev
     }
   });
-
+  
+  // Hide the menubar
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setAutoHideMenuBar(true);
+  
 
   const appURL = isDev
     ? "http://localhost:3000"
@@ -63,25 +70,39 @@ function startBackend() {
 
   const backendPath = app.isPackaged ? prodBackendPath : devBackendPath;
 
-  console.log(" Backend Path:", backendPath);
+  console.log("Backend Path:", backendPath);
 
   if (!fs.existsSync(backendPath)) {
-      console.error("Backend file does not exist:", backendPath);
-      return;
+    console.error("Backend file does not exist:", backendPath);
+    return;
   }
 
   try {
-      backendProcess = spawn("node", [backendPath], {
-          detached: true,
-          windowsHide: true,
-          stdio: "ignore",
-      });
-
-      backendProcess.unref();
+    backendProcess = fork(backendPath, {
+      stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+    });
+    
+    backendProcess.stdout?.on('data', (data) => {
+      console.log(`[BACKEND] ${data.toString().trim()}`);
+    });
+    
+    backendProcess.stderr?.on('data', (data) => {
+      console.error(`[BACKEND ERROR] ${data.toString().trim()}`);
+    });
+    
+    backendProcess.on('exit', (code, signal) => {
+      console.error(`[BACKEND EXIT] code=${code} signal=${signal}`);
+    });
+    
+    backendProcess.on('error', (err) => {
+      console.error(`[BACKEND PROCESS ERROR]`, err);
+    });
+    
   } catch (error) {
-      console.error("Failed to start backend process.", error);
+    console.error("Failed to start backend process.", error);
   }
 }
+
 
 
 // code below adapted from: https://gist.github.com/sunmeat/798c13df42dde2af9648ff19eac8a639

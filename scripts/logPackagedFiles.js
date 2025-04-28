@@ -20,5 +20,5 @@ module.exports = async (context) => {
     const files = listFiles(outputPath);
     fs.writeFileSync(logFile, files.join("\n"), 'utf-8');
 
-    console.log("✅ Packaged Files List Created: ", logFile);
+    console.log("Packaged Files List Created: ", logFile);
 };

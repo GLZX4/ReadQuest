@@ -11,14 +11,13 @@ function AdminRegister() {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            // Replace with your backend API URL
             const response = await axios.post('http://localhost:5000/api/auth/register-admin', {
                 name,
                 email,
                 password
             });
             console.log("Admin Registration successful", response.data);
-            window.location.href = '/login'; // Redirect to login after successful registration
+            window.location.href = '/login';
         } catch (err) {
             console.error('Error during admin registration:', err);
             setError(err.response?.data?.message || 'Admin registration failed');

@@ -142,7 +142,7 @@ function checkWritePermissions(directory) {
 }
 
 function checkSystemResources() {
-    const totalRAM = os.totalmem() / (1024 * 1024 * 1024); // Convert bytes to GB
+    const totalRAM = os.totalmem() / (1024 * 1024 * 1024); 
     const cpuCores = os.cpus().length;
 
     console.log(`CPU Cores: ${cpuCores}`);

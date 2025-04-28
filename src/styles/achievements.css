@@ -1,5 +1,5 @@
 .achievements-container {
-    margin-top: 10px;
+    margin-top: 35px;
     max-height: 350px;
     max-width: 400px;
     display: flex;
@@ -68,14 +68,14 @@
 .progress-bar-container {
     width: 100%;
     height: 10px;
-    background-color: #ddd; /* Light grey background */
+    background-color: #ddd;
     border-radius: 5px;
-    overflow: hidden; /* Ensures inner bar doesn't spill */
+    overflow: hidden; 
 }
 
 .progress-bar {
     height: 100%;
-    background-color: #4caf50; /* Green */
+    background-color: #4caf50;
     transition: width 1.3s ease-in-out;
 }
 

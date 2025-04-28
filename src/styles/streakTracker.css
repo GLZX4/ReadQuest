@@ -6,13 +6,13 @@
 .streak-count {
     font-size: 1.1em;
     font-weight: bold;
-    color: #FF5733; /* Red flame color */
+    color: #FF5733; 
 }
 
 .streak-best {
     font-size: 1em;
     font-weight: bold;
-    color: #009688; /* Green color */
+    color: #009688; 
 }
 
 .streak-bar-container {

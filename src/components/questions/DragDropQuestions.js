@@ -63,7 +63,6 @@ const DragDropQuestion = ({ question, onAnswer, timer }) => {
     <div className="round-container-dragDrop">
       <div className="timerButton-Group">
         <h3 className="timer noselect">Time remaining: <b>{timer}s</b></h3>
-        <ReturnButton />
       </div>
 
       <div className="drag-drop-question">

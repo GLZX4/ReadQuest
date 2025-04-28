@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const router = express.Router();
 
+// express api routing code adapted from: https://expressjs.com/en/guide/routing.html
+
 // Proxy: Update progress for a student's achievements
 router.post('/update-progress', async (req, res) => {
     
@@ -23,13 +25,12 @@ router.post('/update-progress', async (req, res) => {
 });
 
 
-// Proxy: Fetch achievements for a specific student
 router.get('/fetch-achievements', async (req, res) => {
     try {
         const response = await axios.get(`${process.env.API_BASE_URL}/achievement/fetch-achievements`, {
-                params: req.query,
-                headers: { Authorization: req.query.Authorization },
-            });
+            params: req.query,
+            headers: { Authorization: req.headers.authorization },
+        });
 
         res.status(response.status).json(response.data);
     } catch (error) {
@@ -37,5 +38,6 @@ router.get('/fetch-achievements', async (req, res) => {
         res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching achievements' });
     }
 });
+
 
 module.exports = router;

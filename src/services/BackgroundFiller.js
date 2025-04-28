@@ -22,7 +22,7 @@ export function startBackgroundAnimation() {
         questionMark.style.animationDuration = `${duration}s`;
     
         wrapper.dataset.spawnX = left;
-        wrapper.dataset.depth = Math.random() * 0.5 + 0.5; // 0.5 - 1.0
+        wrapper.dataset.depth = Math.random() * 0.5 + 0.5; 
     
         wrapper.appendChild(questionMark);
         backgroundContainer.appendChild(wrapper);
@@ -43,16 +43,17 @@ export function startBackgroundAnimation() {
         mouseY = (e.clientY / innerHeight) - 0.5;
     });
 
+    // code for parallax effect adapted from: https://www.w3schools.com/howto/howto_css_parallax.asp
+
     function animateParallax() {
         const wrappers = document.querySelectorAll('.question-mark-wrapper');
         wrappers.forEach(wrapper => {
             const depth = parseFloat(wrapper.dataset.depth || 1);
-            const spawnX = parseFloat(wrapper.dataset.spawnX || 50); // 0-100 vw
+            const spawnX = parseFloat(wrapper.dataset.spawnX || 50);
     
-            const distanceFromCenter = Math.abs(spawnX - 50) / 50; // 0 (center) to 1 (edge)
+            const distanceFromCenter = Math.abs(spawnX - 50) / 50; 
     
             const finalDepth = depth * (0.5 + distanceFromCenter * 0.5); 
-            // closer to center = smaller movement, edge = bigger
     
             const offsetX = mouseX * 30 * finalDepth;
             const offsetY = mouseY * 30 * finalDepth;

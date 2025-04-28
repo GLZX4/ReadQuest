@@ -4,6 +4,7 @@ const axios = require('axios');
 
 const router = express.Router();
 
+// Proxy: Login
 router.post('/login', async (req, res) => {
   try {
     console.log('req.body:', req.body);
@@ -15,6 +16,8 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+// Proxy: Register
 router.post('/register', async (req, res) => {
   try {
     const response = await axios.post(`${process.env.API_BASE_URL}/auth/register`, req.body);
@@ -25,6 +28,8 @@ router.post('/register', async (req, res) => {
   }
 });
 
+
+// Proxy: Logout
 router.post('/logout', async (req, res) => {
   const { email, token } = req.body;
   try {
@@ -36,6 +41,8 @@ router.post('/logout', async (req, res) => {
   }
 });
 
+
+// Proxy: Register as Tutor
 router.post('/register-tutor', async (req, res) => {
   try {
     const response = await axios.post(`${process.env.API_BASE_URL}/auth/register-tutor`, req.body);
@@ -46,6 +53,8 @@ router.post('/register-tutor', async (req, res) => {
   }
 });
 
+
+// Proxy: Register as Admin
 router.post('/register-admin', async (req, res) => {
   try {
     const response = await axios.post(`${process.env.API_BASE_URL}/auth/register-admin`, req.body);

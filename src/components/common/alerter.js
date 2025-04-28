@@ -29,6 +29,8 @@ function Alerter({ message, type }) {
     let alertContent;
     let alertClass;
 
+    // icons adapted from: https://emojipedia.org/
+
     switch (type) {
         case "success":
             alertContent = "✅ Success!";

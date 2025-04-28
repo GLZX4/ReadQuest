@@ -10,13 +10,13 @@
     justify-content: center;
     border-radius: 10px;
     box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
-    overflow: hidden;  /* Prevents forms from being visible at the same time */
+    overflow: hidden; 
     padding: 30px;
     box-sizing: border-box;
 }
 
 .auth-form {
-    position: absolute;  /* Allow for smooth transitioning without stacking */
+    position: absolute;  
     top: 0;
     left: 0;
     right: 0;
@@ -28,7 +28,7 @@
 }
 
 .auth-buttons {
-    margin-top: 530px;  /* Space for buttons, ensure they sit below the form */
+    margin-top: 530px;
     display: flex;
     flex-direction: column;
     align-items: center;

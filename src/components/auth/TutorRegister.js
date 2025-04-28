@@ -22,7 +22,6 @@ function TutorRegister({ onSuccess }) {
 
         try {
             const response = await axios.post('http://localhost:5000/api/auth/register-tutor', toSubmit);
-            console.log("✅ Tutor Registration successful", response.data);
 
             setError(''); 
 

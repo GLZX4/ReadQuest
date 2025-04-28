@@ -182,19 +182,19 @@
 }
 
 .answer-1 {
-    background-color: #ff9999; /* Light red */
+    background-color: #ff9999; 
 }
 
 .answer-2 {
-    background-color: #ffff99; /* Light yellow */
+    background-color: #ffff99;
 }
 
 .answer-3 {
-    background-color: #99ccff; /* Light blue */
+    background-color: #99ccff;
 }
 
 .answer-4 {
-    background-color: #99ff99; /* Light green */
+    background-color: #99ff99;
 }
 
 .round-complete-overlay {

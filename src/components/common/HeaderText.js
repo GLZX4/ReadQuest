@@ -6,12 +6,12 @@ import "../../styles/header.css";
 const waveVariants = {
   rest: { y: 0 },
   hover: (i) => ({
-    y: [-2, 2, -2, 0], // Subtle movement
+    y: [-2, 2, -2, 0],
     transition: {
-      duration: 0.8, // Slower wave effect
+      duration: 0.8,
       repeat: Infinity,
       repeatType: "mirror",
-      delay: i * 0.1, // Creates a wave effect
+      delay: i * 0.1, 
       ease: "easeInOut",
     },
   }),
@@ -34,8 +34,8 @@ function HeaderText() {
             key={i}
             custom={i}
             variants={waveVariants}
-            style={{ display: "inline-block" }} // Ensures per-letter animation
-            className={i >= 4 ? "ReadQuest-Purple" : ""} // "Quest" part gets purple
+            style={{ display: "inline-block" }} 
+            className={i >= 4 ? "ReadQuest-Purple" : ""} 
           >
             {letter}
           </motion.span>

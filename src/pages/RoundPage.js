@@ -96,7 +96,6 @@ function RoundPage() {
             console.log("Fetched Question:", questionData);
           }
 
-          // Fix: keep answeroptions as an array of objects, not just labels
           const answerOptionsData = typeof questionData.answeroptions === "string"
             ? JSON.parse(questionData.answeroptions)
             : questionData.answeroptions;
@@ -107,7 +106,7 @@ function RoundPage() {
             text: questionData.questiontext,
           });
 
-          setAnswers(answerOptionsData); // <-- Keep full { id, label } objects
+          setAnswers(answerOptionsData); 
           setTotalQuestions((prevIndex) => prevIndex + 1);
         } catch (error) {
           handleRoundComplete();

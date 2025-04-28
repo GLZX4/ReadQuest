@@ -7,8 +7,6 @@ function LoginPage() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('email');
-    console.log('token in login:', token);
-    console.log('email in login:', email);
     
     if (token) {
       try {

@@ -41,7 +41,7 @@ function AddQuestionSet({ onClose }) {
 
   const handlePublishQuestionSet = async () => {
     try {
-      const token = localStorage.getItem("token"); // Assuming authentication token is required
+      const token = localStorage.getItem("token"); 
       const payload = {
         questions,
         questionType: questions[0].type,
@@ -49,7 +49,7 @@ function AddQuestionSet({ onClose }) {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/tutor/add-Question-Set", // Update with your backend endpoint
+        "http://localhost:5000/api/tutor/add-Question-Set", 
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +58,7 @@ function AddQuestionSet({ onClose }) {
 
       if (response.status === 200) {
         alert("Question Set Published Successfully!");
-        onClose(); // Close the modal
+        onClose();
       }
     } catch (error) {
       console.error("Error publishing question set:", error);
@@ -107,7 +107,6 @@ function AddQuestionSet({ onClose }) {
           </button>
         </div>
 
-        {/* Question Type Selection */}
         {!questions[0].type && (
           <div className="addQuestionSet-selectType">
             <h3>Select the Question Type for this Set:</h3>
@@ -129,7 +128,6 @@ function AddQuestionSet({ onClose }) {
           </div>
         )}
 
-        {/* Question Navigation */}
         {questions[0].type && (
           <>
             <div className="addQuestionSet-questionNums">
@@ -146,7 +144,6 @@ function AddQuestionSet({ onClose }) {
               ))}
             </div>
 
-            {/* Current Question Editor */}
             <div className="addQuestionSet-questionContent">
               {renderQuestionComponent(
                 questions[currentQuestionIndex],
@@ -163,7 +160,6 @@ function AddQuestionSet({ onClose }) {
               </select>
             </div>
 
-            {/* Add/Remove Question Controls */}
             <div className="addQuestionSet-controls">
               <button className="controlBtn add" onClick={handleAddQuestion}>
                 Add Question

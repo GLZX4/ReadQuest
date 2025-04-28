@@ -52,7 +52,7 @@ html, body, #root {
     top: 0;
     user-select: none;
     pointer-events: none;
-    transition: transform 0.2s ease; /* Smooth parallax movement */
+    transition: transform 0.2s ease;
 }
 
 .question-mark {

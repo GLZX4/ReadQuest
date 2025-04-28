@@ -15,7 +15,6 @@ function DashboardPage() {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      // Redirect to login if no token is found
       window.location.href = '#/login';
     } else {
       try {
@@ -27,7 +26,6 @@ function DashboardPage() {
 
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
-          // Token has expired
           localStorage.removeItem('token');
           navigate('/login');
         }
@@ -39,7 +37,6 @@ function DashboardPage() {
     }
   }, [navigate]);
 
-  // Render different dashboard components based on user role
   const renderDashboard = () => {
     switch (userRole) {
       case 'admin':
@@ -49,7 +46,7 @@ function DashboardPage() {
       case 'student':
         return <StudentDash />;
       default:
-        return <LoadingSpinner />; // Loading or fallback content
+        return <LoadingSpinner />;
     }
   };
 

@@ -7,6 +7,9 @@ import Alerter from "../common/alerter";
 import { AnimatePresence, motion } from "framer-motion";
 import "../../styles/authToggle.css";
 
+// Detect if running inside Electron production build
+const isProd = !window.location.href.includes("localhost");
+
 function AuthToggle() {
     const [isLogin, setIsLogin] = useState(true);
     const [isTutor, setIsTutor] = useState(false);
@@ -29,7 +32,6 @@ function AuthToggle() {
         setAlert({ message, type: "success" });
         setIsLogin(true);
 
-        // Remove alert after 5 seconds
         setTimeout(() => setAlert(null), 5000);
     };
 
@@ -105,9 +107,12 @@ function AuthToggle() {
                         <button className="roleToggler-Btn noselect" onClick={toggleRole}>
                             {isTutor ? "Register as Student" : "Register as Tutor"}
                         </button>
-                        <button className="roleToggler-Btn noselect" onClick={toggleAdmin}>
-                            {isAdmin ? "Register as Student/Tutor" : "Register as Admin"}
-                        </button>
+
+                        {!isProd && (
+                            <button className="roleToggler-Btn noselect" onClick={toggleAdmin}>
+                                {isAdmin ? "Register as Student/Tutor" : "Register as Admin"}
+                            </button>
+                        )}
                     </>
                 )}
             </div>

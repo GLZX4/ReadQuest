@@ -5,6 +5,7 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import QuestionRenderer from "../components/questions/QuestionRenderer";
 import Alerter from "../components/common/alerter";
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import startSound1 from "../assets/audio/newRound.wav";
 import startSound2 from "../assets/audio/newRound2.wav";
@@ -32,6 +33,7 @@ function RoundPage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [question, setQuestion] = useState(null);
   const [currentRound, setCurrentRound] = useState(1);
+  const [showRoundCompleteOverlay, setShowRoundCompleteOverlay] = useState(false);
   const [alert, setAlert] = useState(null);
   const navigate = useNavigate();
 
@@ -178,13 +180,19 @@ function RoundPage() {
   };
 
   const handleNextQuestion = () => {
-    if (answers.length > 0) {
+    if (answers.length > 0 && questionIndex + 1 < totalQuestions) {
       setQuestionIndex((prevIndex) => prevIndex + 1);
       setCurrentRound((prevRound) => prevRound + 1);
     } else {
-      handleRoundComplete();
+      setQuestion(null);
+      setShowRoundCompleteOverlay(true);
+      setTimeout(() => {
+        handleRoundComplete();
+      }, 1500);
     }
   };
+  
+  
 
   const handleAnswerAndAdvance = async (selectedAnswer) => {
     if (isAnswered) return;
@@ -271,15 +279,41 @@ function RoundPage() {
   }, [alert]);
 
   return (
-    <div className="round-page">
-      {alert && <Alerter message={alert.message} type={alert.type} />}
-      {question ? (
-        <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} timer={timer} />
-      ) : (
-        <LoadingSpinner />
+    <>
+      {showRoundCompleteOverlay && (
+        <motion.div
+          className="round-complete-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1>Round Complete!</h1>
+        </motion.div>
       )}
-    </div>
+  
+      <div className="round-page">
+        {alert && <Alerter message={alert.message} type={alert.type} />}
+  
+        <AnimatePresence mode="wait">
+          {question ? (
+            <motion.div
+              key={questionIndex}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -100 }}
+              transition={{ duration: 0.4 }}
+            >
+              <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} timer={timer} />
+            </motion.div>
+          ) : (
+            <LoadingSpinner />
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
+  
 }
 
 export default RoundPage;

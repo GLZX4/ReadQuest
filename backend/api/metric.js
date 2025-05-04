@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const router = express.Router();
 
-// Proxy: Process metrics
+// Process metrics
 router.post('/process-metrics', async (req, res) => {
     try {
         const response = await axios.post(`${process.env.API_BASE_URL}/metric/process-metrics`,

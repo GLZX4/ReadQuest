@@ -25,7 +25,7 @@ function AdminDash() {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Fetched Schools:", response.data);
-        setSchools(response.data); // Properly update the state
+        setSchools(response.data);
       } catch (error) {
         console.error("Error fetching schools:", error.response?.data || error.message);
       }
@@ -39,13 +39,13 @@ function AdminDash() {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Fetched Admin Data:", response.data);
-        setAdminData(response.data); // Properly update the state
+        setAdminData(response.data); 
       } catch (error) {
         console.error("Error fetching admin data:", error.response?.data || error.message);
       }
     };
 
-    // Fetch data on component mount
+    
     fetchSchools();
     fetchAdminData();
   }, []);
@@ -93,7 +93,6 @@ function AdminDash() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          {/* Pass Filtered Schools */}
           <SchoolsList schools={filteredSchools} />
         </div>
       </div>

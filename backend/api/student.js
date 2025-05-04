@@ -4,7 +4,6 @@ require('dotenv').config();
 
 const router = express.Router();
 
-// Proxy: Get all student rounds completed
 router.get('/completed-rounds', async (req, res) => {
     try {
         const response = await axios.get(`${process.env.API_BASE_URL}/student/completed-rounds`, {

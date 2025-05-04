@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const router = express.Router();
 
-// Proxy: Get performance metrics for round selection
+// Get performance metrics for round selection
 router.get('/students/get-difficulty', async (req, res) => {
     console.log('Proxying request to /performance/students/get-difficulty');
     const { userID } = req.query;
@@ -30,7 +30,7 @@ router.get('/students/get-difficulty', async (req, res) => {
     }
 });
 
-// Proxy: Get current performance metrics for a specific student
+// Get current performance metrics for a specific student
 router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
     const { userID } = req.params;
     const token = req.query.token; 
@@ -52,7 +52,7 @@ router.get('/tutor/current-specific-metric/:userID', async (req, res) => {
     }
 });
 
-// Proxy: Update student performance metrics
+// Update student performance metrics
 router.post('/students/update-metrics', async (req, res) => {
     const token = req.query.token;
     console.log('Proxying request to /performance/students/update-metrics with body:', req.body);

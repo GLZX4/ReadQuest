@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const router = express.Router();
 
-// Proxy: Select a round by difficulty
+// Select a round by difficulty
 router.get('/select-by-difficulty', async (req, res) => {
     console.log('Params in select-by-difficulty:', req.query);
     try {
@@ -21,7 +21,7 @@ router.get('/select-by-difficulty', async (req, res) => {
 });
 
 
-// Proxy: Retrieve question bank by QBankID
+// Retrieve question bank by QBankID
 router.get('/retrieve-qBank', async (req, res) => {
     const { QBankID } = req.query;
 
@@ -42,7 +42,7 @@ router.get('/retrieve-qBank', async (req, res) => {
     }
 });
 
-// Proxy: Get a specific question by QBankID and questionIndex
+// Get a specific question by QBankID and questionIndex
 router.get('/get-question', async (req, res) => {
     const { qBankID, questionIndex, token } = req.query;
 
@@ -71,7 +71,7 @@ router.get('/get-question', async (req, res) => {
 });
 
 
-// Proxy: Validate an answer
+// Validate an answer
 router.post('/validate-answer', async (req, res) => {
     const { questionID, selectedAnswer, token } = req.body;
 

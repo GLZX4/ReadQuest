@@ -1,14 +1,15 @@
 import React from "react";
 import "../../styles/questions/fillInTheBlank.css";
 
-const FillInTheBlankQuestion = ({ question, onAnswer, timer }) => {
+const FillInTheBlankQuestion = ({ question, onAnswer, timer,  questionNumber, totalQuestions  }) => {
   if (!question || !question.answeroptions) return <p>Loading...</p>;
 
   return (
     <div className="round-container">
       <div className="question-timer-container">
-        <div className="questionNum">Question {question.questionid}</div>
+        <div className="questionNum">Question {questionNumber} of {totalQuestions}</div>
         <div className="timer">{timer}s</div>
+        
       </div>
 
       <div className="question-context-container">

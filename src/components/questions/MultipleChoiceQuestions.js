@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/questions/multipleChoiceQuestion.css";
 
-const MultipleChoiceQuestion = ({ question, options, onAnswer, timer }) => {
+const MultipleChoiceQuestion = ({ question, options, onAnswer, timer, questionNumber, totalQuestions }) => {
   if (!question || !options) {
     return <p>Loading question...</p>;
   }
@@ -9,7 +9,7 @@ const MultipleChoiceQuestion = ({ question, options, onAnswer, timer }) => {
   return (
     <div className="round-container">
       <div className="question-timer-container">
-        <div className="questionNum">Question {question.questionid}</div>
+        <div className="questionNum">Question {questionNumber} of {totalQuestions}</div>
         <div className="timer">{timer}s</div>
         <div className="starProgress">
           <div className="star"></div>

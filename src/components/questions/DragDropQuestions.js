@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReturnButton from "../common/returnButton";
 import "../../styles/questions/dragDropQuestion.css";
 
-const DragDropQuestion = ({ question, onAnswer, timer }) => {
+const DragDropQuestion = ({ question, onAnswer, timer, questionNumber, totalQuestions  }) => {
   const additionalData = question.additionalData || {};
   const dropZones = Math.max(
     additionalData.dropZones || 0,
@@ -62,6 +62,7 @@ const DragDropQuestion = ({ question, onAnswer, timer }) => {
   return (
     <div className="round-container-dragDrop">
       <div className="timerButton-Group">
+        <h2>Question {questionNumber} of {totalQuestions}</h2>
         <h3 className="timer noselect">Time remaining: <b>{timer}s</b></h3>
       </div>
 

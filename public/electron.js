@@ -40,7 +40,7 @@ async function createWindow() {
     minHeight: 700,
     icon: path.join(__dirname, "public/icon.ico"),
     webPreferences: {
-      devTools: isDev
+      devTools: true,
     }
   });
   

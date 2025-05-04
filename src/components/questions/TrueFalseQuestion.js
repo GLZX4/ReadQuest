@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../styles/questions/trueFalseQuestion.css";
 
-const TrueFalseQuestion = ({ question, onAnswer, timer }) => {
+const TrueFalseQuestion = ({ question, onAnswer, timer,  questionNumber, totalQuestions  }) => {
     const [selected, setSelected] = useState(null);
 
     const handleAnswer = (answer) => {
@@ -11,7 +11,10 @@ const TrueFalseQuestion = ({ question, onAnswer, timer }) => {
 
     return (
         <div className="round-container-dragDrop">
-            {timer && <p className="timer">Time left: {timer}s</p>}
+            <div className="question-info-container">
+                {timer && <p className="timer">Time left: {timer}s</p>}
+                <h2>Question {questionNumber} of {totalQuestions}</h2>
+            </div>
             <div className="true-false-question">
                 <h2 className="question-text">{question.questiontext}</h2>
                 <div className="true-false-options">

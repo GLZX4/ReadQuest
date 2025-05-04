@@ -1,5 +1,5 @@
 // src/pages/RoundPage.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import QuestionRenderer from "../components/questions/QuestionRenderer";
@@ -19,12 +19,8 @@ function RoundPage() {
   const [startTime, setStartTime] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [hasTimerExpired, setHasTimerExpired] = useState(false);
-  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
   const [qBankID, setQBankID] = useState(null);
-  const [totalAnswerTime, setTotalAnswerTime] = useState(0);
-  const [attempts, setAttempts] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [showCorrectOverlay, setShowCorrectOverlay] = useState(false);
   const [showIncorrectOverlay, setShowIncorrectOverlay] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -38,6 +34,11 @@ function RoundPage() {
   const navigate = useNavigate();
 
   const roundStartSounds = [startSound1, startSound2, startSound3];
+
+  const correctAnswersCountRef = useRef(0);
+  const totalAttemptsRef = useRef(0);
+  const totalAnswerTimeRef = useRef(0);
+  const questionsAnsweredRef = useRef(0);
 
   useEffect(() => {
     const fetchRoundByDifficulty = async () => {
@@ -62,6 +63,17 @@ function RoundPage() {
         const round = roundResponse.data;
         setRoundID(round.roundid);
         setQBankID(round.qbankid);
+        
+        const totalQuestionsResponse = await axios.get(
+            "http://localhost:5000/api/round/get-total-questions",
+            { params: { qBankID: round.qbankid }, 
+              headers: { Authorization: `Bearer ${token}` }
+            }
+        );
+        console.log("Total Questions Response:", totalQuestionsResponse.data);
+        setTotalQuestions(totalQuestionsResponse.data.totalQuestions);
+        console.log("Total Questions:", totalQuestions);
+        
       } catch (error) {
         console.error("Error fetching round by difficulty:", error);
       }
@@ -74,7 +86,7 @@ function RoundPage() {
     if (qBankID !== null) {
       if (!hasPlayedRoundSound) {
         const randomSound = new Audio(roundStartSounds[Math.floor(Math.random() * roundStartSounds.length)]);
-        randomSound.play().catch(e => console.warn("🔇 Failed to play round-start sound:", e));
+        randomSound.play().catch(e => console.warn("Failed to play round-start sound:", e));
         setHasPlayedRoundSound(true);
       }
 
@@ -107,7 +119,6 @@ function RoundPage() {
           });
 
           setAnswers(answerOptionsData); 
-          setTotalQuestions((prevIndex) => prevIndex + 1);
         } catch (error) {
           handleRoundComplete();
         }
@@ -121,19 +132,21 @@ function RoundPage() {
     console.log("Handling round completion...");
     const token = localStorage.getItem("token");
     const userID = jwtDecode(token).userId;
-    const completionRate = totalQuestions > 0 ? (questionsAnswered / totalQuestions) * 100 : 0;
+    const completionRate = totalQuestions > 0 ? (questionsAnsweredRef.current / totalQuestions) * 100 : 0;
 
     const roundStats = {
-      correctAnswersCount,
-      totalQuestions,
-      totalAnswerTime,
-      totalAttempts: attempts,
+      correctAnswersCount: correctAnswersCountRef.current,
+      totalQuestions: questionsAnsweredRef.current,
+      totalAnswerTime: totalAnswerTimeRef.current,
+      totalAttempts: totalAttemptsRef.current,
       roundsPlayed: currentRound,
       totalRoundsAvailable: 10,
       completionRate,
       userID,
     };
-
+    
+    console.log("Round Stats:", roundStats);
+    
     try {
       const response = await axios.post(
         "http://localhost:5000/api/metric/process-metrics",
@@ -141,14 +154,17 @@ function RoundPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      await updateAchievementProgress("roundsPlayed", 1);
+      await updateAchievementProgress("First Round Completed", { roundsPlayed: 1 });
+      await updateAchievementProgress("Play 10 Rounds", { roundsPlayed: 1 });
+      await updateAchievementProgress("Play 50 Rounds", { roundsPlayed: 1 });
+      await updateAchievementProgress("Play 100 Rounds", { roundsPlayed: 1 });
       await updateStreakProgress(userID);
 
       navigate("/dashboard");
     } catch (error) {
       setAlert({ message: "Failed to update achievements: " + error.message, type: "error" });
     }
-  };
+};
 
   const updateAchievementProgress = async (metric, value) => {
     const token = localStorage.getItem("token");
@@ -156,10 +172,11 @@ function RoundPage() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/achievement/update-progress",
-        { studentId: userID, metric, value },
-        { params: { token } }
+          "http://localhost:5000/api/achievement/update-progress",
+          { studentId: userID, achievementType: metric, progressUpdate: value },
+          { params: { token } }
       );
+    
     } catch (error) {
       console.error("Error updating achievement progress:", error);
     }
@@ -192,17 +209,17 @@ function RoundPage() {
   };
   
   
-
   const handleAnswerAndAdvance = async (selectedAnswer) => {
     if (isAnswered) return;
     setIsAnswered(true);
-    setAttempts((prev) => prev + 1);
-
+  
     const endTime = Date.now();
     const answerTime = (endTime - startTime) / 1000;
-
-    setTotalAnswerTime((prev) => prev + answerTime);
-
+  
+    totalAnswerTimeRef.current += answerTime;
+    totalAttemptsRef.current += 1;
+    questionsAnsweredRef.current += 1;
+  
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
@@ -213,19 +230,17 @@ function RoundPage() {
           token
         }
       );
-
+  
       const isCorrect = response.data;
       if (isCorrect) {
-        setCorrectAnswersCount((prev) => prev + 1);
+        correctAnswersCountRef.current += 1;
         setShowCorrectOverlay(true);
         setTimeout(() => setShowCorrectOverlay(false), 500);
       } else {
         setShowIncorrectOverlay(true);
         setTimeout(() => setShowIncorrectOverlay(false), 500);
       }
-
-      setQuestionsAnswered((prev) => prev + 1);
-
+  
       setTimeout(() => {
         handleNextQuestion();
       }, 1000);
@@ -233,6 +248,7 @@ function RoundPage() {
       console.error("Error validating answer:", error);
     }
   };
+  
 
   useEffect(() => {
     if (disableTimer) return;
@@ -303,7 +319,13 @@ function RoundPage() {
               exit={{ opacity: 0, x: -100 }}
               transition={{ duration: 0.4 }}
             >
-              <QuestionRenderer question={question} onAnswer={handleAnswerAndAdvance} timer={timer} />
+              <QuestionRenderer
+                  question={question}
+                  onAnswer={handleAnswerAndAdvance}
+                  timer={timer}
+                  questionNumber={questionIndex + 1}
+                  totalQuestions={totalQuestions}
+              />
             </motion.div>
           ) : (
             <LoadingSpinner />

@@ -104,5 +104,20 @@ router.post('/validate-answer', async (req, res) => {
     }
 });
 
+router.get('/get-total-questions', async (req, res) => {
+    console.log('Entered get-total-questions proxy with: ', req.query);
+    console.log('req.headers:', req.headers);
+    try {
+        const response = await axios.get(`${process.env.API_BASE_URL}/round/get-total-questions`, {
+                params: req.query,
+                headers: { Authorization: req.headers.authorization },
+            });
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error fetching completed rounds from API:', error.message);
+        res.status(error.response?.status || 500).json(error.response?.data || { message: 'Error fetching completed rounds' });
+    }
+});
+
 
 module.exports = router;
